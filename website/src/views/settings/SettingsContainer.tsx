@@ -20,6 +20,7 @@ import {
   setModRegScheduleType,
   toggleBetaTesting,
   toggleModRegNotificationGlobally,
+  togglePreReqTreeDirection,
 } from 'actions/settings';
 import Timetable from 'views/timetable/Timetable';
 import Title from 'views/components/Title';
@@ -46,6 +47,7 @@ type Props = {
   betaTester: boolean;
   loadDisqusManually: boolean;
   modRegNotification: ModRegNotificationSettings;
+  preReqTreeLeft: boolean;
 
   selectTheme: (theme: ThemeId) => void;
   selectColorScheme: (colorScheme: ColorSchemePreference) => void;
@@ -57,6 +59,8 @@ type Props = {
   toggleModRegNotificationGlobally: (enabled: boolean) => void;
   enableModRegNotification: (round: RegPeriod) => void;
   dismissModregNotification: (round: RegPeriod) => void;
+
+  togglePreReqTreeDirection: (status: boolean) => void;
 };
 
 const SettingsContainer: React.FC<Props> = ({
@@ -65,6 +69,7 @@ const SettingsContainer: React.FC<Props> = ({
   betaTester,
   loadDisqusManually,
   modRegNotification,
+  preReqTreeLeft,
   ...props
 }) => {
   const [allowTracking, setAllowTracking] = useState(true);
@@ -289,6 +294,25 @@ const SettingsContainer: React.FC<Props> = ({
           />
         </div>
       </div>
+
+      <hr />
+
+      <h4 id="preReqTreeDirection">Prerequisite Tree Direction</h4>
+
+      <div className="row">
+        <div className="col-md-8">
+          <p>
+            test
+          </p>
+        </div>
+        <div className="col-md-4 text-right">
+          <Toggle
+            labels={['Left', 'Right']}
+            isOn={preReqTreeLeft}
+            onChange={props.togglePreReqTreeDirection}
+          />
+        </div>
+      </div>
     </div>
   );
 };
@@ -299,6 +323,7 @@ const mapStateToProps = (state: StoreState) => ({
   betaTester: state.settings.beta || false,
   loadDisqusManually: state.settings.loadDisqusManually,
   modRegNotification: state.settings.modRegNotification,
+  preReqTreeLeft: state.settings.preReqTreeLeft,
 });
 
 const connectedSettings = connect(mapStateToProps, {
@@ -311,6 +336,7 @@ const connectedSettings = connect(mapStateToProps, {
   dismissModregNotification,
   enableModRegNotification,
   setModRegScheduleType,
+  togglePreReqTreeDirection,
 })(SettingsContainer);
 
 export default deferComponentRender(connectedSettings);
