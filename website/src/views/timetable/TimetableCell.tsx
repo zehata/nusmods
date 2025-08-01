@@ -1,11 +1,10 @@
 import * as React from 'react';
 import classnames from 'classnames';
-import { isEqual } from 'lodash';
 import { addWeeks, format, parseISO } from 'date-fns';
 import NUSModerator, { AcadWeekInfo } from 'nusmoderator';
 
 import { consumeWeeks, WeekRange } from 'types/modules';
-import { HoverLesson, ModifiableLesson } from 'types/timetables';
+import { ColoredLesson, HoverLesson } from 'types/timetables';
 import { OnHoverCell } from 'types/views';
 
 import {
@@ -22,7 +21,7 @@ import styles from './TimetableCell.scss';
 
 type Props = {
   showTitle: boolean;
-  lesson: ModifiableLesson;
+  lesson: ColoredLesson;
   onHover: OnHoverCell;
   style?: React.CSSProperties;
   onClick?: (position: ClientRect) => void;
@@ -92,7 +91,12 @@ const TimetableCell: React.FC<Props> = (props) => {
 
   const moduleName = showTitle ? `${lesson.moduleCode} ${lesson.title}` : lesson.moduleCode;
   const Cell = props.onClick ? 'button' : 'div';
-  const isHoveredOver = isEqual(getHoverLesson(lesson), hoverLesson);
+  const isHoveredOver =
+    lesson.moduleCode === hoverLesson?.moduleCode &&
+    lesson.lessonType === hoverLesson?.lessonType &&
+    lesson.isTaInTimetable
+      ? lesson.lessonIndex === hoverLesson.lessonIndex
+      : lesson.lessonGroup === hoverLesson?.lessonGroup;
 
   const conditionalProps = onClick
     ? {

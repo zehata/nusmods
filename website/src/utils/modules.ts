@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { map } from 'lodash';
 import { format } from 'date-fns';
 import type {
   Module,
@@ -11,7 +11,6 @@ import type {
 
 import config from 'config';
 import { NBSP, noBreak } from 'utils/react';
-import { Lesson } from 'types/timetables';
 import { ModulesMap } from 'types/reducers';
 import { toSingaporeTime } from './timify';
 
@@ -32,27 +31,10 @@ export function getModuleSemesterData(
 
 // Returns a flat array of lessons of a module for the corresponding semester.
 export function getModuleTimetable(module: Module, semester: Semester): readonly RawLesson[] {
-  return _.get(getModuleSemesterData(module, semester), 'timetable', []);
-}
-
-// Do these two lessons belong to the same class?
-export function areLessonsSameClass(lesson1: Lesson, lesson2: Lesson): boolean {
-  return (
-    lesson1.moduleCode === lesson2.moduleCode &&
-    lesson1.classNo === lesson2.classNo &&
-    lesson1.lessonType === lesson2.lessonType
-  );
-}
-
-// Are the two lessons exact duplicates of one another
-export function areLessonsDuplicate(lesson1: Lesson, lesson2: Lesson): boolean {
-  return (
-    lesson1.moduleCode === lesson2.moduleCode &&
-    lesson1.classNo === lesson2.classNo &&
-    lesson1.lessonType === lesson2.lessonType &&
-    lesson1.day === lesson2.day &&
-    lesson1.startTime === lesson2.startTime
-  );
+  return map(_.get(getModuleSemesterData(module, semester), 'timetable', []), (lesson, index) => ({
+    ...lesson,
+    lessonIndex: index,
+  }));
 }
 
 /**

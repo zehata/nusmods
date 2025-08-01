@@ -4,6 +4,10 @@ export type ClassNo = string;
 export type DayText = string;
 export type StartTime = string;
 export type EndTime = string;
+
+export type LessonGroup = string;
+export type LessonIndex = number;
+
 export type Faculty = string;
 export type LessonTime = StartTime | EndTime;
 export type LessonType = string;
@@ -25,6 +29,7 @@ export type WeekRange = {
   // Week intervals for modules with uneven spacing between lessons
   weeks?: number[];
 };
+export type SerializedWeek = string;
 
 // Recursive tree of module codes and boolean operators for the prereq tree
 export type PrereqTree =
@@ -130,6 +135,7 @@ export const attributeDescription: { [key in keyof AttributeMap]: string } = {
 // Usually ModuleCode and ModuleTitle has to be injected in before using in the timetable.
 export type RawLesson = Readonly<{
   classNo: ClassNo;
+  lessonIndex: LessonIndex;
   day: DayText;
   startTime: StartTime;
   endTime: EndTime;
@@ -138,10 +144,25 @@ export type RawLesson = Readonly<{
   weeks: Weeks;
 }>;
 
+/**
+ * Lesson groups are meant to replace lessons-by-classNo \
+ * All lessons in a lesson group must have the same classNo \
+ * No lessons in a lesson group may overlap with another \
+ * If there are overlaps, first try to differentiate them by venue \
+ * If there are still overlaps, try to differentiate them by weeks \
+ * If there are _still_ overlaps, the lesson group is necessarily unitary, return only the lesson itself
+ */
+export type GroupedLessons = {
+  [lessonType: LessonType]: {
+    [lessonGroup: LessonGroup]: LessonIndex[];
+  };
+};
+
 // Semester-specific information of a module.
 export type SemesterData = {
   semester: Semester;
   timetable: readonly RawLesson[];
+  groupedLessons: GroupedLessons;
 
   // Exam
   examDate?: string;

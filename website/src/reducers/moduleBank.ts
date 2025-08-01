@@ -1,5 +1,5 @@
 import { produce, Draft } from 'immer';
-import { keyBy, omit, size, zipObject } from 'lodash';
+import { keyBy, map, omit, size, zipObject } from 'lodash';
 
 import { createMigrate, REHYDRATE } from 'redux-persist';
 import type { Actions } from 'types/actions';
@@ -15,6 +15,7 @@ import {
   SET_EXPORTED_DATA,
 } from 'actions/constants';
 import { SUCCESS_KEY } from 'middlewares/requests-middleware';
+import { splitIntoGroupedLessons } from 'utils/timetables';
 
 const defaultModuleBankState: ModuleBank = {
   moduleList: [], // List of basic modules data (module code, name, semester)
@@ -49,7 +50,21 @@ function moduleBank(state: ModuleBank = defaultModuleBankState, action: Actions)
         ...state,
         modules: {
           ...state.modules,
-          [action.payload.moduleCode]: { ...action.payload, timestamp: Date.now() },
+          [action.payload.moduleCode]: {
+            ...action.payload,
+            timestamp: Date.now(),
+            semesterData: map(action.payload.semesterData, (semesterData) =>
+              // HACK: to test server based lesson grouping
+              ({
+                ...semesterData,
+                timetable: map(semesterData.timetable, (lesson, lessonIndex) => ({
+                  ...lesson,
+                  lessonIndex,
+                })),
+                groupedLessons: splitIntoGroupedLessons(semesterData.timetable),
+              }),
+            ),
+          },
         },
       };
 

@@ -15,6 +15,8 @@ const DEFAULT_LESSON: ColoredLesson = {
   endTime: '1200',
   venue: 'LT26',
   colorIndex: 1,
+  lessonIndex: 0,
+  lessonGroup: '1',
 };
 
 type Props = {
@@ -65,8 +67,9 @@ describe(TimetableCell, () => {
     const { wrapper } = make({
       hoverLesson: {
         moduleCode: 'CS1010',
-        classNo: '1',
         lessonType: 'Lecture',
+        lessonIndex: 1,
+        lessonGroup: '1',
       },
     });
 
@@ -80,8 +83,9 @@ describe(TimetableCell, () => {
     button = make({
       hoverLesson: {
         moduleCode: 'CS1010',
-        classNo: '1',
         lessonType: 'Tutorial',
+        lessonIndex: 2,
+        lessonGroup: '1',
       },
     })
       .wrapper.find('button')
@@ -92,8 +96,9 @@ describe(TimetableCell, () => {
     button = make({
       hoverLesson: {
         moduleCode: 'CS1010',
-        classNo: '2',
         lessonType: 'Lecture',
+        lessonIndex: 3,
+        lessonGroup: '2',
       },
     })
       .wrapper.find('button')
@@ -104,8 +109,9 @@ describe(TimetableCell, () => {
     button = make({
       hoverLesson: {
         moduleCode: 'CS1101S',
-        classNo: '1',
         lessonType: 'Lecture',
+        lessonIndex: 0,
+        lessonGroup: '1',
       },
     })
       .wrapper.find('button')

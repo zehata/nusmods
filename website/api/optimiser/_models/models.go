@@ -6,6 +6,14 @@ import (
 	"strings"
 )
 
+type LessonType = string
+type LessonGroup = string
+type LessonIndex = int
+type DayText = string
+type LessonTime = string
+type GroupedLessons = map[LessonType]map[LessonGroup][]LessonIndex
+type SerializedWeek = string
+
 type OptimiserRequest struct {
 	Modules             []string `json:"modules"`             // Format: ["CS1010S", "CS2030S"]
 	Recordings          []string `json:"recordings"`          // Format: ["CS1010S Lecture", "CS2030S Laboratory"]
@@ -20,11 +28,20 @@ type OptimiserRequest struct {
 }
 
 type TimetableState struct {
-	Assignments   map[string]string // lessonKey -> chosen classNo
-	DaySlots      [6][]ModuleSlot   // For each day, a time-sorted slice of slots
-	DayDistance   [6]float64        // Squared travel distance per day
-	TotalDistance float64           // Sum of all DayDistance
+	Assignments   map[string]LessonGroup // lessonKey -> chosen classNo
+	DaySlots      [6][]ModuleSlot        // For each day, a time-sorted slice of slots
+	DayDistance   [6]float64             // Squared travel distance per day
+	TotalDistance float64                // Sum of all DayDistance
 }
+
+type WeekRange struct {
+	Start        string `json:start`
+	End          string `json:end`
+	WeekInterval int    `json:weekInterval`
+	Weeks        []int  `json:weeks`
+}
+
+type NumericWeeks = []SerializedWeek
 
 type ModuleSlot struct {
 	ClassNo     string      `json:"classNo"`
@@ -34,12 +51,15 @@ type ModuleSlot struct {
 	StartTime   string      `json:"startTime"`
 	Venue       string      `json:"venue"`
 	Coordinates Coordinates `json:"coordinates"`
+	Weeks       interface{} `json:weeks`
 
 	// Parsed fields
-	StartMin  int    // Minutes from 00:00 (e.g., 540 for 09:00)
-	EndMin    int    // Minutes from 00:00
-	DayIndex  int    // 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday
-	LessonKey string // "MODULE|LessonType"
+	StartMin    int    // Minutes from 00:00 (e.g., 540 for 09:00)
+	EndMin      int    // Minutes from 00:00
+	DayIndex    int    // 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday
+	LessonGroup string // "LessonGroup"
+	LessonKey   string // "MODULE|LessonType"
+	LessonIndex int    // "Lesson's index in the timetable"
 }
 
 // ParseModuleSlotFields parses and populates the parsed fields in ModuleSlot for faster computation

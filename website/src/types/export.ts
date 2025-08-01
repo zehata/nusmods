@@ -1,4 +1,4 @@
-import { SemTimetableConfig, TaModulesConfig } from 'types/timetables';
+import { TaModulesConfig, SemTimetableConfig } from 'types/timetables';
 import { Semester, ModuleCode } from 'types/modules';
 import type { ColorScheme } from 'types/settings';
 import { ColorMapping, ThemeState } from 'types/reducers';

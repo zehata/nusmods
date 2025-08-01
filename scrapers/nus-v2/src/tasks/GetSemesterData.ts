@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { each, fromPairs, keyBy, isEmpty } from 'lodash';
+import { each, fromPairs, keyBy, isEmpty, mapValues, groupBy, map, reduce, values } from 'lodash';
 
 import type { AcademicGrp, AcademicOrg, ModuleAttributeEntry, ModuleInfo } from '../types/api';
 import type {
@@ -9,7 +9,21 @@ import type {
   SemesterModuleData,
   WritableSemesterModuleData,
 } from '../types/mapper';
-import type { NUSModuleAttributes, RawLesson, Semester, Workload } from '../types/modules';
+import type {
+  DayText,
+  GroupedLessons,
+  LessonGroup,
+  LessonIndex,
+  LessonTime,
+  LessonWithIndex,
+  NUSModuleAttributes,
+  RawLesson,
+  Semester,
+  SerializedWeek,
+  WeekRange,
+  Weeks,
+  Workload,
+} from '../types/modules';
 import type { CovidZoneId } from '../services/getCovidZones';
 import { Task } from '../types/tasks';
 import { Cache } from '../types/persist';
@@ -24,6 +38,8 @@ import { validateSemester } from '../services/validation';
 import { removeEmptyValues, titleize, trimValues, decodeHTMLEntities } from '../utils/data';
 import { difference } from '../utils/set';
 import { Logger } from '../services/logger';
+
+const LESSON_GROUP_CRITERIA_SEP = '~';
 
 interface Input {
   departments: AcademicOrg[];
@@ -227,6 +243,124 @@ const mapModuleInfo = (
   };
 };
 
+const injectLessonIndex = (timetable: readonly RawLesson[]): LessonWithIndex[] =>
+  timetable.map((lesson, lessonIndex) => ({
+    ...lesson,
+    lessonIndex,
+  }));
+
+const sortLessons = (lessons: RawLesson[]): RawLesson[] =>
+  lessons.sort((lesson1, lesson2) => lesson1.startTime.localeCompare(lesson2.startTime));
+
+const groupLessonsByDay = (lessons: RawLesson[]): { [dayText: DayText]: RawLesson[] } =>
+  groupBy(lessons, (lesson) => lesson.day);
+
+const serializeWeekRanges = (weekRange: WeekRange): SerializedWeek[] =>
+  map(
+    weekRange.weeks ?? [''],
+    (week) => `${weekRange.start}${weekRange.end}${weekRange.weekInterval}${week}`,
+  );
+
+const isWeekRange = (week: Weeks): week is WeekRange => !Array.isArray(week);
+
+/**
+ * - Cannot detect overlap between lessons that use weeks array and lessons that use WeekRange
+ * - Returns true for lessons using WeekRange that don't overlap, but has different WeekRange
+ *
+ * Note that the current usage is with `splitIntoGroupedLessons`, which attempts to group lessons by classNo and venues first. These listed issues only applies to extreme edge cases where lessons that cannot already be differentiated with those.
+ */
+const doLessonsInArrayOverlap = (lessons: RawLesson[]): boolean => {
+  // Lessons on different days will never overlap
+  const lessonsByDay: RawLesson[][] = values(groupLessonsByDay(lessons));
+  for (const lessonsOnDay of lessonsByDay) {
+    if (lessonsOnDay.length === 1) continue;
+
+    const sortedLessons = sortLessons(lessonsOnDay);
+    const latestEndTimeWithinDayByWeek: {
+      [week: SerializedWeek]: LessonTime;
+    } = {};
+    for (const lesson of sortedLessons) {
+      const lessonWeeks: SerializedWeek[] = isWeekRange(lesson.weeks)
+        ? serializeWeekRanges(lesson.weeks)
+        : map(lesson.weeks, String);
+      for (const week of lessonWeeks) {
+        if (lesson.startTime < latestEndTimeWithinDayByWeek[week]) return true;
+        latestEndTimeWithinDayByWeek[week] = lesson.endTime;
+      }
+    }
+  }
+  return false;
+};
+
+/**
+ * Disambiguates lessons into groups keyed with an identifier using the disambiguation methods provided
+ * @param lessons Lessons to disambiguate
+ * @param disambiguationMethods Disambiguation methods to try. Subsequent disambiguation methods are only tried for groups of lessons that overlap each other.
+ * @param prevIdentifier Identifiers will be prepended with this string
+ * @returns
+ */
+const disambiguateLessons = (
+  lessons: LessonWithIndex[],
+  disambiguationMethods: ((lesson: LessonWithIndex) => string)[],
+  prevIdentifier?: string,
+): {
+  [lessonGroup: LessonGroup]: LessonIndex[];
+} => {
+  const [disambiguateBy, ...nextDisambiguationMethods] = disambiguationMethods;
+  const lessonsByIdentifier = groupBy(lessons, disambiguateBy);
+  return reduce(
+    lessonsByIdentifier,
+    (groupedLessons, lessonsWithIdentifier, identifier) => {
+      const currentLevelIdentifier = prevIdentifier ? `${prevIdentifier}${LESSON_GROUP_CRITERIA_SEP}${identifier}` : identifier;
+      if (!doLessonsInArrayOverlap(lessonsWithIdentifier)) {
+        return {
+          ...groupedLessons,
+          [currentLevelIdentifier]: map(lessonsWithIdentifier, 'lessonIndex'),
+        };
+      }
+
+      // Fallback to grouping by lesson index when there are no more disambiguation methods to try
+      if (!nextDisambiguationMethods.length) {
+        const lessonIndices = map(lessonsWithIdentifier, 'lessonIndex');
+        return {
+          ...groupedLessons,
+          ...groupBy(lessonIndices),
+        };
+      }
+
+      return {
+        ...groupedLessons,
+        ...disambiguateLessons(
+          lessonsWithIdentifier,
+          nextDisambiguationMethods,
+          currentLevelIdentifier,
+        ),
+      };
+    },
+    {} as { [lessonGroup: LessonGroup]: LessonIndex[] },
+  );
+};
+
+const splitIntoGroupedLessons = (lessons: readonly RawLesson[]): GroupedLessons => {
+  const lessonsWithIndices = injectLessonIndex(lessons);
+  return mapValues(
+    groupBy(lessonsWithIndices, (lesson) => lesson.lessonType),
+    (lessonsWithLessonType) =>
+      disambiguateLessons(
+        lessonsWithLessonType,
+        [
+          (lesson) => lesson.classNo,
+          (lesson) => lesson.venue,
+          (lesson) =>
+            !isWeekRange(lesson.weeks)
+              ? lesson.weeks.join()
+              : `${lesson.startTime}${lesson.endTime}${lesson.weeks.weeks?.join()}`,
+          (lesson) => `${lesson.lessonIndex}`,
+        ],
+      ),
+  );
+};
+
 /**
  * Download, clean and combine module info, timetable, and exam info. This task
  * uses the subtasks
@@ -317,6 +451,7 @@ export default class GetSemesterData extends BaseTask implements Task<Input, Out
         semesterModuleDatum.semesterData = {
           semester,
           timetable,
+          groupedLessons: splitIntoGroupedLessons(timetable),
           covidZones: getLessonCovidZones(timetable),
           ...examInfo,
         };

@@ -12,7 +12,7 @@ import type { SemTimetableConfig, TaModulesConfig } from 'types/timetables';
 import { selectSemester } from 'actions/settings';
 import { getSemesterTimetableColors, getSemesterTimetableLessons } from 'selectors/timetables';
 import {
-  fetchTimetableModules,
+  fetchModules,
   setHiddenModulesFromImport,
   setTaModulesFromImport,
   setTimetable,
@@ -20,16 +20,19 @@ import {
 import { openNotification } from 'actions/app';
 import { undo } from 'actions/undoHistory';
 import { getModuleCondensed } from 'selectors/moduleBank';
-import { deserializeHidden, deserializeTa, deserializeTimetable } from 'utils/timetables';
+import { deserializeTimetable } from 'utils/timetables';
 import { fillColorMapping } from 'utils/colors';
 import { semesterForTimetablePage, TIMETABLE_SHARE, timetablePage } from 'views/routes/paths';
 import deferComponentRender from 'views/hocs/deferComponentRender';
 import SemesterSwitcher from 'views/components/semester-switcher/SemesterSwitcher';
 import LoadingSpinner from 'views/components/LoadingSpinner';
 import useScrollToTop from 'views/hooks/useScrollToTop';
-import TimetableContent from './TimetableContent';
+import qs from 'query-string';
 
+import { curry, keys, omit } from 'lodash';
+import { getModuleSemesterData } from 'utils/modules';
 import styles from './TimetableContainer.scss';
+import TimetableContent from './TimetableContent';
 
 type Params = {
   action: string;
@@ -177,26 +180,51 @@ export const TimetableContainerComponent: FC = () => {
   const activeSemester = useSelector(({ app }: State) => app.activeSemester);
 
   const location = useLocation();
-  const [importedTimetable, setImportedTimetable] = useState(() =>
-    semester && params.action ? deserializeTimetable(location.search) : null,
-  );
 
-  const importedHidden = useMemo(
-    () => (semester && params.action ? deserializeHidden(location.search) : null),
-    [semester, params.action, location.search],
-  );
+  const [importedTimetable, setImportedTimetable] = useState<SemTimetableConfig | null>(null);
 
-  const importedTa = useMemo(
-    () => (semester && params.action ? deserializeTa(location.search) : null),
-    [semester, params.action, location.search],
-  );
+  const [importedHidden, setImportedHidden] = useState<ModuleCode[] | null>(null);
+
+  const [importedTa, setImportedTa] = useState<ModuleCode[] | null>(null);
 
   const dispatch = useDispatch();
+
+  const getModuleLessons = useMemo(() => curry(getModuleSemesterData), []);
+
   useEffect(() => {
-    if (importedTimetable) {
-      dispatch(fetchTimetableModules([importedTimetable]));
+    if (!(semester && params.action)) return;
+
+    const parsedQuery = qs.parse(location.search);
+    const importedModuleCodes = keys(omit(parsedQuery, ['ta', 'hidden']));
+
+    if (!importedModuleCodes.length) return;
+
+    const moduleCodes = keys(modules);
+
+    // Check if modules timetables are loaded
+    const modulesToFetch = importedModuleCodes.filter(
+      (importedModuleCode) => !moduleCodes.includes(importedModuleCode),
+    );
+    if (modulesToFetch.length) {
+      dispatch(fetchModules(new Set(modulesToFetch)));
     }
-  }, [dispatch, importedTimetable]);
+
+    const {
+      semTimetableConfig,
+      hidden: hiddenModules,
+      ta: taModules,
+    } = deserializeTimetable(
+      location.search,
+      modules,
+      getModuleLessons(curry.placeholder, semester),
+    );
+
+    setImportedTimetable(semTimetableConfig);
+
+    if (hiddenModules.length) setImportedHidden(hiddenModules);
+
+    if (taModules.length) setImportedTa(taModules);
+  }, [modules, semester, params.action, location.search, dispatch, getModuleLessons]);
 
   const isLoading = useMemo(() => {
     // Check that all modules are fully loaded into the ModuleBank

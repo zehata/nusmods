@@ -1,36 +1,46 @@
 import * as React from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { sortBy, difference, values, flatten, mapValues, isEmpty } from 'lodash';
+import {
+  sortBy,
+  difference,
+  values,
+  flatten,
+  mapValues,
+  isEmpty,
+  curry,
+  groupBy,
+  isArray,
+  findKey,
+  map,
+  filter,
+} from 'lodash';
 
 import { ColorMapping, HORIZONTAL, ModulesMap, TimetableOrientation } from 'types/reducers';
-import { ClassNo, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import { LessonGroup, LessonIndex, LessonType, Module, ModuleCode, Semester } from 'types/modules';
 import {
   ColoredLesson,
   Lesson,
-  ModifiableLesson,
   SemTimetableConfig,
-  SemTimetableConfigWithLessons,
   TaModulesConfig,
-  TimetableArrangement,
+  SemTimetableConfigWithLessons,
 } from 'types/timetables';
 
 import {
   addModule,
-  addTaLessonInTimetable,
   cancelModifyLesson,
   changeLesson,
+  addLesson,
+  removeLesson,
   modifyLesson,
   removeModule,
-  removeTaLessonInTimetable,
   resetTimetable,
 } from 'actions/timetables';
 import {
-  areLessonsDuplicate,
-  areLessonsSameClass,
   canTa,
   formatExamDate,
   getExamDate,
+  getModuleSemesterData,
   getModuleTimetable,
 } from 'utils/modules';
 import {
@@ -40,8 +50,7 @@ import {
   getLessonIdentifier,
   getSemesterModules,
   hydrateSemTimetableWithLessons,
-  hydrateTaModulesConfigWithLessons,
-  lessonsForLessonType,
+  migrateTaModulesConfig,
   timetableLessonsArray,
 } from 'utils/timetables';
 import { resetScrollPosition } from 'utils/react';
@@ -90,20 +99,25 @@ type Props = OwnProps & {
   removeModule: (semester: Semester, moduleCode: ModuleCode) => void;
   resetTimetable: (semester: Semester) => void;
   modifyLesson: (lesson: Lesson) => void;
-  changeLesson: (semester: Semester, lesson: Lesson) => void;
+  addLesson: (
+    semester: Semester,
+    moduleCode: ModuleCode,
+    lessonType: LessonType,
+    lessonIndices: LessonIndex[],
+  ) => void;
+  removeLesson: (
+    semester: Semester,
+    moduleCode: ModuleCode,
+    lessonType: LessonType,
+    lessonIndices: LessonIndex[],
+  ) => void;
+  changeLesson: (
+    semester: Semester,
+    moduleCode: ModuleCode,
+    lessonType: LessonType,
+    lessonIndices: LessonIndex[],
+  ) => void;
   cancelModifyLesson: () => void;
-  addTaLessonInTimetable: (
-    semester: Semester,
-    moduleCode: ModuleCode,
-    lessonType: LessonType,
-    classNo: ClassNo,
-  ) => void;
-  removeTaLessonInTimetable: (
-    semester: Semester,
-    moduleCode: ModuleCode,
-    lessonType: LessonType,
-    classNo: ClassNo,
-  ) => void;
 };
 
 type State = {
@@ -147,6 +161,74 @@ class TimetableContent extends React.Component<Props, State> {
 
   modifiedCell: ModifiedCell | null = null;
 
+  modifyTaCell = curry((sameLessonTypeLessons: ColoredLesson[], lesson: ColoredLesson) => {
+    const { moduleCode, lessonType, lessonIndex } = lesson;
+
+    const currentlySelected = sameLessonTypeLessons.filter(
+      (sameLessonTypeLesson) => !sameLessonTypeLesson.isOptionInTimetable,
+    );
+    if (lesson.isOptionInTimetable) {
+      // Allow multiple lessons of the same type to be added for TA lessons
+      this.props.addLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
+    } else if (currentlySelected.length > 1) {
+      // If a TA lesson is the last of its type, disallow removing it
+      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
+    } else {
+      this.props.cancelModifyLesson();
+    }
+    resetScrollPosition();
+  });
+
+  modifyCell = curry(
+    (
+      moduleTimetable: ColoredLesson[],
+      activeLesson: Lesson | null,
+      lesson: ColoredLesson,
+      position: ClientRect,
+    ) => {
+      // If activeLesson exists, then the user is choosing a cell to modify
+      const isChoosing = !!activeLesson;
+      if (isChoosing) {
+        const sameLessonTypeLessons = moduleTimetable.filter(
+          (timetableLesson) =>
+            timetableLesson.moduleCode === lesson.moduleCode &&
+            timetableLesson.lessonType === lesson.lessonType,
+        );
+
+        if (this.isTaInTimetable(lesson.moduleCode)) {
+          this.modifyTaCell(sameLessonTypeLessons, lesson);
+          return;
+        }
+
+        if (lesson.isAvailable) {
+          const lessonIndices = map(
+            filter(
+              sameLessonTypeLessons,
+              (timetableLessons) => timetableLessons.lessonGroup === lesson.lessonGroup,
+            ),
+            (sameLessonTypeLesson) => sameLessonTypeLesson.lessonIndex,
+          );
+          this.props.changeLesson(
+            this.props.semester,
+            lesson.moduleCode,
+            lesson.lessonType,
+            lessonIndices,
+          );
+        } else {
+          this.props.cancelModifyLesson();
+        }
+        resetScrollPosition();
+      } else {
+        this.props.modifyLesson(lesson);
+
+        this.modifiedCell = {
+          position,
+          className: getLessonIdentifier(lesson),
+        };
+      }
+    },
+  );
+
   override componentDidUpdate() {
     if (this.modifiedCell && this.timetableRef.current) {
       maintainScrollPosition(this.timetableRef.current, this.modifiedCell);
@@ -179,60 +261,14 @@ class TimetableContent extends React.Component<Props, State> {
   isHiddenInTimetable = (moduleCode: ModuleCode) =>
     this.props.hiddenInTimetable.includes(moduleCode);
 
-  isTaInTimetable = (moduleCode: ModuleCode) => this.props.taInTimetable[moduleCode]?.length > 0;
+  isTaInTimetable = (moduleCode: ModuleCode) => {
+    const taTimetable = this.props.taInTimetable;
+    return isArray(taTimetable) ? taTimetable.includes(moduleCode) : moduleCode in taTimetable;
+  };
 
   canTa = (moduleCode: ModuleCode) => {
     const { semester, modules } = this.props;
     return canTa(modules, moduleCode, semester);
-  };
-
-  // Adds current non lecture lessons as TA lessons
-  setTaLessonInTimetable = (semester: Semester, moduleCode: ModuleCode) => {
-    timetableLessonsArray(this.props.timetableWithLessons)
-      .filter((lesson) => lesson.moduleCode === moduleCode && lesson.lessonType !== 'Lecture')
-      .forEach((lesson) =>
-        this.props.addTaLessonInTimetable(semester, moduleCode, lesson.lessonType, lesson.classNo),
-      );
-  };
-
-  modifyTaCell(lesson: ModifiableLesson) {
-    const { moduleCode, lessonType, classNo } = lesson;
-    if (lesson.isOptionInTimetable) {
-      // Allow multiple lessons of the same type to be added for TA lessons
-      this.props.addTaLessonInTimetable(this.props.semester, moduleCode, lessonType, classNo);
-    } else if (this.props.taInTimetable[moduleCode].length > 1) {
-      // If a TA lesson is the last of its type, disallow removing it
-      this.props.removeTaLessonInTimetable(this.props.semester, moduleCode, lessonType, classNo);
-    } else {
-      this.props.cancelModifyLesson();
-    }
-    resetScrollPosition();
-  }
-
-  modifyCell = (lesson: ModifiableLesson, position: ClientRect) => {
-    const { activeLesson } = this.props;
-    // If activeLesson exists, then the user is choosing a cell to modify
-    const isChoosing = !!activeLesson;
-    if (isChoosing) {
-      if (this.isTaInTimetable(lesson.moduleCode)) {
-        this.modifyTaCell(lesson);
-        return;
-      }
-
-      if (lesson.isAvailable) {
-        this.props.changeLesson(this.props.semester, lesson);
-      } else {
-        this.props.cancelModifyLesson();
-      }
-      resetScrollPosition();
-    } else {
-      this.props.modifyLesson(lesson);
-
-      this.modifiedCell = {
-        position,
-        className: getLessonIdentifier(lesson),
-      };
-    }
   };
 
   addModule = (semester: Semester, moduleCode: ModuleCode) => {
@@ -286,7 +322,6 @@ class TimetableContent extends React.Component<Props, State> {
       readOnly={this.props.readOnly}
       tombstone={tombstone}
       resetTombstone={this.resetTombstone}
-      enableTaModeInTimetable={this.setTaLessonInTimetable}
     />
   );
 
@@ -338,6 +373,112 @@ class TimetableContent extends React.Component<Props, State> {
     );
   }
 
+  hydrateLessonInfo(
+    modules: ModulesMap,
+    semester: Semester,
+    timetableLessons: Lesson[],
+    colors: ColorMapping,
+    readOnly: boolean,
+    activeLesson?: Lesson,
+    activeLessonGroup?: LessonGroup,
+    alreadySelectedLessonIndices?: LessonIndex[],
+  ): ColoredLesson[] {
+    const moduleTimetables = mapValues(modules, (module) => getModuleTimetable(module, semester));
+    const moduleGroupedLessons = mapValues(
+      modules,
+      (module) => getModuleSemesterData(module, semester)?.groupedLessons,
+    );
+
+    return map(timetableLessons, (lesson) => {
+      const { moduleCode, lessonType, lessonIndex } = lesson;
+      const lessonGroup = findKey(moduleGroupedLessons[moduleCode]?.[lessonType], (lessonIndices) =>
+        lessonIndices.includes(lessonIndex),
+      );
+      const isSameModuleAndLessonType =
+        moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
+      const isTaInTimetable = this.isTaInTimetable(moduleCode);
+      return {
+        ...lesson,
+        isActive: activeLesson
+          ? isSameModuleAndLessonType && lessonIndex === activeLesson.lessonIndex
+          : false,
+        isTaInTimetable,
+        isAvailable:
+          isSameModuleAndLessonType &&
+          !alreadySelectedLessonIndices?.includes(lesson.lessonIndex) &&
+          (isTaInTimetable
+            ? lessonIndex !== activeLesson.lessonIndex
+            : lessonGroup !== activeLessonGroup),
+        isOptionInTimetable:
+          isSameModuleAndLessonType &&
+          !alreadySelectedLessonIndices?.includes(lesson.lessonIndex) &&
+          (isTaInTimetable
+            ? lessonIndex !== activeLesson.lessonIndex
+            : lessonGroup !== activeLessonGroup),
+        colorIndex: colors[lesson.moduleCode],
+        isModifiable:
+          !readOnly && areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType),
+        lessonGroup,
+      };
+    });
+  }
+
+  getColoredLessons(
+    timetableLessons: Lesson[],
+    modules: ModulesMap,
+    semester: Semester,
+    colors: ColorMapping,
+    readOnly: boolean,
+    activeLesson: Lesson | null,
+  ): ColoredLesson[] {
+    if (!activeLesson)
+      return this.hydrateLessonInfo(modules, semester, timetableLessons, colors, readOnly);
+
+    const activeModule = modules[activeLesson.moduleCode];
+    const activeModuleGroupedLessons = getModuleSemesterData(
+      activeModule,
+      semester,
+    )?.groupedLessons;
+    if (!activeModuleGroupedLessons)
+      return this.hydrateLessonInfo(modules, semester, timetableLessons, colors, readOnly);
+    const activeLessonTypeLessons = map(
+      filter(
+        getModuleTimetable(activeModule, semester),
+        (lesson) => lesson.lessonType === activeLesson.lessonType,
+      ),
+      (lesson) => ({ ...lesson, moduleCode: activeModule.moduleCode, title: activeModule.title }),
+    );
+
+    const activeLessonTypeLessonGroups = activeModuleGroupedLessons[activeLesson.lessonType];
+    const activeLessonGroup = findKey(activeLessonTypeLessonGroups, (lessonGroup) =>
+      lessonGroup.includes(activeLesson.lessonIndex),
+    );
+    // TODO: check this assertion
+    if (!activeLessonGroup)
+      return this.hydrateLessonInfo(modules, semester, timetableLessons, colors, readOnly);
+
+    const { alreadySelected, otherLessons } = groupBy(timetableLessons, (lesson) =>
+      lesson.moduleCode === activeLesson.moduleCode && lesson.lessonType === activeLesson.lessonType
+        ? 'alreadySelected'
+        : 'otherLessons',
+    );
+    const alreadySelectedLessonIndices = map(alreadySelected, 'lessonIndex');
+
+    return [
+      ...this.hydrateLessonInfo(
+        modules,
+        semester,
+        activeLessonTypeLessons,
+        colors,
+        readOnly,
+        activeLesson,
+        activeLessonGroup,
+        alreadySelectedLessonIndices,
+      ),
+      ...this.hydrateLessonInfo(modules, semester, otherLessons, colors, readOnly),
+    ];
+  }
+
   override render() {
     const {
       semester,
@@ -353,79 +494,19 @@ class TimetableContent extends React.Component<Props, State> {
 
     const { showExamCalendar } = this.state;
 
-    let timetableLessons: Lesson[] = timetableLessonsArray(this.props.timetableWithLessons)
-      // Omit all lessons for hidden modules
-      .filter((lesson) => !this.isHiddenInTimetable(lesson.moduleCode));
-
-    if (activeLesson) {
-      const { moduleCode } = activeLesson;
-      // Remove activeLesson because it will appear again
-      timetableLessons = timetableLessons.filter(
-        (lesson) => !areLessonsSameClass(lesson, activeLesson),
-      );
-
-      const module = modules[moduleCode];
-      const moduleTimetable = getModuleTimetable(module, semester);
-      const lessonOptions = this.isTaInTimetable(moduleCode)
-        ? moduleTimetable.filter((lesson) => lesson.lessonType !== 'Lecture')
-        : lessonsForLessonType(moduleTimetable, activeLesson.lessonType);
-      lessonOptions.forEach((lesson) => {
-        const modifiableLesson: Omit<ModifiableLesson, 'isModifiable' | 'colorIndex'> = {
-          ...lesson,
-          // Inject module code in
-          moduleCode,
-          title: module.title,
-        };
-
-        // Prevent multiple versions of the same lesson
-        if (
-          timetableLessons.some((curLesson) => areLessonsDuplicate(modifiableLesson, curLesson))
-        ) {
-          return;
-        }
-
-        // All lessons added within this block are options to be added in the timetable
-        // Except for the activeLesson
-        modifiableLesson.isOptionInTimetable = true;
-        if (areLessonsSameClass(modifiableLesson, activeLesson)) {
-          modifiableLesson.isActive = true;
-          modifiableLesson.isOptionInTimetable = false;
-        } else if (
-          this.isTaInTimetable(moduleCode) ||
-          lesson.lessonType === activeLesson.lessonType
-        ) {
-          modifiableLesson.isAvailable = true;
-        }
-        timetableLessons.push(modifiableLesson);
-      });
-    }
-
-    // Inject color into module
-    const coloredTimetableLessons = timetableLessons.map(
-      (lesson: Lesson): ColoredLesson => ({
-        ...lesson,
-        colorIndex: colors[lesson.moduleCode],
-        isTaInTimetable: this.isTaInTimetable(lesson.moduleCode),
-      }),
+    const timetableLessons = timetableLessonsArray(this.props.timetableWithLessons).filter(
+      (lesson) => !this.isHiddenInTimetable(lesson.moduleCode),
     );
 
+    const coloredTimetableLessons: ColoredLesson[] = this.getColoredLessons(
+      timetableLessons,
+      modules,
+      semester,
+      colors,
+      readOnly,
+      activeLesson,
+    );
     const arrangedLessons = arrangeLessonsForWeek(coloredTimetableLessons);
-    const arrangedLessonsWithModifiableFlag: TimetableArrangement = mapValues(
-      arrangedLessons,
-      (dayRows) =>
-        dayRows.map((row) =>
-          row.map((lesson) => {
-            const module: Module = modules[lesson.moduleCode];
-            const moduleTimetable = getModuleTimetable(module, semester);
-
-            return {
-              ...lesson,
-              isModifiable:
-                !readOnly && areOtherClassesAvailable(moduleTimetable, lesson.lessonType),
-            };
-          }),
-        ),
-    );
 
     const isVerticalOrientation = timetableOrientation !== HORIZONTAL;
     const isShowingTitle = !isVerticalOrientation && showTitle;
@@ -474,11 +555,11 @@ class TimetableContent extends React.Component<Props, State> {
                 ref={this.timetableRef}
               >
                 <Timetable
-                  lessons={arrangedLessonsWithModifiableFlag}
+                  lessons={arrangedLessons}
                   isVerticalOrientation={isVerticalOrientation}
                   isScrolledHorizontally={this.state.isScrolledHorizontally}
                   showTitle={isShowingTitle}
-                  onModifyCell={this.modifyCell}
+                  onModifyCell={this.modifyCell(coloredTimetableLessons, activeLesson)}
                 />
               </div>
             )}
@@ -540,23 +621,16 @@ function mapStateToProps(state: StoreState, ownProps: OwnProps) {
 
   const hiddenInTimetable =
     ownProps.hiddenImportedModules ?? state.timetables.hidden[semester] ?? [];
-  const taInTimetable = ownProps.taImportedModules ?? state.timetables.ta[semester] ?? {};
+  const taModules = state.timetables.ta[semester];
+  const taModulesList = isArray(taModules) ? taModules : migrateTaModulesConfig(taModules);
+  const taInTimetable = ownProps.taImportedModules ?? taModulesList ?? [];
 
   const timetableWithLessons = hydrateSemTimetableWithLessons(timetable, modules, semester);
-  const timetableWithTaLessons = hydrateTaModulesConfigWithLessons(
-    taInTimetable,
-    modules,
-    semester,
-  );
-  const filteredTimetableWithLessons = {
-    ...timetableWithLessons,
-    ...timetableWithTaLessons,
-  };
 
   return {
     semester,
     timetable,
-    timetableWithLessons: filteredTimetableWithLessons,
+    timetableWithLessons,
     modules,
     activeLesson: state.app.activeLesson,
     timetableOrientation: state.theme.timetableOrientation,
@@ -572,7 +646,7 @@ export default connect(mapStateToProps, {
   resetTimetable,
   modifyLesson,
   changeLesson,
+  addLesson,
+  removeLesson,
   cancelModifyLesson,
-  addTaLessonInTimetable,
-  removeTaLessonInTimetable,
 })(TimetableContent);

@@ -15,6 +15,9 @@ export type ModuleTitle = string;
 export type Semester = number; // E.g. 1/2/3/4. 3 and 4 means special sem i and ii.
 export type Workload = string | number[];
 export type Venue = string;
+export type LessonGroup = string;
+export type LessonIndex = number;
+export type SerializedWeek = string;
 
 export type WeekRange = {
   // The start and end dates
@@ -78,10 +81,19 @@ export type RawLesson = Readonly<{
   covidZone: CovidZoneId;
 }>;
 
+export type LessonWithIndex = RawLesson & { readonly lessonIndex: LessonIndex };
+
+export type GroupedLessons = {
+  [lessonType: LessonType]: {
+    [lessonGroup: LessonGroup]: LessonIndex[];
+  };
+};
+
 // Semester-specific information of a module.
 export type SemesterData = {
   semester: Semester;
   timetable: RawLesson[];
+  groupedLessons: GroupedLessons;
 
   // Aggregated from timetable
   covidZones: CovidZoneId[];

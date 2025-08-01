@@ -1,32 +1,60 @@
-import { each, flatMap } from 'lodash';
+import {
+  each,
+  entries,
+  flatMap,
+  forEach,
+  intersection,
+  isArray,
+  mapValues,
+  maxBy,
+  reduce,
+} from 'lodash';
 
 import type {
   ColorIndex,
   Lesson,
+  TaModulesConfig,
   ModuleLessonConfig,
   SemTimetableConfig,
-  TaModulesConfig,
+  TimetableConfig,
 } from 'types/timetables';
 import type { Dispatch, GetState } from 'types/redux';
-import type { ColorMapping } from 'types/reducers';
-import type { ClassNo, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import type { ColorMapping, ConfigSchema, ModulesMap, TaModulesMap } from 'types/reducers';
+import type {
+  LessonGroup,
+  LessonIndex,
+  LessonType,
+  Module,
+  ModuleCode,
+  Semester,
+} from 'types/modules';
 
 import { fetchModule } from 'actions/moduleBank';
 import { openNotification } from 'actions/app';
 import { getModuleCondensed } from 'selectors/moduleBank';
 import {
+  migrateSemTimetableConfig,
+  migrateTaModulesConfig,
   randomModuleLessonConfig,
   validateModuleLessons,
   validateTimetableModules,
 } from 'utils/timetables';
-import { getModuleTimetable } from 'utils/modules';
+import { getModuleSemesterData } from 'utils/modules';
 
 // Actions that should not be used directly outside of thunks
+export const SET_TIMETABLES = 'SET_TIMETABLES' as const;
 export const SET_TIMETABLE = 'SET_TIMETABLE' as const;
 export const ADD_MODULE = 'ADD_MODULE' as const;
 export const SET_HIDDEN_IMPORTED = 'SET_HIDDEN_IMPORTED' as const;
 export const SET_TA_IMPORTED = 'SET_TA_IMPORTED' as const;
 export const Internal = {
+  setTimetables(lessons: TimetableConfig, taModules: TaModulesMap, configSchema: ConfigSchema) {
+    return {
+      type: SET_TIMETABLES,
+      payload: { lessons, taModules, configSchema },
+    };
+  },
+
   setTimetable(
     semester: Semester,
     timetable: SemTimetableConfig | undefined,
@@ -72,8 +100,7 @@ export function addModule(semester: Semester, moduleCode: ModuleCode) {
         return;
       }
 
-      const lessons = getModuleTimetable(module, semester);
-      const moduleLessonConfig = randomModuleLessonConfig(lessons);
+      const moduleLessonConfig = randomModuleLessonConfig(module, semester);
 
       dispatch(Internal.addModule(semester, moduleCode, moduleLessonConfig));
     });
@@ -115,7 +142,7 @@ export function setLesson(
   semester: Semester,
   moduleCode: ModuleCode,
   lessonType: LessonType,
-  classNo: ClassNo,
+  lessonIndices: LessonIndex[],
 ) {
   return {
     type: CHANGE_LESSON,
@@ -123,13 +150,54 @@ export function setLesson(
       semester,
       moduleCode,
       lessonType,
-      classNo,
+      lessonIndices,
     },
   };
 }
 
-export function changeLesson(semester: Semester, lesson: Lesson) {
-  return setLesson(semester, lesson.moduleCode, lesson.lessonType, lesson.classNo);
+export const ADD_LESSON = 'ADD_LESSON' as const;
+export function addLesson(
+  semester: Semester,
+  moduleCode: ModuleCode,
+  lessonType: LessonType,
+  lessonIndices: LessonIndex[],
+) {
+  return {
+    type: ADD_LESSON,
+    payload: {
+      semester,
+      moduleCode,
+      lessonType,
+      lessonIndices,
+    },
+  };
+}
+
+export const REMOVE_LESSON = 'REMOVE_LESSON' as const;
+export function removeLesson(
+  semester: Semester,
+  moduleCode: ModuleCode,
+  lessonType: LessonType,
+  lessonIndices: LessonIndex[],
+) {
+  return {
+    type: REMOVE_LESSON,
+    payload: {
+      semester,
+      moduleCode,
+      lessonType,
+      lessonIndices,
+    },
+  };
+}
+
+export function changeLesson(
+  semester: Semester,
+  moduleCode: ModuleCode,
+  lessonType: LessonType,
+  lessonIndices: LessonIndex[],
+) {
+  return setLesson(semester, moduleCode, lessonType, lessonIndices);
 }
 
 export const SET_LESSON_CONFIG = 'SET_LESSON_CONFIG' as const;
@@ -179,24 +247,70 @@ export function setTimetable(
   };
 }
 
+function migrateTimetableConfigs(
+  lessons: TimetableConfig,
+  ta: TaModulesMap,
+  modules: ModulesMap,
+  validConfigSchema: ConfigSchema,
+  dispatch: Dispatch,
+) {
+  const timetableConfig: TimetableConfig = mapValues(
+    lessons,
+    (semTimetableConfig: SemTimetableConfig, semesterString) => {
+      const semester = parseInt(semesterString, 10);
+      return migrateSemTimetableConfig(semTimetableConfig, ta[semester], modules, semester);
+    },
+  );
+  const taModulesMap: TaModulesMap = mapValues(ta, migrateTaModulesConfig);
+
+  dispatch(Internal.setTimetables(timetableConfig, taModulesMap, validConfigSchema));
+
+  return {
+    lessons: timetableConfig,
+    ta: taModulesMap,
+  };
+}
+
 export function validateTimetable(semester: Semester) {
   return (dispatch: Dispatch, getState: GetState) => {
     const { timetables, moduleBank } = getState();
+    const { configSchema } = timetables;
+
+    // Migrate classNo timetable config to lessonGroup timetable config
+    // Checking the config for its schema has nearly the same complexity as migrating it,
+    // so the migration is made to be idempotent and to accept lesson group schema.
+    // It will only run when the config schema is not lesson group
+    const validConfigSchema: ConfigSchema = 'LESSON_GROUP';
+    const { lessons, ta } =
+      configSchema === validConfigSchema
+        ? timetables
+        : migrateTimetableConfigs(
+            timetables.lessons,
+            timetables.ta,
+            moduleBank.modules,
+            validConfigSchema,
+            dispatch,
+          );
 
     // Extract the timetable and the modules for the semester
-    const timetable = timetables.lessons[semester];
-    if (!timetable) return;
+    const semTimetable = lessons[semester];
+    const taModules = ta[semester];
+
+    if (!(semTimetable && taModules)) return;
 
     // Check that all lessons for each module are valid. If they are not, we update it
     // such that they are
-    each(timetable, (lessonConfig: ModuleLessonConfig, moduleCode: ModuleCode) => {
+    each(semTimetable, (lessonConfig: ModuleLessonConfig, moduleCode: ModuleCode) => {
       const module = moduleBank.modules[moduleCode];
       if (!module) return;
+
+      const isTa = taModules.includes(moduleCode);
 
       const [validatedLessonConfig, changedLessonTypes] = validateModuleLessons(
         semester,
         lessonConfig,
         module,
+        isTa,
       );
 
       if (changedLessonTypes.length) {
@@ -207,8 +321,12 @@ export function validateTimetable(semester: Semester) {
 }
 
 export function fetchTimetableModules(timetables: SemTimetableConfig[]) {
+  const moduleCodes = new Set(flatMap(timetables, Object.keys));
+  return fetchModules(moduleCodes);
+}
+
+export function fetchModules(moduleCodes: Set<ModuleCode>) {
   return (dispatch: Dispatch, getState: GetState) => {
-    const moduleCodes = new Set(flatMap(timetables, Object.keys));
     const validateModule = getModuleCondensed(getState());
 
     return Promise.all(
@@ -273,36 +391,57 @@ export function showLessonInTimetable(semester: Semester, moduleCode: ModuleCode
   };
 }
 
-export const ADD_TA_LESSON_IN_TIMETABLE = 'ADD_TA_LESSON_IN_TIMETABLE' as const;
-export function addTaLessonInTimetable(
-  semester: Semester,
-  moduleCode: ModuleCode,
-  lessonType: LessonType,
-  classNo: ClassNo,
-) {
+export const ADD_TA_MODULE = 'ADD_TA_MODULE' as const;
+export function addTaModule(semester: Semester, moduleCode: ModuleCode) {
   return {
-    type: ADD_TA_LESSON_IN_TIMETABLE,
-    payload: { semester, moduleCode, lessonType, classNo },
-  };
-}
-
-export const REMOVE_TA_LESSON_IN_TIMETABLE = 'REMOVE_TA_LESSON_IN_TIMETABLE' as const;
-export function removeTaLessonInTimetable(
-  semester: Semester,
-  moduleCode: ModuleCode,
-  lessonType: LessonType,
-  classNo: ClassNo,
-) {
-  return {
-    type: REMOVE_TA_LESSON_IN_TIMETABLE,
-    payload: { semester, moduleCode, lessonType, classNo },
-  };
-}
-
-export const DISABLE_TA_MODE_IN_TIMETABLE = 'DISABLE_TA_MODE_IN_TIMETABLE' as const;
-export function disableTaModeInTimetable(semester: Semester, moduleCode: ModuleCode) {
-  return {
-    type: DISABLE_TA_MODE_IN_TIMETABLE,
+    type: ADD_TA_MODULE,
     payload: { semester, moduleCode },
+  };
+}
+
+export const REMOVE_TA_MODULE = 'REMOVE_TA_MODULE' as const;
+export function removeTaModule(semester: Semester, moduleCode: ModuleCode) {
+  return {
+    type: REMOVE_TA_MODULE,
+    payload: { semester, moduleCode },
+  };
+}
+
+export const DISABLE_TA_MODULE = 'DISABLE_TA_MODULE' as const;
+export function disableTaModule(semester: Semester, moduleCode: ModuleCode) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const module: Module = getState().moduleBank.modules[moduleCode];
+    const semesterData = getModuleSemesterData(module, semester);
+    if (!semesterData) {
+      dispatch(removeTaModule(semester, moduleCode));
+      return;
+    }
+    const { groupedLessons } = semesterData;
+    const timetableLessonIndices = getState().timetables.lessons[semester][moduleCode];
+
+    // For each lesson type
+    forEach(groupedLessons, (lessonsWithLessonType, lessonType) => {
+      const timetableLessonsWithLessonType = timetableLessonIndices[lessonType];
+      if (!isArray(timetableLessonsWithLessonType)) return;
+      const lessonGroupOccurrences = entries(
+        reduce(
+          lessonsWithLessonType,
+          (accumulated, lessonIndices, lessonGroup) => ({
+            ...accumulated,
+            [lessonGroup]: intersection(lessonIndices, timetableLessonsWithLessonType).length,
+          }),
+          {} as Record<LessonGroup, number>,
+        ),
+      );
+
+      const [closestLessonGroupKey] =
+        maxBy(lessonGroupOccurrences, ([, occurrences]) => occurrences) ??
+        lessonGroupOccurrences[0];
+
+      const closestLessonGroup = groupedLessons[lessonType][closestLessonGroupKey];
+      dispatch(changeLesson(semester, moduleCode, lessonType, closestLessonGroup));
+    });
+
+    dispatch(removeTaModule(semester, moduleCode));
   };
 }

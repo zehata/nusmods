@@ -17,7 +17,8 @@ import {
   selectModuleColor,
   hideLessonInTimetable,
   showLessonInTimetable,
-  disableTaModeInTimetable,
+  addTaModule,
+  disableTaModule,
 } from 'actions/timetables';
 import {
   getExamDate,
@@ -49,8 +50,8 @@ export type Props = {
   selectModuleColor: (semester: Semester, moduleCode: ModuleCode, colorIndex: ColorIndex) => void;
   hideLessonInTimetable: (semester: Semester, moduleCode: ModuleCode) => void;
   showLessonInTimetable: (semester: Semester, moduleCode: ModuleCode) => void;
-  enableTaModeInTimetable: (semester: Semester, moduleCode: ModuleCode) => void;
-  disableTaModeInTimetable: (semester: Semester, moduleCode: ModuleCode) => void;
+  enableTaModule: (semester: Semester, moduleCode: ModuleCode) => void;
+  disableTaModule: (semester: Semester, moduleCode: ModuleCode) => void;
   onRemoveModule: (moduleCode: ModuleCode) => void;
   resetTombstone: () => void;
 };
@@ -105,9 +106,9 @@ export const TimetableModulesTableComponent: React.FC<Props> = (props) => {
                 aria-label={taBtnLabel}
                 onClick={() => {
                   if (module.isTaInTimetable) {
-                    props.disableTaModeInTimetable(semester, module.moduleCode);
+                    props.disableTaModule(semester, module.moduleCode);
                   } else {
-                    props.enableTaModeInTimetable(semester, module.moduleCode);
+                    props.enableTaModule(semester, module.moduleCode);
                   }
                 }}
               >
@@ -207,6 +208,7 @@ export default connect(
     selectModuleColor,
     hideLessonInTimetable,
     showLessonInTimetable,
-    disableTaModeInTimetable,
+    enableTaModule: addTaModule,
+    disableTaModule,
   },
 )(React.memo(TimetableModulesTableComponent));

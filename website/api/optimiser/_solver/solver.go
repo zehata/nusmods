@@ -64,7 +64,7 @@ func BeamSearch(
 				}
 
 				newState := copyState(state)
-				newState.Assignments[lessonKey] = validGroup[0].ClassNo
+				newState.Assignments[lessonKey] = validGroup[0].LessonGroup
 
 				// Track days that change, so we only recalc distance on those days
 				for _, slot := range validGroup {
@@ -370,7 +370,7 @@ func Solve(w http.ResponseWriter, req models.OptimiserRequest) {
 	})
 
 	best := BeamSearch(lessons, lessonToSlots, 2500, 100, recordings, req)
-	shareableLink := GenerateNUSModsShareableLink(best.Assignments, req)
+	shareableLink := GenerateNUSModsShareableLink(best.Assignments, lessonToSlots, req)
 	response := SolveResponse{
 		TimetableState: best,
 		ShareableLink:  shareableLink,
