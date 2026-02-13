@@ -5,19 +5,19 @@ import type {
   ModuleLessonConfig,
   SemTimetableConfig,
   TimetableConfig,
-  LessonWithIndex,
+  LessonWithSerializedDetails,
   TimetableConfigV1,
 } from 'types/timetables';
 import type { Dispatch, GetState } from 'types/redux';
 import type { TaModulesMapV1, ColorMapping, TaModulesMap } from 'types/reducers';
-import type { LessonIndex, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import type { SerializedLessonDetails, LessonType, Module, ModuleCode, Semester } from 'types/modules';
 
 import { fetchModule } from 'actions/moduleBank';
 import { openNotification } from 'actions/app';
 import { getModuleCondensed } from 'selectors/moduleBank';
 import {
   getClosestLessonConfig,
-  makeLessonIndicesMap,
+  makeSerializedLessonDetailsMap,
   migrateSemTimetableConfig,
   randomModuleLessonConfig,
   validateModuleLessons,
@@ -105,7 +105,7 @@ export function resetTimetable(semester: Semester) {
 }
 
 export const MODIFY_LESSON = 'MODIFY_LESSON' as const;
-export function modifyLesson(activeLesson: LessonWithIndex) {
+export function modifyLesson(activeLesson: LessonWithSerializedDetails) {
   return {
     type: MODIFY_LESSON,
     payload: {
@@ -119,7 +119,7 @@ export function changeLesson(
   semester: Semester,
   moduleCode: ModuleCode,
   lessonType: LessonType,
-  lessonIndices: LessonIndex[],
+  serializedLessonDetails: SerializedLessonDetails[],
 ) {
   return {
     type: CHANGE_LESSON,
@@ -127,7 +127,7 @@ export function changeLesson(
       semester,
       moduleCode,
       lessonType,
-      lessonIndices,
+      serializedLessonDetails,
     },
   };
 }
@@ -137,7 +137,7 @@ export function addLesson(
   semester: Semester,
   moduleCode: ModuleCode,
   lessonType: LessonType,
-  lessonIndices: LessonIndex[],
+  serializedLessonDetails: SerializedLessonDetails[],
 ) {
   return {
     type: ADD_LESSON,
@@ -145,7 +145,7 @@ export function addLesson(
       semester,
       moduleCode,
       lessonType,
-      lessonIndices,
+      serializedLessonDetails,
     },
   };
 }
@@ -155,7 +155,7 @@ export function removeLesson(
   semester: Semester,
   moduleCode: ModuleCode,
   lessonType: LessonType,
-  lessonIndices: LessonIndex[],
+  serializedLessonDetails: SerializedLessonDetails[],
 ) {
   return {
     type: REMOVE_LESSON,
@@ -163,7 +163,7 @@ export function removeLesson(
       semester,
       moduleCode,
       lessonType,
-      lessonIndices,
+      serializedLessonDetails,
     },
   };
 }
@@ -392,15 +392,15 @@ export function disableTaModule(semester: Semester, moduleCode: ModuleCode) {
   return (dispatch: Dispatch, getState: GetState) => {
     const { moduleBank, timetables } = getState();
     const module: Module = moduleBank.modules[moduleCode];
-    const timetableLessonIndices = timetables.lessons[semester][moduleCode];
+    const timetableSerializedLessonDetails = timetables.lessons[semester][moduleCode];
 
     const semesterData = getModuleSemesterData(module, semester);
     if (!semesterData) {
-      dispatch(removeTaModule(semester, moduleCode, timetableLessonIndices));
+      dispatch(removeTaModule(semester, moduleCode, timetableSerializedLessonDetails));
       return;
     }
-    const lessonIndicesMap = makeLessonIndicesMap(semesterData.timetable);
-    const lessonConfig = getClosestLessonConfig(lessonIndicesMap, timetableLessonIndices);
+    const serializedLessonDetailsMap = makeSerializedLessonDetailsMap(semesterData.timetable);
+    const lessonConfig = getClosestLessonConfig(serializedLessonDetailsMap, timetableSerializedLessonDetails);
 
     dispatch(removeTaModule(semester, moduleCode, lessonConfig));
   };

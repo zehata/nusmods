@@ -16,7 +16,7 @@ import {
   LessonType,
   ModuleCode,
   RawLesson,
-  RawLessonWithIndex,
+  RawLessonWithSerializedDetails,
   Semester,
   Weeks,
 } from 'types/modules';
@@ -47,7 +47,7 @@ import {
   formatNumericWeeks,
   getClosestLessonConfig,
   getEndTimeAsDate,
-  getRecoveryLessonIndices,
+  getRecoverySerializedLessonDetails,
   getStartTimeAsDate,
   groupLessonsByDay,
   hydrateSemTimetableWithLessons,
@@ -403,13 +403,13 @@ test('findExamClashes should return non-empty object if exams starting at differ
 });
 
 describe('timetable serialization/deserialization', () => {
-  const mockSemesterTimetable: { [moduleCode: ModuleCode]: readonly RawLessonWithIndex[] } = {
+  const mockSemesterTimetable: { [moduleCode: ModuleCode]: readonly RawLessonWithSerializedDetails[] } = {
     CS1010S: getModuleTimetable(CS1010S, 1),
     CS3216: getModuleTimetable(CS3216, 1),
     GER1000: getModuleTimetable(GER1000, 1),
     CS4243: getModuleTimetable(CS4243, 1),
   };
-  const mockGetModuleSemesterTimetable = (moduleCode: ModuleCode): readonly RawLessonWithIndex[] =>
+  const mockGetModuleSemesterTimetable = (moduleCode: ModuleCode): readonly RawLessonWithSerializedDetails[] =>
     get(mockSemesterTimetable, moduleCode);
 
   test('timetable serialization/deserialization', () => {
@@ -1002,8 +1002,8 @@ describe(getClosestLessonConfig, () => {
   });
 });
 
-describe(getRecoveryLessonIndices, () => {
+describe(getRecoverySerializedLessonDetails, () => {
   test('guard against empty lessons input', () => {
-    expect(getRecoveryLessonIndices([])).toEqual([]);
+    expect(getRecoverySerializedLessonDetails([])).toEqual([]);
   });
 });

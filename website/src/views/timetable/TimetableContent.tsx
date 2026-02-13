@@ -16,12 +16,12 @@ import {
 } from 'lodash';
 
 import { ColorMapping, HORIZONTAL, ModulesMap, TimetableOrientation } from 'types/reducers';
-import { LessonIndex, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import { SerializedLessonDetails, LessonType, Module, ModuleCode, Semester } from 'types/modules';
 import {
   SemTimetableConfig,
   SemTimetableConfigWithLessons,
   InteractableLesson,
-  LessonWithIndex,
+  LessonWithSerializedDetails,
   TaModulesConfigV1,
 } from 'types/timetables';
 
@@ -80,7 +80,7 @@ type Props = OwnProps & {
   // From Redux
   timetableWithLessons: SemTimetableConfigWithLessons;
   modules: ModulesMap;
-  activeLesson: LessonWithIndex | null;
+  activeLesson: LessonWithSerializedDetails | null;
   timetableOrientation: TimetableOrientation;
   showTitle: boolean;
   hiddenInTimetable: ModuleCode[];
@@ -90,24 +90,24 @@ type Props = OwnProps & {
   addModule: (semester: Semester, moduleCode: ModuleCode) => void;
   removeModule: (semester: Semester, moduleCode: ModuleCode) => void;
   resetTimetable: (semester: Semester) => void;
-  modifyLesson: (lesson: LessonWithIndex) => void;
+  modifyLesson: (lesson: LessonWithSerializedDetails) => void;
   addLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    serializedLessonDetails: SerializedLessonDetails[],
   ) => void;
   removeLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    serializedLessonDetails: SerializedLessonDetails[],
   ) => void;
   changeLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    serializedLessonDetails: SerializedLessonDetails[],
   ) => void;
   cancelModifyLesson: () => void;
 };
@@ -178,17 +178,17 @@ class TimetableContent extends React.Component<Props, State> {
     sameLessonTypeLessons: InteractableLesson[],
     lesson: InteractableLesson,
   ): void => {
-    const { moduleCode, lessonType, lessonIndex } = lesson;
+    const { moduleCode, lessonType, serializedLessonDetails } = lesson;
 
     const currentlySelected = sameLessonTypeLessons.filter(
       (sameLessonTypeLesson) => !sameLessonTypeLesson.canBeAddedToLessonConfig,
     );
     if (lesson.canBeAddedToLessonConfig) {
       // Allow multiple lessons of the same type to be added for TA lessons
-      this.props.addLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
+      this.props.addLesson(this.props.semester, moduleCode, lessonType, [serializedLessonDetails]);
     } else if (currentlySelected.length > 1) {
       // If a TA lesson is the last of its type, disallow removing it
-      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
+      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [serializedLessonDetails]);
     } else {
       this.props.cancelModifyLesson();
     }
@@ -196,7 +196,7 @@ class TimetableContent extends React.Component<Props, State> {
   };
 
   modifyCell =
-    (moduleTimetable: InteractableLesson[], activeLesson: LessonWithIndex | null) =>
+    (moduleTimetable: InteractableLesson[], activeLesson: LessonWithSerializedDetails | null) =>
     (lesson: InteractableLesson, position: ClientRect): void => {
       // If activeLesson exists, then the user is choosing a cell to modify
       const isChoosing = !!activeLesson;
@@ -213,18 +213,18 @@ class TimetableContent extends React.Component<Props, State> {
         }
 
         if (lesson.canBeAddedToLessonConfig) {
-          const lessonIndices = map(
+          const serializedLessonDetails = map(
             filter(
               sameLessonTypeLessons,
               (timetableLessons) => timetableLessons.classNo === lesson.classNo,
             ),
-            (sameLessonTypeLesson) => sameLessonTypeLesson.lessonIndex,
+            (sameLessonTypeLesson) => sameLessonTypeLesson.serializedLessonDetails,
           );
           this.props.changeLesson(
             this.props.semester,
             lesson.moduleCode,
             lesson.lessonType,
-            lessonIndices,
+            serializedLessonDetails,
           );
         } else {
           this.props.cancelModifyLesson();
@@ -360,29 +360,29 @@ class TimetableContent extends React.Component<Props, State> {
    * See type defintion of `InteractableLesson` for properties added
    */
   hydrateInteractability(
-    timetableLessons: LessonWithIndex[],
+    timetableLessons: LessonWithSerializedDetails[],
     modules: ModulesMap,
     semester: Semester,
     colors: ColorMapping,
     readOnly: boolean,
-    activeLesson?: LessonWithIndex,
-    alreadySelectedLessonIndices?: LessonIndex[],
+    activeLesson?: LessonWithSerializedDetails,
+    alreadySelectedSerializedLessonDetails?: SerializedLessonDetails[],
   ): InteractableLesson[] {
     const moduleTimetables = mapValues(modules, (module) => getModuleTimetable(module, semester));
 
     return map(timetableLessons, (lesson) => {
-      const { moduleCode, lessonType, classNo, lessonIndex } = lesson;
+      const { moduleCode, lessonType, classNo, serializedLessonDetails } = lesson;
       const isSameModuleAndLessonType =
         moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
 
-      const isActive = isSameModuleAndLessonType && lessonIndex === activeLesson?.lessonIndex;
+      const isActive = isSameModuleAndLessonType && serializedLessonDetails === activeLesson?.serializedLessonDetails;
       const isTaInTimetable = this.isTaInTimetable(moduleCode);
       const canBeSelectedAsActiveLesson =
         !readOnly && areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType);
 
-      const alreadyAddedToLessonConfig = alreadySelectedLessonIndices?.includes(lesson.lessonIndex);
+      const alreadyAddedToLessonConfig = alreadySelectedSerializedLessonDetails?.includes(lesson.serializedLessonDetails);
       const isSameLessonGroupAsActiveLesson = isTaInTimetable
-        ? lessonIndex === activeLesson?.lessonIndex
+        ? serializedLessonDetails === activeLesson?.serializedLessonDetails
         : classNo === activeLesson?.classNo;
       const canBeAddedToLessonConfig =
         isSameModuleAndLessonType &&
@@ -405,12 +405,12 @@ class TimetableContent extends React.Component<Props, State> {
    * See type defintion of `InteractableLesson` for properties added
    */
   getInteractableLessons(
-    timetableLessons: LessonWithIndex[],
+    timetableLessons: LessonWithSerializedDetails[],
     modules: ModulesMap,
     semester: Semester,
     colors: ColorMapping,
     readOnly: boolean,
-    activeLesson: LessonWithIndex | null,
+    activeLesson: LessonWithSerializedDetails | null,
   ): InteractableLesson[] {
     if (!activeLesson)
       return this.hydrateInteractability(timetableLessons, modules, semester, colors, readOnly);
@@ -428,7 +428,7 @@ class TimetableContent extends React.Component<Props, State> {
         ? 'alreadySelected'
         : 'otherLessons',
     );
-    const alreadySelectedLessonIndices = map(alreadySelected, 'lessonIndex');
+    const alreadySelectedSerializedLessonDetails = map(alreadySelected, 'serializedLessonDetails');
 
     return [
       ...this.hydrateInteractability(
@@ -438,7 +438,7 @@ class TimetableContent extends React.Component<Props, State> {
         colors,
         readOnly,
         activeLesson,
-        alreadySelectedLessonIndices,
+        alreadySelectedSerializedLessonDetails,
       ),
       ...this.hydrateInteractability(otherLessons, modules, semester, colors, readOnly),
     ];
@@ -459,7 +459,7 @@ class TimetableContent extends React.Component<Props, State> {
 
     const { showExamCalendar } = this.state;
 
-    const timetableLessons: LessonWithIndex[] = timetableLessonsArray(
+    const timetableLessons: LessonWithSerializedDetails[] = timetableLessonsArray(
       this.props.timetableWithLessons,
     ).filter((lesson) => !this.isHiddenInTimetable(lesson.moduleCode));
 

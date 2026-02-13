@@ -1,5 +1,5 @@
 import { ModuleCode, Semester } from 'types/modules';
-import { SemTimetableConfig, LessonWithIndex, TimetableConfigV1 } from 'types/timetables';
+import { SemTimetableConfig, LessonWithSerializedDetails, TimetableConfigV1 } from 'types/timetables';
 
 import lessons from '__mocks__/lessons-array.json';
 import { CS1010A, CS1010S, CS3216 } from '__mocks__/modules';
@@ -40,15 +40,15 @@ test('removeLesson should return information to remove module', () => {
 });
 
 test('modifyLesson should return lesson payload', () => {
-  const activeLesson: LessonWithIndex = lessons[0];
+  const activeLesson: LessonWithSerializedDetails = lessons[0];
   expect(actions.modifyLesson(activeLesson)).toMatchSnapshot();
 });
 
 test('changeLesson should return updated information to change lesson', () => {
   const semester: Semester = 1;
-  const lesson: LessonWithIndex = lessons[1];
+  const lesson: LessonWithSerializedDetails = lessons[1];
   expect(
-    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [lesson.lessonIndex]),
+    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [lesson.serializedLessonDetails]),
   ).toMatchSnapshot();
 });
 

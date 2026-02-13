@@ -4,7 +4,7 @@ import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 import { Repeat } from 'react-feather';
 import classnames from 'classnames';
 
-import type { ModuleCode, RawLessonWithIndex, Semester } from 'types/modules';
+import type { ModuleCode, RawLessonWithSerializedDetails, Semester } from 'types/modules';
 import type { ColorMapping } from 'types/reducers';
 import type { State } from 'types/state';
 import type { SemTimetableConfig } from 'types/timetables';
@@ -190,7 +190,7 @@ export const TimetableContainerComponent: FC = () => {
   const dispatch = useDispatch();
 
   const getModuleSemesterTimetable = useCallback(
-    (moduleCode: ModuleCode): readonly RawLessonWithIndex[] => {
+    (moduleCode: ModuleCode): readonly RawLessonWithSerializedDetails[] => {
       const module = modules[moduleCode];
       if (!semester || !module) return [];
       return getModuleTimetable(module, semester);

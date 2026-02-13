@@ -20,9 +20,9 @@ import { noBreak } from 'utils/react';
 
 import { EVERY_WEEK } from 'test-utils/timetable';
 import { CS1010S, CS3216 } from '__mocks__/modules';
-import { LessonWithIndex } from 'types/timetables';
+import { LessonWithSerializedDetails } from 'types/timetables';
 
-const mockLesson = _.cloneDeep(CS1010S.semesterData[0].timetable[0]) as LessonWithIndex;
+const mockLesson = _.cloneDeep(CS1010S.semesterData[0].timetable[0]) as LessonWithSerializedDetails;
 mockLesson.moduleCode = 'CS1010S';
 mockLesson.title = 'Programming Methodology';
 
@@ -40,7 +40,7 @@ test('getModuleSemesterData should return semester data if semester is present',
         startTime: '1830',
         endTime: '2030',
         venue: 'VCRm',
-        lessonIndex: 0,
+        serializedLessonDetails: 0,
       },
     ],
   };

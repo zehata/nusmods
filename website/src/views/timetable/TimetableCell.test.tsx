@@ -15,7 +15,7 @@ const NON_TA_LESSON: InteractableLesson = {
   endTime: '1200',
   venue: 'LT26',
   colorIndex: 1,
-  lessonIndex: 1,
+  serializedLessonDetails: 1,
 };
 
 type Props = {
@@ -71,7 +71,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        lessonIndex: 1,
+        serializedLessonDetails: 1,
       },
     });
 
@@ -87,7 +87,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        lessonIndex: 2,
+        serializedLessonDetails: 2,
       },
     })
       .wrapper.find('button')
@@ -100,7 +100,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '2',
         lessonType: 'Lecture',
-        lessonIndex: 3,
+        serializedLessonDetails: 3,
       },
     })
       .wrapper.find('button')
@@ -113,7 +113,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1101S',
         classNo: '1',
         lessonType: 'Lecture',
-        lessonIndex: 0,
+        serializedLessonDetails: 0,
       },
     })
       .wrapper.find('button')
@@ -147,13 +147,13 @@ describe(TimetableCell, () => {
     expect(button.hasClass('clickable')).toBe(true);
   });
 
-  it('should highlight lesson when module code, classNo, lessonType and lessonIndex matches', () => {
+  it('should highlight lesson when module code, classNo, lessonType and serializedLessonDetails matches', () => {
     const { wrapper } = make({
       hoverLesson: {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        lessonIndex: 1,
+        serializedLessonDetails: 1,
       },
     });
 
@@ -167,7 +167,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        lessonIndex: 2,
+        serializedLessonDetails: 2,
       },
     });
 
@@ -183,7 +183,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        lessonIndex: 2,
+        serializedLessonDetails: 2,
       },
     })
       .wrapper.find('button')
@@ -196,7 +196,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '2',
         lessonType: 'Lecture',
-        lessonIndex: 3,
+        serializedLessonDetails: 3,
       },
     })
       .wrapper.find('button')
@@ -209,7 +209,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1101S',
         classNo: '1',
         lessonType: 'Lecture',
-        lessonIndex: 0,
+        serializedLessonDetails: 0,
       },
     })
       .wrapper.find('button')

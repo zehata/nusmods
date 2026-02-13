@@ -57,7 +57,7 @@ exports[`modifyLesson should return lesson payload 1`] = `
       "colorIndex": 0,
       "day": "Wednesday",
       "endTime": "1200",
-      "lessonIndex": 0,
+      "serializedLessonDetails": 0,
       "lessonType": "Lecture",
       "moduleCode": "CS1010S",
       "startTime": "1000",
