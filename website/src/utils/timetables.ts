@@ -85,6 +85,17 @@ export const LESSON_TYPE_ABBREV: lessonTypeAbbrev = {
   Workshop: 'WS',
 };
 
+type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export const DAY_OF_WEEK_ABBREV: { [x in DayOfWeek]: string } = {
+  Monday: 'MON',
+  Tuesday: 'TUE',
+  Wednesday: 'WED',
+  Thursday: 'THU',
+  Friday: 'FRI',
+  Saturday: 'SAT',
+  Sunday: 'SUN',
+};
+
 // Reverse lookup map of LESSON_TYPE_ABBREV
 export const LESSON_ABBREV_TYPE: { [key: string]: LessonType } = invert(LESSON_TYPE_ABBREV);
 
@@ -109,23 +120,20 @@ export function isValidSemester(semester: Semester): boolean {
 //    [lessonType: string]: ClassNo,
 //  }
 export function randomModuleLessonConfig(lessons: readonly RawLesson[]): ModuleLessonConfig {
-  const lessonsWithSerializedDetails = map(
-    lessons,
-    (lesson) => ({
-      ...lesson,
-      serializedLessonDetails: serializeLessonDetails(lesson)
-    })
-  );
+  const lessonsWithSerializedDetails = map(lessons, (lesson) => ({
+    ...lesson,
+    serializedLessonDetails: serializeLessonDetails(lesson),
+  }));
 
-  const lessonByGroups: { [lessonType: string]: readonly RawLessonWithSerializedDetails[] } = groupBy(
-    lessonsWithSerializedDetails,
-    (lesson) => lesson.lessonType,
-  );
+  const lessonByGroups: { [lessonType: string]: readonly RawLessonWithSerializedDetails[] } =
+    groupBy(lessonsWithSerializedDetails, (lesson) => lesson.lessonType);
 
   const lessonByGroupsByClassNo: {
     [lessonType: string]: { [classNo: string]: readonly RawLessonWithSerializedDetails[] };
-  } = mapValues(lessonByGroups, (lessonsOfSamelessonType: readonly RawLessonWithSerializedDetails[]) =>
-    groupBy(lessonsOfSamelessonType, (lesson) => lesson.classNo),
+  } = mapValues(
+    lessonByGroups,
+    (lessonsOfSamelessonType: readonly RawLessonWithSerializedDetails[]) =>
+      groupBy(lessonsOfSamelessonType, (lesson) => lesson.classNo),
   );
 
   return mapValues(
@@ -162,9 +170,13 @@ function hydrateModuleConfigWithLessons(
 ): ModuleLessonConfigWithLessons {
   return mapValues(moduleLessonConfig, (serializedLessonDetails: SerializedLessonDetails[]) => {
     const lessons = getModuleTimetable(module, semester);
-    const lessonsWithSerializedDetails = map(lessons, (lesson) => ({ ...lesson, serializedLessonDetails: serializeLessonDetails(lesson) }));
-    const newLessons = lessonsWithSerializedDetails.filter((lesson: RawLessonWithSerializedDetails) =>
-      serializedLessonDetails.includes(lesson.serializedLessonDetails),
+    const lessonsWithSerializedDetails = map(lessons, (lesson) => ({
+      ...lesson,
+      serializedLessonDetails: serializeLessonDetails(lesson),
+    }));
+    const newLessons = lessonsWithSerializedDetails.filter(
+      (lesson: RawLessonWithSerializedDetails) =>
+        serializedLessonDetails.includes(lesson.serializedLessonDetails),
     );
     return newLessons.map((lesson: RawLessonWithSerializedDetails) => ({
       ...lesson,
@@ -189,7 +201,9 @@ export function lessonsForLessonType<T extends RawLesson>(
 //      [lessonType: string]: [Lesson, ...],
 //    }
 //  }
-export function timetableLessonsArray(timetable: SemTimetableConfigWithLessons): LessonWithSerializedDetails[] {
+export function timetableLessonsArray(
+  timetable: SemTimetableConfigWithLessons,
+): LessonWithSerializedDetails[] {
   return flatMapDeep(timetable, values);
 }
 
@@ -459,7 +473,10 @@ export function validateTaModuleLessons(
   const { config: validatedLessonConfig, valid } = reduce(
     lessonConfig,
     (accumulatedValidationResult, configSerializedLessonDetails, lessonType) => {
-      const validSerializedLessonDetails = map(lessonsByType[lessonType], 'serializedLessonDetails');
+      const validSerializedLessonDetails = map(
+        lessonsByType[lessonType],
+        'serializedLessonDetails',
+      );
       if (!validSerializedLessonDetails.length) {
         return {
           config: accumulatedValidationResult.config,
@@ -468,7 +485,8 @@ export function validateTaModuleLessons(
       }
       const hasInvalidLesson = some(
         configSerializedLessonDetails,
-        (serializedLessonDetails) => !validSerializedLessonDetails.includes(serializedLessonDetails),
+        (serializedLessonDetails) =>
+          !validSerializedLessonDetails.includes(serializedLessonDetails),
       );
       return {
         config: {
@@ -543,7 +561,8 @@ export function validateNonTaModuleLesson(
           firstSerializedLessonDetails < validLessons.length
         )
       ) {
-        const validSerializedLessonDetails = getRecoverySerializedLessonDetails(lessonsWithLessonType);
+        const validSerializedLessonDetails =
+          getRecoverySerializedLessonDetails(lessonsWithLessonType);
         return {
           config: {
             ...accumulatedValidationResult.config,
@@ -808,7 +827,11 @@ export function deserializeTaModulesConfigV1(
           // ["TUT", "2"]
           const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
           if (!lessonType) return accumulatedModuleLessonConfig;
-          const serializedLessonDetails = getSerializedLessonDetails(serializedLessonDetailsMap, lessonType, classNo);
+          const serializedLessonDetails = getSerializedLessonDetails(
+            serializedLessonDetailsMap,
+            lessonType,
+            classNo,
+          );
           return {
             ...accumulatedModuleLessonConfig,
             [lessonType]: [
@@ -849,15 +872,21 @@ export function deserializeModuleLessonConfig(
       const [lessonTypeAbbr, serializedLessonDetailsSerialized] =
         lessonTypeSerialized.split(LESSON_TYPE_KEY_VALUE_SEP);
       // ["LEC", "0,1"]
-      const unwrappedSerializedLessonDetailsSerialized = serializedLessonDetailsSerialized.match(/(?<=\()(.*)(?=\))/);
+      const unwrappedSerializedLessonDetailsSerialized =
+        serializedLessonDetailsSerialized.match(/(?<=\()(.*)(?=\))/);
       if (!unwrappedSerializedLessonDetailsSerialized) {
         return accumulatedModuleLessonConfig;
       }
-      const serializedLessonDetails = unwrappedSerializedLessonDetailsSerialized[0].split(LESSON_SEP); // [0, 1]
+      const serializedLessonDetails =
+        unwrappedSerializedLessonDetailsSerialized[0].split(LESSON_SEP); // [0, 1]
       const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
-      const validSerializedLessonDetails = map(lessonsByLessonType[lessonType], 'serializedLessonDetails');
-      const validatedSerializedLessonDetails = filter(serializedLessonDetails, (serializedLessonDetails) =>
-        validSerializedLessonDetails.includes(serializedLessonDetails),
+      const validSerializedLessonDetails = map(
+        lessonsByLessonType[lessonType],
+        'serializedLessonDetails',
+      );
+      const validatedSerializedLessonDetails = filter(
+        serializedLessonDetails,
+        (serializedLessonDetails) => validSerializedLessonDetails.includes(serializedLessonDetails),
       );
       return {
         ...accumulatedModuleLessonConfig,
@@ -892,7 +921,11 @@ export function deserializeModuleLessonConfigV1(
       const [lessonTypeAbbr, classNo] = lessonTypeSerialized.split(LESSON_TYPE_KEY_VALUE_SEP);
       // ["LEC", "1"]
       const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
-      const serializedLessonDetails = getSerializedLessonDetails(serializedLessonDetailsMap, lessonType, classNo);
+      const serializedLessonDetails = getSerializedLessonDetails(
+        serializedLessonDetailsMap,
+        lessonType,
+        classNo,
+      );
       return {
         ...accumulatedModuleLessonConfig,
         [lessonType]: [
@@ -1012,6 +1045,7 @@ function parseLessonConfigParams(
  * Checks serialization format and parses accordingly
  * - V1 format: `?CS1010S=LEC:1,TUT:1,REC:1&ta=CS1010S(LEC:1,TUT:1,TUT:2,REC:1)&hidden=CS1010S`
  * - V2 format: `?CS1010S=LEC:(0);TUT:(11,22);REC:(1)&ta=CS1010S&hidden=CS1010S`
+ * - V3 format: `?CS1010S=LEC|1|WED|1200|1400|LT32,`
  * @param serialized
  * @param getModuleSemesterTimetable
  * @returns
@@ -1170,10 +1204,16 @@ export function migrateModuleLessonConfig(
             lessonType,
             classNo,
           ) as (SerializedLessonDetails | undefined)[];
-          if (!serializedLessonDetailsWithClassNo || serializedLessonDetailsWithClassNo.includes(undefined)) {
+          if (
+            !serializedLessonDetailsWithClassNo ||
+            serializedLessonDetailsWithClassNo.includes(undefined)
+          ) {
             throw new Error('Lesson indices missing');
           }
-          return [...accumulatedSerializedLessonDetails, ...(serializedLessonDetailsWithClassNo as SerializedLessonDetails[])];
+          return [
+            ...accumulatedSerializedLessonDetails,
+            ...(serializedLessonDetailsWithClassNo as SerializedLessonDetails[]),
+          ];
         },
         [] as SerializedLessonDetails[],
       );
@@ -1273,7 +1313,8 @@ export function getClosestLessonConfig(
           lessonsWithLessonType,
           (accumulated, serializedLessonDetails, lessonGroup) => ({
             ...accumulated,
-            [lessonGroup]: intersection(serializedLessonDetails, timetableLessonsWithLessonType).length,
+            [lessonGroup]: intersection(serializedLessonDetails, timetableLessonsWithLessonType)
+              .length,
           }),
           {} as Record<ClassNo, number>,
         ),
@@ -1298,5 +1339,18 @@ export function getClosestLessonConfig(
 }
 
 export function serializeLessonDetails<T extends RawLesson>(lesson: T): string {
+  const { lessonType, classNo, day, startTime, endTime, venue, weeks } = lesson;
 
+  const abbreviatedLessonType = LESSON_TYPE_ABBREV[lessonType];
+  const abbreviatedDayOfWeek = DAY_OF_WEEK_ABBREV[day as DayOfWeek];
+
+  return [
+    abbreviatedLessonType,
+    classNo,
+    abbreviatedDayOfWeek,
+    startTime,
+    endTime,
+    venue,
+    weeks,
+  ].join('|');
 }

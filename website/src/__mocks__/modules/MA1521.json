@@ -50,7 +50,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 0
+          "serializedLessonDetails": "28|FRI|1400|1500|S17-0405|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "27",
@@ -74,7 +74,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 1
+          "serializedLessonDetails": "27|FRI|1300|1400|S17-0611|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "29",
@@ -98,7 +98,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 2
+          "serializedLessonDetails": "29|FRI|1500|1600|S17-0405|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "30",
@@ -122,7 +122,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 3
+          "serializedLessonDetails": "30|FRI|1600|1700|S17-0405|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
@@ -148,7 +148,7 @@
           "lessonType": "Lecture",
           "size": 450,
           "covidZone": "B",
-          "lessonIndex": 4
+          "serializedLessonDetails": "2|THU|1000|1200|LT11|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
@@ -174,7 +174,7 @@
           "lessonType": "Lecture",
           "size": 450,
           "covidZone": "B",
-          "lessonIndex": 5
+          "serializedLessonDetails": "1|FRI|0800|1000|LT11|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "14",
@@ -198,7 +198,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 6
+          "serializedLessonDetails": "14|WED|1000|1100|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "18",
@@ -222,7 +222,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 7
+          "serializedLessonDetails": "18|THU|1200|1300|S16-0304|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "11",
@@ -246,7 +246,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 8
+          "serializedLessonDetails": "11|TUE|1600|1700|S16-0435|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "19",
@@ -270,7 +270,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 9
+          "serializedLessonDetails": "19|THU|1300|1400|S16-0304|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "9",
@@ -294,7 +294,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 10
+          "serializedLessonDetails": "9|TUE|1400|1500|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
@@ -318,7 +318,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 11
+          "serializedLessonDetails": "2|MON|1500|1600|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "22",
@@ -342,7 +342,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 12
+          "serializedLessonDetails": "22|THU|1600|1700|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "21",
@@ -366,7 +366,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 13
+          "serializedLessonDetails": "21|THU|1500|1600|S16-0304|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "24",
@@ -390,7 +390,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 14
+          "serializedLessonDetails": "24|FRI|1000|1100|S17-0611|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "10",
@@ -414,7 +414,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 15
+          "serializedLessonDetails": "10|TUE|1500|1600|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "13",
@@ -438,7 +438,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 16
+          "serializedLessonDetails": "13|WED|0900|1000|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "8",
@@ -462,7 +462,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 17
+          "serializedLessonDetails": "8|TUE|1300|1400|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "20",
@@ -486,7 +486,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 18
+          "serializedLessonDetails": "20|THU|1400|1500|S16-0304|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
@@ -510,7 +510,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 19
+          "serializedLessonDetails": "5|TUE|1000|1100|S17-0512|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
@@ -534,7 +534,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 20
+          "serializedLessonDetails": "4|MON|1700|1800|S16-0307|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "7",
@@ -558,7 +558,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 21
+          "serializedLessonDetails": "7|TUE|1200|1300|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "12",
@@ -582,7 +582,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 22
+          "serializedLessonDetails": "12|TUE|1700|1800|S16-0435|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "17",
@@ -606,7 +606,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 23
+          "serializedLessonDetails": "17|WED|1300|1400|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "16",
@@ -630,7 +630,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 24
+          "serializedLessonDetails": "16|WED|1200|1300|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
@@ -656,7 +656,7 @@
           "lessonType": "Lecture",
           "size": 450,
           "covidZone": "B",
-          "lessonIndex": 25
+          "serializedLessonDetails": "1|TUE|0800|1000|LT11|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
@@ -682,7 +682,7 @@
           "lessonType": "Lecture",
           "size": 450,
           "covidZone": "B",
-          "lessonIndex": 26
+          "serializedLessonDetails": "2|MON|1000|1200|LT11|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
@@ -706,7 +706,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 27
+          "serializedLessonDetails": "1|MON|1400|1500|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "15",
@@ -730,7 +730,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 28
+          "serializedLessonDetails": "15|WED|1100|1200|S16-0309|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "23",
@@ -754,7 +754,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 29
+          "serializedLessonDetails": "23|THU|1700|1800|S17-0404|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "26",
@@ -778,7 +778,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 30
+          "serializedLessonDetails": "26|FRI|1200|1300|S17-0611|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
@@ -802,7 +802,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 31
+          "serializedLessonDetails": "3|MON|1600|1700|S16-0307|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "25",
@@ -826,7 +826,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 32
+          "serializedLessonDetails": "25|FRI|1100|1200|S17-0611|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "6",
@@ -850,7 +850,7 @@
           "lessonType": "Tutorial",
           "size": 30,
           "covidZone": "B",
-          "lessonIndex": 33
+          "serializedLessonDetails": "6|TUE|1100|1200|S17-0512|(3,4,5,6,7,8,9,10,11,12,13)"
         }
       ],
       "covidZones": [
@@ -886,7 +886,7 @@
           "lessonType": "Lecture",
           "size": 375,
           "covidZone": "B",
-          "lessonIndex": 34
+          "serializedLessonDetails": "2|MON|1400|1600|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
@@ -912,7 +912,7 @@
           "lessonType": "Lecture",
           "size": 375,
           "covidZone": "B",
-          "lessonIndex": 35
+          "serializedLessonDetails": "2|THU|1400|1600|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
@@ -938,7 +938,7 @@
           "lessonType": "Lecture",
           "size": 375,
           "covidZone": "B",
-          "lessonIndex": 36
+          "serializedLessonDetails": "1|THU|0800|1000|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
@@ -964,7 +964,7 @@
           "lessonType": "Lecture",
           "size": 375,
           "covidZone": "B",
-          "lessonIndex": 37
+          "serializedLessonDetails": "1|MON|0800|1000|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ],
       "covidZones": [

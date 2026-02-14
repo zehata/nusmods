@@ -50,7 +50,9 @@ export type Lesson = RawLesson & {
   title: ModuleTitle;
 };
 
-export type LessonWithSerializedDetails = Lesson & { readonly serializedLessonDetails: SerializedLessonDetails };
+export type LessonWithSerializedDetails = Lesson & {
+  readonly serializedLessonDetails: SerializedLessonDetails;
+};
 
 export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
 

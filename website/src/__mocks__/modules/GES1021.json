@@ -22,22 +22,50 @@
         {
           "classNo": "SL1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 0
+          "serializedLessonDetails": "SL1|MON|1600|1800|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "SL1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 1
+          "serializedLessonDetails": "SL1|THU|1600|1800|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ],
       "LecturePeriods": [
@@ -52,22 +80,50 @@
         {
           "classNo": "SL1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 0
+          "serializedLessonDetails": "SL1|MON|1600|1800|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "SL1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 1
+          "serializedLessonDetails": "SL1|WED|1600|1800|LT27|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ]
     }

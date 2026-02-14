@@ -10,7 +10,7 @@
       "venue": "LT26",
       "moduleCode": "CS1010S",
       "title": "Programming Methodology",
-      "lessonIndex": 0
+      "serializedLessonDetails": "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }],
     "Recitation": [{
       "classNo": "1",
@@ -22,7 +22,7 @@
       "venue": "VCRm",
       "moduleCode": "CS1010S",
       "title": "Programming Methodology",
-      "lessonIndex": 1
+      "serializedLessonDetails": "1|THU|1000|1100|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }, {
       "classNo": "1",
       "lessonType": "Recitation",
@@ -33,7 +33,7 @@
       "venue": "VCRm",
       "moduleCode": "CS1010S",
       "title": "Programming Methodology",
-      "lessonIndex": 2
+      "serializedLessonDetails": "1|THU|1200|1300|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }],
     "Tutorial": [{
       "classNo": "2",
@@ -45,7 +45,7 @@
       "venue": "COM1-0203",
       "moduleCode": "CS1010S",
       "title": "Programming Methodology",
-      "lessonIndex": 3
+      "serializedLessonDetails": "2|MON|0900|1000|COM1-0203|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }, {
       "classNo": "2",
       "lessonType": "Tutorial",
@@ -56,7 +56,7 @@
       "venue": "COM1-0216",
       "moduleCode": "CS1010S",
       "title": "Programming Methodology",
-      "lessonIndex": 4
+      "serializedLessonDetails": "2|TUE|0900|1000|COM1-0216|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }]
   },
   "CS3216": {
@@ -70,7 +70,7 @@
       "venue": "VCRm",
       "moduleCode": "CS3216",
       "title": "Application Development on Evolving Platforms",
-      "lessonIndex": 0
+      "serializedLessonDetails": "1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
     }]
   }
 }

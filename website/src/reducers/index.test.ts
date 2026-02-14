@@ -11,16 +11,16 @@ const exportData: ExportData = {
   semester: 1,
   timetable: {
     CS3216: {
-      Lecture: [0],
+      Lecture: ["1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
     },
     CS1010S: {
-      Lecture: [0],
-      Tutorial: [11],
-      Recitation: [1],
+      Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+      Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+      Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
     },
     PC1222: {
-      Lecture: [4],
-      Tutorial: [6],
+      Lecture: ["SL1|TUE|1000|1200|LT31|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+      Tutorial: ["ST1|MON|1700|1800|S12-0401|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
     },
   },
   colors: {

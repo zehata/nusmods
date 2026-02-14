@@ -139,7 +139,9 @@ export type RawLesson = Readonly<{
   weeks: Weeks;
 }>;
 
-export type RawLessonWithSerializedDetails = RawLesson & { readonly serializedLessonDetails: SerializedLessonDetails };
+export type RawLessonWithSerializedDetails = RawLesson & {
+  readonly serializedLessonDetails: SerializedLessonDetails;
+};
 
 export type SerializedLessonDetailsMap = {
   [lessonType: LessonType]: {

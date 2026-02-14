@@ -188,7 +188,9 @@ class TimetableContent extends React.Component<Props, State> {
       this.props.addLesson(this.props.semester, moduleCode, lessonType, [serializedLessonDetails]);
     } else if (currentlySelected.length > 1) {
       // If a TA lesson is the last of its type, disallow removing it
-      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [serializedLessonDetails]);
+      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [
+        serializedLessonDetails,
+      ]);
     } else {
       this.props.cancelModifyLesson();
     }
@@ -375,12 +377,16 @@ class TimetableContent extends React.Component<Props, State> {
       const isSameModuleAndLessonType =
         moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
 
-      const isActive = isSameModuleAndLessonType && serializedLessonDetails === activeLesson?.serializedLessonDetails;
+      const isActive =
+        isSameModuleAndLessonType &&
+        serializedLessonDetails === activeLesson?.serializedLessonDetails;
       const isTaInTimetable = this.isTaInTimetable(moduleCode);
       const canBeSelectedAsActiveLesson =
         !readOnly && areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType);
 
-      const alreadyAddedToLessonConfig = alreadySelectedSerializedLessonDetails?.includes(lesson.serializedLessonDetails);
+      const alreadyAddedToLessonConfig = alreadySelectedSerializedLessonDetails?.includes(
+        lesson.serializedLessonDetails,
+      );
       const isSameLessonGroupAsActiveLesson = isTaInTimetable
         ? serializedLessonDetails === activeLesson?.serializedLessonDetails
         : classNo === activeLesson?.classNo;

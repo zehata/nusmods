@@ -13,65 +13,114 @@
         {
           "classNo": "A1",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ1-0303",
-          "lessonIndex": 0
+          "serializedLessonDetails": "A1|MON|1400|1700|BIZ1-0303|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A2",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Wednesday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 1
+          "serializedLessonDetails": "A2|WED|1100|1400|BIZ1-0203|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A3",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 2
+          "serializedLessonDetails": "A3|THU|1100|1400|BIZ1-0203|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A4",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ1-0303",
-          "lessonIndex": 3
+          "serializedLessonDetails": "A4|MON|1400|1700|BIZ1-0303|(7,8,9,10,11,12,13)"
         },
         {
           "classNo": "A5",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 4
+          "serializedLessonDetails": "A5|WED|1100|1400|BIZ1-0203|(7,8,9,10,11,12,13)"
         },
         {
           "classNo": "A6",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 5
+          "serializedLessonDetails": "A6|THU|1100|1400|BIZ1-0203|(7,8,9,10,11,12,13)"
         }
       ],
-      "LecturePeriods": ["Monday Afternoon", "Wednesday Morning", "Thursday Morning"]
+      "LecturePeriods": [
+        "Monday Afternoon",
+        "Wednesday Morning",
+        "Thursday Morning"
+      ]
     },
     {
       "semester": 2,
@@ -79,62 +128,107 @@
         {
           "classNo": "A1",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 0
+          "serializedLessonDetails": "A1|TUE|1100|1400|BIZ1-0203|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A2",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Wednesday",
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ1-0203",
-          "lessonIndex": 1
+          "serializedLessonDetails": "A2|WED|0900|1200|BIZ1-0203|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A3",
           "lessonType": "Sectional Teaching",
-          "weeks": [1, 2, 3, 4, 5, 6],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1500",
           "venue": "BIZ1-0203",
-          "lessonIndex": 2
+          "serializedLessonDetails": "A3|WED|1200|1500|BIZ1-0203|(1,2,3,4,5,6)"
         },
         {
           "classNo": "A4",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ1-0203",
-          "lessonIndex": 3
+          "serializedLessonDetails": "A4|TUE|1100|1400|BIZ1-0203|(7,8,9,10,11,12,13)"
         },
         {
           "classNo": "A5",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ1-0203",
-          "lessonIndex": 4
+          "serializedLessonDetails": "A5|WED|0900|1200|BIZ1-0203|(7,8,9,10,11,12,13)"
         },
         {
           "classNo": "A6",
           "lessonType": "Sectional Teaching",
-          "weeks": [7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1500",
           "venue": "BIZ1-0203",
-          "lessonIndex": 5
+          "serializedLessonDetails": "A6|WED|1200|1500|BIZ1-0203|(7,8,9,10,11,12,13)"
         }
       ]
     }

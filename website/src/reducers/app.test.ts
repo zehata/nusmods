@@ -55,7 +55,9 @@ test('app should set active lesson', () => {
 });
 
 test('app should accept lesson change and unset active lesson', () => {
-  const action = changeLesson(semester, lesson.moduleCode, lesson.lessonType, [lesson.serializedLessonDetails]);
+  const action = changeLesson(semester, lesson.moduleCode, lesson.lessonType, [
+    lesson.serializedLessonDetails,
+  ]);
   const nextState: AppState = reducer(appInitialState, action);
 
   expect(nextState).toEqual(appInitialState);

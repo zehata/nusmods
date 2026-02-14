@@ -10,7 +10,13 @@ import type {
 } from 'types/timetables';
 import type { Dispatch, GetState } from 'types/redux';
 import type { TaModulesMapV1, ColorMapping, TaModulesMap } from 'types/reducers';
-import type { SerializedLessonDetails, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import type {
+  SerializedLessonDetails,
+  LessonType,
+  Module,
+  ModuleCode,
+  Semester,
+} from 'types/modules';
 
 import { fetchModule } from 'actions/moduleBank';
 import { openNotification } from 'actions/app';
@@ -400,7 +406,10 @@ export function disableTaModule(semester: Semester, moduleCode: ModuleCode) {
       return;
     }
     const serializedLessonDetailsMap = makeSerializedLessonDetailsMap(semesterData.timetable);
-    const lessonConfig = getClosestLessonConfig(serializedLessonDetailsMap, timetableSerializedLessonDetails);
+    const lessonConfig = getClosestLessonConfig(
+      serializedLessonDetailsMap,
+      timetableSerializedLessonDetails,
+    );
 
     dispatch(removeTaModule(semester, moduleCode, lessonConfig));
   };

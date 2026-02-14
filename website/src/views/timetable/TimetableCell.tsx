@@ -56,7 +56,11 @@ function checkHover(
 
   if (!lesson.isTaInTimetable && lesson.classNo === hoverLesson.classNo) return true;
 
-  if (lesson.isTaInTimetable && lesson.serializedLessonDetails === hoverLesson.serializedLessonDetails) return true;
+  if (
+    lesson.isTaInTimetable &&
+    lesson.serializedLessonDetails === hoverLesson.serializedLessonDetails
+  )
+    return true;
 
   return false;
 }

@@ -6,7 +6,13 @@
   "faculty": "Computing",
   "description": "In this module, various methods for computers to understand and interpret the contents of images are investigated. The objective is to expose the students to the basic concepts underlying various computer vision techniques and the application of current techniques for problem solving. Topics covered include morphological operations, convolution and cross correlation, edge and corner detection, colour, texture, motion, image registration and mosaicking, 3D vision, camera calibration and 3D reconstruction, eigenface and pattern recognition. Laboratory exercises and projects are included for the students to solve practical problems using computer vision and image processing software packages.",
   "moduleCredit": "4",
-  "workload": [3, 0, 0, 3, 4],
+  "workload": [
+    3,
+    0,
+    0,
+    3,
+    4
+  ],
   "Prerequisite": "(CS1020 or CS1020E or CS2020 or ((CS2030 or CS2113/T) and (CS2040 or CS2040C)))\nand (MA1101R or MA1506) and (MA1102R or MA1505C or MA1505 or MA1521), and (ST1232 or ST2131 or ST2334)",
   "semesterData": [
     {
@@ -17,62 +23,136 @@
         {
           "classNo": "1",
           "lessonType": "Laboratory",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
           "venue": "AS6-0421",
-          "lessonIndex": 0
+          "serializedLessonDetails": "1|TUE|1400|1600|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
           "lessonType": "Laboratory",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "AS6-0421",
-          "lessonIndex": 1
+          "serializedLessonDetails": "2|TUE|1600|1800|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
           "lessonType": "Laboratory",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1830",
           "endTime": "2030",
           "venue": "AS6-0421",
-          "lessonIndex": 2
+          "serializedLessonDetails": "3|TUE|1830|2030|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
           "lessonType": "Laboratory",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
           "venue": "AS6-0421",
-          "lessonIndex": 3
+          "serializedLessonDetails": "4|THU|1600|1800|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
           "lessonType": "Laboratory",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1000",
           "endTime": "1200",
           "venue": "AS6-0421",
-          "lessonIndex": 4
+          "serializedLessonDetails": "5|FRI|1000|1200|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1830",
           "endTime": "2030",
           "venue": "LT15",
-          "lessonIndex": 5
+          "serializedLessonDetails": "1|MON|1830|2030|LT15|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ]
     }

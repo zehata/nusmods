@@ -35,7 +35,7 @@ const CS3216_LESSONS = {
       startTime: '1830',
       endTime: '2030',
       venue: 'VCRm',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
     },
   ],
 };
@@ -52,7 +52,7 @@ const CS1010S_LESSONS = {
       startTime: '1100',
       endTime: '1200',
       venue: 'i3-0344',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "9|THU|1100|1200|i3-0344|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
     },
   ],
 };
@@ -69,7 +69,7 @@ const PC1222_LESSONS = {
       startTime: '1400',
       endTime: '1700',
       venue: 'S12-0402',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "U02|TUE|1400|1700|S12-0402|(4,6,8,10,12)",
     },
   ],
   Tutorial: [
@@ -83,7 +83,7 @@ const PC1222_LESSONS = {
       startTime: '0900',
       endTime: '1000',
       venue: 'CQT/SR0315',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "T11|WED|0900|1000|CQT/SR0315|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
     },
   ],
   Lecture: [
@@ -97,7 +97,7 @@ const PC1222_LESSONS = {
       startTime: '1200',
       endTime: '1400',
       venue: 'LT25',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "SL1|TUE|1200|1400|LT25|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
     },
     {
       moduleCode: 'PC1222',
@@ -109,7 +109,7 @@ const PC1222_LESSONS = {
       startTime: '1200',
       endTime: '1400',
       venue: 'LT25',
-      serializedLessonDetails: 0,
+      serializedLessonDetails: "SL1|FRI|1200|1400|LT25|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
     },
   ],
 };

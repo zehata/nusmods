@@ -6,7 +6,13 @@
   "faculty": "Computing",
   "description": "(CS1010A) This course introduces the fundamental concepts of problem solving by computing and programming using an imperative programming language. It is the first and foremost introductory course to computing and is equivalent to CS1010 and CS1010E Programming Methodology. Topics covered include problem solving by computing, writing pseudo-codes, basic problem formulation and problem solving, program development, coding, testing and debugging, fundamental programming constructs (variables, types, expressions, assignments, functions, control structures, etc.), fundamental data structures: arrays, strings and structures, simple file processing, and basic recursion. This course is appropriate for FoS students.",
   "moduleCredit": "4",
-  "workload": [2, 1, 1, 3, 3],
+  "workload": [
+    2,
+    1,
+    1,
+    3,
+    3
+  ],
   "preclusion": "CG1101, CS1010, CS1010E, CS1010FC, CS1101, CS1101C, CS1101S",
   "semesterData": [
     {
@@ -17,432 +23,970 @@
         {
           "classNo": "1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
           "venue": "LT32",
-          "lessonIndex": 0
+          "serializedLessonDetails": "1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S14-0620",
-          "lessonIndex": 1
+          "serializedLessonDetails": "1|THU|1600|1700|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "10",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "S14-0620",
-          "lessonIndex": 2
+          "serializedLessonDetails": "10|FRI|1300|1400|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S14-0620",
-          "lessonIndex": 3
+          "serializedLessonDetails": "2|THU|1700|1800|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "S14-0619",
-          "lessonIndex": 4
+          "serializedLessonDetails": "3|FRI|0900|1000|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "S14-0620",
-          "lessonIndex": 5
+          "serializedLessonDetails": "4|FRI|0900|1000|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "SR@LT19",
-          "lessonIndex": 6
+          "serializedLessonDetails": "5|THU|1100|1200|SR@LT19|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "6",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "SR@LT19",
-          "lessonIndex": 7
+          "serializedLessonDetails": "6|THU|1200|1300|SR@LT19|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "7",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "S14-0619",
-          "lessonIndex": 8
+          "serializedLessonDetails": "7|FRI|1400|1500|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "8",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "S14-0619",
-          "lessonIndex": 9
+          "serializedLessonDetails": "8|FRI|1500|1600|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "9",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "S14-0620",
-          "lessonIndex": 10
+          "serializedLessonDetails": "9|FRI|1200|1300|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "AS6-0208",
-          "lessonIndex": 11
+          "serializedLessonDetails": "1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "10",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "COM1-0207",
-          "lessonIndex": 12
+          "serializedLessonDetails": "10|TUE|0900|1000|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "11",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "COM1-0207",
-          "lessonIndex": 13
+          "serializedLessonDetails": "11|TUE|1000|1100|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "12",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-0207",
-          "lessonIndex": 14
+          "serializedLessonDetails": "12|TUE|1100|1200|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "13",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "COM1-0208",
-          "lessonIndex": 15
+          "serializedLessonDetails": "13|TUE|1200|1300|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "14",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "COM1-0208",
-          "lessonIndex": 16
+          "serializedLessonDetails": "14|TUE|1300|1400|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "15",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "COM1-0208",
-          "lessonIndex": 17
+          "serializedLessonDetails": "15|TUE|1400|1500|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "16",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "COM1-0217",
-          "lessonIndex": 18
+          "serializedLessonDetails": "16|TUE|1500|1600|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "17",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "COM1-0217",
-          "lessonIndex": 19
+          "serializedLessonDetails": "17|TUE|1600|1700|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "18",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-0217",
-          "lessonIndex": 20
+          "serializedLessonDetails": "18|TUE|1700|1800|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "19",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-0207",
-          "lessonIndex": 21
+          "serializedLessonDetails": "19|MON|1100|1200|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "AS6-0208",
-          "lessonIndex": 22
+          "serializedLessonDetails": "2|MON|1000|1100|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "20",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "COM1-0207",
-          "lessonIndex": 23
+          "serializedLessonDetails": "20|MON|1200|1300|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "21",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "COM1-0207",
-          "lessonIndex": 24
+          "serializedLessonDetails": "21|MON|1300|1400|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "22",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "COM1-0207",
-          "lessonIndex": 25
+          "serializedLessonDetails": "22|MON|1400|1500|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "23",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-0207",
-          "lessonIndex": 26
+          "serializedLessonDetails": "23|MON|1700|1800|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "24",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "AS6-0421",
-          "lessonIndex": 27
+          "serializedLessonDetails": "24|TUE|0900|1000|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "25",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "AS6-0421",
-          "lessonIndex": 28
+          "serializedLessonDetails": "25|TUE|1000|1100|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "26",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "AS6-0421",
-          "lessonIndex": 29
+          "serializedLessonDetails": "26|TUE|1100|1200|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "27",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "AS6-0421",
-          "lessonIndex": 30
+          "serializedLessonDetails": "27|TUE|1200|1300|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "28",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "AS6-0421",
-          "lessonIndex": 31
+          "serializedLessonDetails": "28|TUE|1300|1400|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "29",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "AS6-0421",
-          "lessonIndex": 32
+          "serializedLessonDetails": "29|TUE|1400|1500|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "AS6-0208",
-          "lessonIndex": 33
+          "serializedLessonDetails": "3|MON|1100|1200|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "30",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "AS6-0421",
-          "lessonIndex": 34
+          "serializedLessonDetails": "30|TUE|1500|1600|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "31",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "AS6-0421",
-          "lessonIndex": 35
+          "serializedLessonDetails": "31|TUE|1600|1700|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "32",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "AS6-0421",
-          "lessonIndex": 36
+          "serializedLessonDetails": "32|TUE|1700|1800|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "AS6-0208",
-          "lessonIndex": 37
+          "serializedLessonDetails": "4|MON|1200|1300|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "AS6-0208",
-          "lessonIndex": 38
+          "serializedLessonDetails": "5|MON|1300|1400|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "6",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "AS6-0208",
-          "lessonIndex": 39
+          "serializedLessonDetails": "6|MON|1400|1500|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "7",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "AS6-0208",
-          "lessonIndex": 40
+          "serializedLessonDetails": "7|MON|1500|1600|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "8",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "AS6-0208",
-          "lessonIndex": 41
+          "serializedLessonDetails": "8|MON|1600|1700|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "9",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "AS6-0208",
-          "lessonIndex": 42
+          "serializedLessonDetails": "9|MON|1700|1800|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         }
       ]
     },
@@ -454,445 +998,998 @@
         {
           "classNo": "1",
           "lessonType": "Lecture",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
           "venue": "LT26",
-          "lessonIndex": 0
+          "serializedLessonDetails": "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "S14-0619",
-          "lessonIndex": 1
+          "serializedLessonDetails": "1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "10",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "RMI-SR1",
-          "lessonIndex": 2
+          "serializedLessonDetails": "10|THU|1200|1300|RMI-SR1|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "S14-0619",
-          "lessonIndex": 3
+          "serializedLessonDetails": "2|THU|1300|1400|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S14-0619",
-          "lessonIndex": 4
+          "serializedLessonDetails": "3|THU|1600|1700|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S14-0619",
-          "lessonIndex": 5
+          "serializedLessonDetails": "4|THU|1700|1800|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "S14-0619",
-          "lessonIndex": 6
+          "serializedLessonDetails": "5|FRI|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "6",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "S14-0619",
-          "lessonIndex": 7
+          "serializedLessonDetails": "6|FRI|1300|1400|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "7",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "S14-0620",
-          "lessonIndex": 8
+          "serializedLessonDetails": "7|FRI|1000|1100|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "8",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Friday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "S14-0620",
-          "lessonIndex": 9
+          "serializedLessonDetails": "8|FRI|0900|1000|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "9",
           "lessonType": "Recitation",
-          "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "i3-0344",
-          "lessonIndex": 10
+          "serializedLessonDetails": "9|THU|1100|1200|i3-0344|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "1",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "COM1-0203",
-          "lessonIndex": 11
+          "serializedLessonDetails": "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "10",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "COM1-0209",
-          "lessonIndex": 12
+          "serializedLessonDetails": "10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "11",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "COM1-0208",
-          "lessonIndex": 13
+          "serializedLessonDetails": "11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "12",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-0207",
-          "lessonIndex": 14
+          "serializedLessonDetails": "12|TUE|1100|1200|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "13",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "COM1-0114",
-          "lessonIndex": 15
+          "serializedLessonDetails": "13|TUE|1200|1300|COM1-0114|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "14",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "COM1-0114",
-          "lessonIndex": 16
+          "serializedLessonDetails": "14|TUE|1300|1400|COM1-0114|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "15",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "AS6-0208",
-          "lessonIndex": 17
+          "serializedLessonDetails": "15|TUE|1400|1500|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "16",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "AS6-0208",
-          "lessonIndex": 18
+          "serializedLessonDetails": "16|TUE|1500|1600|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "17",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "COM1-0217",
-          "lessonIndex": 19
+          "serializedLessonDetails": "17|TUE|1600|1700|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "18",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-0217",
-          "lessonIndex": 20
+          "serializedLessonDetails": "18|TUE|1700|1800|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "2",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "COM1-0217",
-          "lessonIndex": 21
+          "serializedLessonDetails": "2|MON|1000|1100|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "22",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "COM1-0218",
-          "lessonIndex": 22
+          "serializedLessonDetails": "22|MON|1600|1700|COM1-0218|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "23",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-0218",
-          "lessonIndex": 23
+          "serializedLessonDetails": "23|MON|1700|1800|COM1-0218|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "24",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "COM1-0209",
-          "lessonIndex": 24
+          "serializedLessonDetails": "24|TUE|1000|1100|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "25",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-0209",
-          "lessonIndex": 25
+          "serializedLessonDetails": "25|TUE|1100|1200|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "26",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "COM1-0208",
-          "lessonIndex": 26
+          "serializedLessonDetails": "26|TUE|1200|1300|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "27",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "COM1-0208",
-          "lessonIndex": 27
+          "serializedLessonDetails": "27|TUE|1300|1400|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "28",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "COM1-0113",
-          "lessonIndex": 28
+          "serializedLessonDetails": "28|TUE|1500|1600|COM1-0113|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "29",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "COM1-B103",
-          "lessonIndex": 29
+          "serializedLessonDetails": "29|TUE|1600|1700|COM1-B103|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "3",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-0217",
-          "lessonIndex": 30
+          "serializedLessonDetails": "3|MON|1100|1200|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "30",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-B103",
-          "lessonIndex": 31
+          "serializedLessonDetails": "30|TUE|1700|1800|COM1-B103|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "31",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "0900",
           "endTime": "1000",
           "venue": "COM1-B110",
-          "lessonIndex": 32
+          "serializedLessonDetails": "31|MON|0900|1000|COM1-B110|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "32",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1100",
           "venue": "COM1-B110",
-          "lessonIndex": 33
+          "serializedLessonDetails": "32|MON|1000|1100|COM1-B110|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "33",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1200",
           "venue": "COM1-B110",
-          "lessonIndex": 34
+          "serializedLessonDetails": "33|MON|1100|1200|COM1-B110|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "36",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "COM1-B110",
-          "lessonIndex": 35
+          "serializedLessonDetails": "36|TUE|1400|1500|COM1-B110|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "37",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "COM1-0209",
-          "lessonIndex": 36
+          "serializedLessonDetails": "37|TUE|1600|1700|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "38",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Tuesday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "COM1-0209",
-          "lessonIndex": 37
+          "serializedLessonDetails": "38|TUE|1700|1800|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "4",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1300",
           "venue": "COM1-0217",
-          "lessonIndex": 38
+          "serializedLessonDetails": "4|MON|1200|1300|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "5",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1400",
           "venue": "COM1-0217",
-          "lessonIndex": 39
+          "serializedLessonDetails": "5|MON|1300|1400|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "6",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1500",
           "venue": "AS6-0208",
-          "lessonIndex": 40
+          "serializedLessonDetails": "6|MON|1400|1500|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "7",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1500",
           "endTime": "1600",
           "venue": "AS6-0208",
-          "lessonIndex": 41
+          "serializedLessonDetails": "7|MON|1500|1600|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "8",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1700",
           "venue": "AS6-0208",
-          "lessonIndex": 42
+          "serializedLessonDetails": "8|MON|1600|1700|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "9",
           "lessonType": "Tutorial",
-          "weeks": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+          "weeks": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
           "day": "Monday",
           "startTime": "1700",
           "endTime": "1800",
           "venue": "AS6-0208",
-          "lessonIndex": 43
+          "serializedLessonDetails": "9|MON|1700|1800|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"
         }
       ]
     }
   ],
-  "fulfillRequirements": ["ST3247", "MA3269"]
+  "fulfillRequirements": [
+    "ST3247",
+    "MA3269"
+  ]
 }

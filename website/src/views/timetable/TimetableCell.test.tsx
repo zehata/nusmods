@@ -15,7 +15,7 @@ const NON_TA_LESSON: InteractableLesson = {
   endTime: '1200',
   venue: 'LT26',
   colorIndex: 1,
-  serializedLessonDetails: 1,
+  serializedLessonDetails: "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
 };
 
 type Props = {
@@ -71,7 +71,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        serializedLessonDetails: 1,
+        serializedLessonDetails: "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     });
 
@@ -87,7 +87,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        serializedLessonDetails: 2,
+        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')
@@ -100,7 +100,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '2',
         lessonType: 'Lecture',
-        serializedLessonDetails: 3,
+        serializedLessonDetails: "2|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')
@@ -113,7 +113,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1101S',
         classNo: '1',
         lessonType: 'Lecture',
-        serializedLessonDetails: 0,
+        serializedLessonDetails: "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')
@@ -153,7 +153,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        serializedLessonDetails: 1,
+        serializedLessonDetails: "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     });
 
@@ -167,7 +167,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Lecture',
-        serializedLessonDetails: 2,
+        serializedLessonDetails: "2|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     });
 
@@ -183,7 +183,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        serializedLessonDetails: 2,
+        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')
@@ -196,7 +196,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '2',
         lessonType: 'Lecture',
-        serializedLessonDetails: 3,
+        serializedLessonDetails: "2|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')
@@ -209,7 +209,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1101S',
         classNo: '1',
         lessonType: 'Lecture',
-        serializedLessonDetails: 0,
+        serializedLessonDetails: "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
       },
     })
       .wrapper.find('button')

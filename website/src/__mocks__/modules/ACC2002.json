@@ -22,7 +22,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ1-0301",
-          "lessonIndex": 0
+          "serializedLessonDetails": "K1|TUE|0900|1200|BIZ1-0301|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K10",
@@ -32,7 +32,7 @@
           "startTime": "0800",
           "endTime": "1100",
           "venue": "BIZ2-0510",
-          "lessonIndex": 1
+          "serializedLessonDetails": "K10|WED|0800|1100|BIZ2-0510|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K11",
@@ -42,7 +42,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ2-0510",
-          "lessonIndex": 2
+          "serializedLessonDetails": "K11|WED|1400|1700|BIZ2-0510|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K12",
@@ -52,7 +52,7 @@
           "startTime": "0800",
           "endTime": "1100",
           "venue": "BIZ2-0510",
-          "lessonIndex": 3
+          "serializedLessonDetails": "K12|THU|0800|1100|BIZ2-0510|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K13",
@@ -62,7 +62,7 @@
           "startTime": "1300",
           "endTime": "1600",
           "venue": "BIZ2-0202",
-          "lessonIndex": 4
+          "serializedLessonDetails": "K13|MON|1300|1600|BIZ2-0202|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K14",
@@ -72,7 +72,7 @@
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ2-0509",
-          "lessonIndex": 5
+          "serializedLessonDetails": "K14|TUE|1100|1400|BIZ2-0509|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K15",
@@ -82,7 +82,7 @@
           "startTime": "1500",
           "endTime": "1800",
           "venue": "BIZ2-0509",
-          "lessonIndex": 6
+          "serializedLessonDetails": "K15|THU|1500|1800|BIZ2-0509|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K2",
@@ -92,7 +92,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ2-0413B",
-          "lessonIndex": 7
+          "serializedLessonDetails": "K2|TUE|1400|1700|BIZ2-0413B|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K3",
@@ -102,7 +102,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ1-0205",
-          "lessonIndex": 8
+          "serializedLessonDetails": "K3|WED|0900|1200|BIZ1-0205|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K4",
@@ -112,7 +112,7 @@
           "startTime": "1300",
           "endTime": "1600",
           "venue": "BIZ1-0304",
-          "lessonIndex": 9
+          "serializedLessonDetails": "K4|WED|1300|1600|BIZ1-0304|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K5",
@@ -122,7 +122,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ2-0202",
-          "lessonIndex": 10
+          "serializedLessonDetails": "K5|MON|0900|1200|BIZ2-0202|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K8",
@@ -132,7 +132,7 @@
           "startTime": "1200",
           "endTime": "1500",
           "venue": "BIZ1-0201",
-          "lessonIndex": 11
+          "serializedLessonDetails": "K8|WED|1200|1500|BIZ1-0201|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "K9",
@@ -142,7 +142,7 @@
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ2-0509",
-          "lessonIndex": 12
+          "serializedLessonDetails": "K9|THU|1100|1400|BIZ2-0509|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ],
       "LecturePeriods": [
@@ -168,7 +168,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ2-0413B",
-          "lessonIndex": 0
+          "serializedLessonDetails": "B1|TUE|0900|1200|BIZ2-0413B|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B10",
@@ -178,7 +178,7 @@
           "startTime": "1300",
           "endTime": "1600",
           "venue": "BIZ1-0203",
-          "lessonIndex": 1
+          "serializedLessonDetails": "B10|WED|1300|1600|BIZ1-0203|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B11",
@@ -188,7 +188,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ2-0413C",
-          "lessonIndex": 2
+          "serializedLessonDetails": "B11|FRI|1400|1700|BIZ2-0413C|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B2",
@@ -198,7 +198,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ2-0413B",
-          "lessonIndex": 3
+          "serializedLessonDetails": "B2|TUE|1400|1700|BIZ2-0413B|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B3",
@@ -208,7 +208,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ2-0413B",
-          "lessonIndex": 4
+          "serializedLessonDetails": "B3|WED|0900|1200|BIZ2-0413B|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B4",
@@ -218,7 +218,7 @@
           "startTime": "1100",
           "endTime": "1400",
           "venue": "BIZ2-0413A",
-          "lessonIndex": 5
+          "serializedLessonDetails": "B4|THU|1100|1400|BIZ2-0413A|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B5",
@@ -228,7 +228,7 @@
           "startTime": "1500",
           "endTime": "1800",
           "venue": "BIZ2-0413A",
-          "lessonIndex": 6
+          "serializedLessonDetails": "B5|THU|1500|1800|BIZ2-0413A|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B6",
@@ -238,7 +238,7 @@
           "startTime": "0800",
           "endTime": "1100",
           "venue": "BIZ1-0303",
-          "lessonIndex": 7
+          "serializedLessonDetails": "B6|WED|0800|1100|BIZ1-0303|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B7",
@@ -248,7 +248,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "BIZ1-0303",
-          "lessonIndex": 8
+          "serializedLessonDetails": "B7|WED|1400|1700|BIZ1-0303|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B8",
@@ -258,7 +258,7 @@
           "startTime": "1500",
           "endTime": "1800",
           "venue": "BIZ1-0204",
-          "lessonIndex": 9
+          "serializedLessonDetails": "B8|FRI|1500|1800|BIZ1-0204|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         },
         {
           "classNo": "B9",
@@ -268,7 +268,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "BIZ1-0203",
-          "lessonIndex": 10
+          "serializedLessonDetails": "B9|WED|0900|1200|BIZ1-0203|(1,2,3,4,5,6,7,8,9,10,11,12,13)"
         }
       ],
       "LecturePeriods": [

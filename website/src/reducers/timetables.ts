@@ -110,13 +110,15 @@ function moduleLessonConfig(
       };
     }
     case REMOVE_LESSON: {
-      const { serializedLessonDetails: serializedLessonDetailsToExclude, lessonType } = action.payload;
+      const { serializedLessonDetails: serializedLessonDetailsToExclude, lessonType } =
+        action.payload;
       if (!(serializedLessonDetailsToExclude && lessonType)) return state;
       return {
         ...state,
         [lessonType]: [
           ...state[lessonType].filter(
-            (serializedLessonDetails: SerializedLessonDetails) => !serializedLessonDetailsToExclude.includes(serializedLessonDetails),
+            (serializedLessonDetails: SerializedLessonDetails) =>
+              !serializedLessonDetailsToExclude.includes(serializedLessonDetails),
           ),
         ],
       };

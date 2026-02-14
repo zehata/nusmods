@@ -1,5 +1,9 @@
 import { ModuleCode, Semester } from 'types/modules';
-import { SemTimetableConfig, LessonWithSerializedDetails, TimetableConfigV1 } from 'types/timetables';
+import {
+  SemTimetableConfig,
+  LessonWithSerializedDetails,
+  TimetableConfigV1,
+} from 'types/timetables';
 
 import lessons from '__mocks__/lessons-array.json';
 import { CS1010A, CS1010S, CS3216 } from '__mocks__/modules';
@@ -48,7 +52,9 @@ test('changeLesson should return updated information to change lesson', () => {
   const semester: Semester = 1;
   const lesson: LessonWithSerializedDetails = lessons[1];
   expect(
-    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [lesson.serializedLessonDetails]),
+    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [
+      lesson.serializedLessonDetails,
+    ]),
   ).toMatchSnapshot();
 });
 
@@ -69,9 +75,9 @@ describe('disabling ta module', () => {
     lessons: {
       [semester]: {
         CS1010S: {
-          Lecture: [0],
-          Tutorial: [11],
-          Recitation: [1],
+          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
         },
       },
     },
@@ -145,9 +151,9 @@ describe('fillTimetableBlanks', () => {
   test('do nothing if timetable is already full', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
-        Recitation: [1],
+        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+        Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
       },
     };
 
@@ -160,8 +166,8 @@ describe('fillTimetableBlanks', () => {
   test('fill missing lessons with randomly generated modules', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
+        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
       },
       CS3216: {},
     };
@@ -177,9 +183,9 @@ describe('fillTimetableBlanks', () => {
         semester,
         moduleCode: 'CS1010S',
         lessonConfig: {
-          Lecture: [0],
-          Tutorial: [11],
-          Recitation: [1],
+          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
         },
       },
     });
@@ -240,12 +246,12 @@ describe('fillTimetableBlanks', () => {
 
     const migratedTimetable: SemTimetableConfig = {
       CS1010S: {
-        Lecture: [0],
-        Recitation: [3],
-        Tutorial: [21],
+        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Recitation: ["2|THU|1300|1400|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Tutorial: ["2|MON|1000|1100|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"],
       },
       CS3216: {
-        Lecture: [0],
+        Lecture: ["1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
       },
     };
     const migratedTaModules: ModuleCode[] = ['CS1010S'];
@@ -265,9 +271,9 @@ describe('fillTimetableBlanks', () => {
   test('should not error when module cannot be found', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
-        Recitation: [1],
+        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+        Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
       },
     };
     const moduleBankWithoutModule = {

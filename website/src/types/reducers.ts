@@ -2,7 +2,13 @@ import { AxiosError } from 'axios';
 import { RegPeriodType, ScheduleType } from 'config';
 
 import { ColorSchemePreference } from './settings';
-import { TaModulesConfigV1, ColorIndex, LessonWithSerializedDetails, TimetableConfig } from './timetables';
+import {
+  TaModulesConfigV1,
+  ColorIndex,
+  LessonWithSerializedDetails,
+  TimetableConfig,
+  TimetableConfigV1,
+} from './timetables';
 import {
   Faculty,
   Module,
@@ -123,7 +129,7 @@ export type TimetablesState = {
   readonly ta: TaModulesMap;
   readonly academicYear: string;
   // Mapping of academic year to old timetable config
-  readonly archive: { [key: string]: TimetableConfig };
+  readonly archive: { [key: string]: TimetableConfig | TimetableConfigV1 };
 };
 
 /* venueBank.js */
