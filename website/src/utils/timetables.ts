@@ -31,16 +31,16 @@ import qs from 'query-string';
 
 import {
   consumeWeeks,
-  LessonIndex,
+  SerializedLessonDetails,
   LessonType,
-  RawLessonWithIndex,
+  RawLessonWithSerializedDetails,
   Module,
   ModuleCode,
   NumericWeeks,
   RawLesson,
   Semester,
   ClassNo,
-  LessonIndicesMap,
+  SerializedLessonDetailsMap,
 } from 'types/modules';
 
 import {
@@ -51,7 +51,7 @@ import {
   HoverLesson,
   InteractableLesson,
   Lesson,
-  LessonWithIndex,
+  LessonWithSerializedDetails,
   ModuleLessonConfig,
   ModuleLessonConfigWithLessons,
   SemTimetableConfig,
@@ -85,6 +85,17 @@ export const LESSON_TYPE_ABBREV: lessonTypeAbbrev = {
   Workshop: 'WS',
 };
 
+type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export const DAY_OF_WEEK_ABBREV: { [x in DayOfWeek]: string } = {
+  Monday: 'MON',
+  Tuesday: 'TUE',
+  Wednesday: 'WED',
+  Thursday: 'THU',
+  Friday: 'FRI',
+  Saturday: 'SAT',
+  Sunday: 'SUN',
+};
+
 // Reverse lookup map of LESSON_TYPE_ABBREV
 export const LESSON_ABBREV_TYPE: { [key: string]: LessonType } = invert(LESSON_TYPE_ABBREV);
 
@@ -109,24 +120,27 @@ export function isValidSemester(semester: Semester): boolean {
 //    [lessonType: string]: ClassNo,
 //  }
 export function randomModuleLessonConfig(lessons: readonly RawLesson[]): ModuleLessonConfig {
-  const lessonsWithIndices = map(lessons, (lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
+  const lessonsWithSerializedDetails = map(lessons, (lesson) => ({
+    ...lesson,
+    serializedLessonDetails: serializeLessonDetails(lesson),
+  }));
 
-  const lessonByGroups: { [lessonType: string]: readonly RawLessonWithIndex[] } = groupBy(
-    lessonsWithIndices,
-    (lesson) => lesson.lessonType,
-  );
+  const lessonByGroups: { [lessonType: string]: readonly RawLessonWithSerializedDetails[] } =
+    groupBy(lessonsWithSerializedDetails, (lesson) => lesson.lessonType);
 
   const lessonByGroupsByClassNo: {
-    [lessonType: string]: { [classNo: string]: readonly RawLessonWithIndex[] };
-  } = mapValues(lessonByGroups, (lessonsOfSamelessonType: readonly RawLessonWithIndex[]) =>
-    groupBy(lessonsOfSamelessonType, (lesson) => lesson.classNo),
+    [lessonType: string]: { [classNo: string]: readonly RawLessonWithSerializedDetails[] };
+  } = mapValues(
+    lessonByGroups,
+    (lessonsOfSamelessonType: readonly RawLessonWithSerializedDetails[]) =>
+      groupBy(lessonsOfSamelessonType, (lesson) => lesson.classNo),
   );
 
   return mapValues(
     lessonByGroupsByClassNo,
-    (group: { [classNo: string]: readonly RawLessonWithIndex[] }) => {
+    (group: { [classNo: string]: readonly RawLessonWithSerializedDetails[] }) => {
       const randomlySelectedLessons = sample(group);
-      return map(randomlySelectedLessons, 'lessonIndex');
+      return map(randomlySelectedLessons, 'serializedLessonDetails');
     },
   );
 }
@@ -154,13 +168,17 @@ function hydrateModuleConfigWithLessons(
   module: Module,
   semester: Semester,
 ): ModuleLessonConfigWithLessons {
-  return mapValues(moduleLessonConfig, (lessonIndices: LessonIndex[]) => {
+  return mapValues(moduleLessonConfig, (serializedLessonDetails: SerializedLessonDetails[]) => {
     const lessons = getModuleTimetable(module, semester);
-    const lessonsWithIndices = map(lessons, (lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
-    const newLessons = lessonsWithIndices.filter((lesson: RawLessonWithIndex) =>
-      lessonIndices.includes(lesson.lessonIndex),
+    const lessonsWithSerializedDetails = map(lessons, (lesson) => ({
+      ...lesson,
+      serializedLessonDetails: serializeLessonDetails(lesson),
+    }));
+    const newLessons = lessonsWithSerializedDetails.filter(
+      (lesson: RawLessonWithSerializedDetails) =>
+        serializedLessonDetails.includes(lesson.serializedLessonDetails),
     );
-    return newLessons.map((lesson: RawLessonWithIndex) => ({
+    return newLessons.map((lesson: RawLessonWithSerializedDetails) => ({
       ...lesson,
       moduleCode: module.moduleCode,
       title: module.title,
@@ -183,7 +201,9 @@ export function lessonsForLessonType<T extends RawLesson>(
 //      [lessonType: string]: [Lesson, ...],
 //    }
 //  }
-export function timetableLessonsArray(timetable: SemTimetableConfigWithLessons): LessonWithIndex[] {
+export function timetableLessonsArray(
+  timetable: SemTimetableConfigWithLessons,
+): LessonWithSerializedDetails[] {
   return flatMapDeep(timetable, values);
 }
 
@@ -437,14 +457,14 @@ export function validateTimetableModules(
  *
  * Valid TA modules configs must have lesson indices that belong to the correct lesson type
  * @param lessonConfig {@link ModuleLessonConfig|lesson configs} to validate
- * @param validLessons {@link RawLessonWithIndex|lesson}s to validate against
+ * @param validLessons {@link RawLessonWithSerializedDetails|lesson}s to validate against
  * @returns
  * - validated TA modules' {@link ModuleLessonConfig|lesson config}
  * - whether the input is valid, to signal to skip dispatch
  */
 export function validateTaModuleLessons(
   lessonConfig: ModuleLessonConfig,
-  validLessons: readonly RawLessonWithIndex[],
+  validLessons: readonly RawLessonWithSerializedDetails[],
 ): {
   validatedLessonConfig: ModuleLessonConfig;
   valid: boolean;
@@ -452,24 +472,28 @@ export function validateTaModuleLessons(
   const lessonsByType = groupBy(validLessons, (lesson) => lesson.lessonType);
   const { config: validatedLessonConfig, valid } = reduce(
     lessonConfig,
-    (accumulatedValidationResult, configLessonIndices, lessonType) => {
-      const validLessonIndices = map(lessonsByType[lessonType], 'lessonIndex');
-      if (!validLessonIndices.length) {
+    (accumulatedValidationResult, configSerializedLessonDetails, lessonType) => {
+      const validSerializedLessonDetails = map(
+        lessonsByType[lessonType],
+        'serializedLessonDetails',
+      );
+      if (!validSerializedLessonDetails.length) {
         return {
           config: accumulatedValidationResult.config,
           valid: false,
         };
       }
       const hasInvalidLesson = some(
-        configLessonIndices,
-        (lessonIndex) => !validLessonIndices.includes(lessonIndex),
+        configSerializedLessonDetails,
+        (serializedLessonDetails) =>
+          !validSerializedLessonDetails.includes(serializedLessonDetails),
       );
       return {
         config: {
           ...accumulatedValidationResult.config,
           [lessonType]: hasInvalidLesson
-            ? getRecoveryLessonIndices(lessonsByType[lessonType])
-            : configLessonIndices,
+            ? getRecoverySerializedLessonDetails(lessonsByType[lessonType])
+            : configSerializedLessonDetails,
         },
         valid: accumulatedValidationResult.valid && !hasInvalidLesson,
       };
@@ -490,19 +514,19 @@ export function validateTaModuleLessons(
  *
  * Note: the current implementation generates a config containing lessons belonging to the first classNo in the provided lessons
  */
-export function getRecoveryLessonIndices(
-  lessonsWithLessonType: RawLessonWithIndex[],
-): LessonIndex[] {
+export function getRecoverySerializedLessonDetails(
+  lessonsWithLessonType: RawLessonWithSerializedDetails[],
+): SerializedLessonDetails[] {
   const firstClass = first(lessonsWithLessonType);
   if (!firstClass) {
     return [];
   }
   const { classNo } = firstClass;
-  const validLessonIndices = map(
+  const validSerializedLessonDetails = map(
     filter(lessonsWithLessonType, (lesson) => lesson.classNo === classNo),
-    'lessonIndex',
+    'serializedLessonDetails',
   );
-  return validLessonIndices;
+  return validSerializedLessonDetails;
 }
 
 /**
@@ -515,7 +539,7 @@ export function getRecoveryLessonIndices(
  */
 export function validateNonTaModuleLesson(
   lessonConfig: ModuleLessonConfig,
-  validLessons: readonly RawLessonWithIndex[],
+  validLessons: readonly RawLessonWithSerializedDetails[],
 ): {
   validatedLessonConfig: ModuleLessonConfig;
   valid: boolean;
@@ -526,47 +550,48 @@ export function validateNonTaModuleLesson(
     lessonsByType,
     (accumulatedValidationResult, lessonsWithLessonType, lessonType) => {
       const lessonTypeInLessonConfig = lessonTypesInLessonConfig.includes(lessonType);
-      const configLessonIndices = lessonConfig[lessonType];
-      const firstLessonIndex = first(configLessonIndices);
+      const configSerializedLessonDetails = lessonConfig[lessonType];
+      const firstSerializedLessonDetails = first(configSerializedLessonDetails);
 
       if (
         !(
           lessonTypeInLessonConfig &&
-          configLessonIndices.length &&
-          isNumber(firstLessonIndex) &&
-          firstLessonIndex < validLessons.length
+          configSerializedLessonDetails.length &&
+          isNumber(firstSerializedLessonDetails) &&
+          firstSerializedLessonDetails < validLessons.length
         )
       ) {
-        const validLessonIndices = getRecoveryLessonIndices(lessonsWithLessonType);
+        const validSerializedLessonDetails =
+          getRecoverySerializedLessonDetails(lessonsWithLessonType);
         return {
           config: {
             ...accumulatedValidationResult.config,
-            [lessonType]: validLessonIndices,
+            [lessonType]: validSerializedLessonDetails,
           },
           valid: false,
         };
       }
 
-      const firstLesson = get(validLessons, firstLessonIndex);
+      const firstLesson = get(validLessons, firstSerializedLessonDetails);
       const { classNo } = firstLesson;
-      const classNoLessonIndices = map(
+      const classNoSerializedLessonDetails = map(
         filter(lessonsWithLessonType, (lesson) => lesson.classNo === classNo),
-        'lessonIndex',
+        'serializedLessonDetails',
       );
-      const configLessonIndicesValid = isEqual(
-        new Set(configLessonIndices),
-        new Set(classNoLessonIndices),
+      const configSerializedLessonDetailsValid = isEqual(
+        new Set(configSerializedLessonDetails),
+        new Set(classNoSerializedLessonDetails),
       );
-      const validLessonIndices = configLessonIndicesValid
-        ? classNoLessonIndices
-        : getRecoveryLessonIndices(lessonsWithLessonType);
+      const validSerializedLessonDetails = configSerializedLessonDetailsValid
+        ? classNoSerializedLessonDetails
+        : getRecoverySerializedLessonDetails(lessonsWithLessonType);
 
       return {
         config: {
           ...accumulatedValidationResult.config,
-          [lessonType]: validLessonIndices,
+          [lessonType]: validSerializedLessonDetails,
         },
-        valid: accumulatedValidationResult.valid && configLessonIndicesValid,
+        valid: accumulatedValidationResult.valid && configSerializedLessonDetailsValid,
       };
     },
     { config: {}, valid: true } as { config: ModuleLessonConfig; valid: boolean },
@@ -611,29 +636,29 @@ export function validateModuleLessons(
  * @param lessonsWithIndex lessons to group
  * @returns lesson indices, not lessons
  */
-export const makeLessonIndicesMap = (
-  lessonsWithIndex: readonly RawLessonWithIndex[],
-): LessonIndicesMap => {
+export const makeSerializedLessonDetailsMap = (
+  lessonsWithIndex: readonly RawLessonWithSerializedDetails[],
+): SerializedLessonDetailsMap => {
   const lessonsByLessonType = groupBy(lessonsWithIndex, 'lessonType');
   return mapValues(lessonsByLessonType, (lessonsWithLessonType) => {
     const lessonsByClassNo = groupBy(lessonsWithLessonType, 'classNo');
     return mapValues(lessonsByClassNo, (lessonsWithClassNo) =>
-      map(lessonsWithClassNo, 'lessonIndex'),
+      map(lessonsWithClassNo, 'serializedLessonDetails'),
     );
   });
 };
 
 /**
- * Helper function to return the indices of lessons belonging to the {@link LessonType|lesson type} and {@link ClassNo|classNo} in the {@link LessonIndicesMap|lesson index mapping}
- * @param lessonIndicesMap
+ * Helper function to return the indices of lessons belonging to the {@link LessonType|lesson type} and {@link ClassNo|classNo} in the {@link SerializedLessonDetailsMap|lesson index mapping}
+ * @param serializedLessonDetailsMap
  * @param lessonType
  * @param classNo
  */
-const getLessonIndices = (
-  lessonIndicesMap: LessonIndicesMap,
+const getSerializedLessonDetails = (
+  serializedLessonDetailsMap: SerializedLessonDetailsMap,
   lessonType: LessonType,
   classNo: ClassNo,
-): LessonIndex[] => get(get(lessonIndicesMap, lessonType), classNo);
+): SerializedLessonDetails[] => get(get(serializedLessonDetailsMap, lessonType), classNo);
 
 // Get information for all modules present in a semester timetable config
 export function getSemesterModules(
@@ -705,8 +730,8 @@ export function formatNumericWeeks(unprocessedWeeks: NumericWeeks): string | nul
 function serializeModuleConfig(config: ModuleLessonConfig): string {
   return map(
     config,
-    (lessonIndex, lessonType) =>
-      `${LESSON_TYPE_ABBREV[lessonType]}${LESSON_TYPE_KEY_VALUE_SEP}(${lessonIndex.join(
+    (serializedLessonDetails, lessonType) =>
+      `${LESSON_TYPE_ABBREV[lessonType]}${LESSON_TYPE_KEY_VALUE_SEP}(${serializedLessonDetails.join(
         LESSON_SEP,
       )})`,
   ).join(';');
@@ -771,7 +796,7 @@ export function parseTaModuleCodes(taSerialized?: string | null): ModuleCode[] {
  */
 export function deserializeTaModulesConfigV1(
   taSerialized: string | null | undefined,
-  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithIndex[],
+  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithSerializedDetails[],
 ): SemTimetableConfig {
   if (!taSerialized || last(taSerialized) !== ')') {
     return {};
@@ -792,7 +817,7 @@ export function deserializeTaModulesConfigV1(
       // ["CS2100", "TUT:2,TUT:3,LAB:1"]
       const timetable = getModuleSemesterTimetable(moduleCode);
       if (!timetable) return accumulatedTaTimetableConfig;
-      const lessonIndicesMap = makeLessonIndicesMap(timetable);
+      const serializedLessonDetailsMap = makeSerializedLessonDetailsMap(timetable);
 
       const moduleLessonConfig = lessons
         .split(LESSON_SEP)
@@ -802,12 +827,16 @@ export function deserializeTaModulesConfigV1(
           // ["TUT", "2"]
           const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
           if (!lessonType) return accumulatedModuleLessonConfig;
-          const lessonIndices = getLessonIndices(lessonIndicesMap, lessonType, classNo);
+          const serializedLessonDetails = getSerializedLessonDetails(
+            serializedLessonDetailsMap,
+            lessonType,
+            classNo,
+          );
           return {
             ...accumulatedModuleLessonConfig,
             [lessonType]: [
               ...(accumulatedModuleLessonConfig[lessonType] ?? []),
-              ...(lessonIndices ?? []),
+              ...(serializedLessonDetails ?? []),
             ],
           } as ModuleLessonConfig;
         }, {} as ModuleLessonConfig);
@@ -822,17 +851,17 @@ export function deserializeTaModulesConfigV1(
 }
 
 /**
- * Deserializes a serialized v2 format lesson config string to a module lesson config
+ * Deserializes a serialized v2 or v3 format lesson config string to a module lesson config
 
  * @param moduleLessonConfig moduleLessonConfig from previously parsed params to combine with, if any
- * @param serializedModuleLessonConfig e.g. `LEC:(0,1);TUT:(3)`
+ * @param serializedModuleLessonConfig e.g. `LEC:(0,1);TUT:(3)` (v2) `TODO` (v3)
  * @param timetable Array of valid lessons
  * @returns Combined moduleLessonConfig
  */
 export function deserializeModuleLessonConfig(
   moduleLessonConfig: ModuleLessonConfig,
   serializedModuleLessonConfig: string,
-  timetable: readonly RawLessonWithIndex[],
+  timetable: readonly RawLessonWithSerializedDetails[],
 ): ModuleLessonConfig {
   const lessonsByLessonType = groupBy(timetable, 'lessonType');
   // LEC:(0,1);TUT:(3)
@@ -840,27 +869,37 @@ export function deserializeModuleLessonConfig(
     serializedModuleLessonConfig.split(LESSON_TYPE_SEP),
     (accumulatedModuleLessonConfig, lessonTypeSerialized) => {
       // LEC:(0,1)
-      const [lessonTypeAbbr, lessonIndicesSerialized] =
+      const [lessonTypeAbbr, serializedLessonDetailsSerialized] =
         lessonTypeSerialized.split(LESSON_TYPE_KEY_VALUE_SEP);
       // ["LEC", "0,1"]
-      const unwrappedLessonIndicesSerialized = lessonIndicesSerialized.match(/(?<=\()(.*)(?=\))/);
-      if (!unwrappedLessonIndicesSerialized) {
+      console.log(serializedLessonDetailsSerialized)
+      const unwrappedSerializedLessonDetailsSerialized =
+        serializedLessonDetailsSerialized.match(/(?<=\()(.*)(?=\))/);
+      if (!unwrappedSerializedLessonDetailsSerialized) {
         return accumulatedModuleLessonConfig;
       }
-      const lessonIndices = map(
-        unwrappedLessonIndicesSerialized[0].split(LESSON_SEP),
-        (lessonIndex) => parseInt(lessonIndex, 10),
+      const serializedLessonDetails: SerializedLessonDetails[] = map(
+        unwrappedSerializedLessonDetailsSerialized[0].split(LESSON_SEP),
+        lessonIdentifier => {
+          let lessonIndex = parseInt(lessonIdentifier, 10);
+          // TODO
+          return isNaN(lessonIndex) ? lessonIdentifier : timetable[lessonIndex].serializedLessonDetails;
+        }
       ); // [0, 1]
       const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
-      const validLessonIndices = map(lessonsByLessonType[lessonType], 'lessonIndex');
-      const validatedLessonIndices = filter(lessonIndices, (lessonIndex) =>
-        validLessonIndices.includes(lessonIndex),
+      const validSerializedLessonDetails = map(
+        lessonsByLessonType[lessonType],
+        'serializedLessonDetails',
+      );
+      const validatedSerializedLessonDetails = filter(
+        serializedLessonDetails,
+        (serializedLessonDetails) => validSerializedLessonDetails.includes(serializedLessonDetails),
       );
       return {
         ...accumulatedModuleLessonConfig,
         [lessonType]: [
           ...(accumulatedModuleLessonConfig[lessonType] ?? []),
-          ...validatedLessonIndices,
+          ...validatedSerializedLessonDetails,
         ],
       };
     },
@@ -878,10 +917,10 @@ export function deserializeModuleLessonConfig(
 export function deserializeModuleLessonConfigV1(
   moduleLessonConfig: ModuleLessonConfig,
   serializedModuleLessonConfig: string,
-  timetable: readonly RawLessonWithIndex[],
+  timetable: readonly RawLessonWithSerializedDetails[],
 ): ModuleLessonConfig {
   // LEC:1,TUT:1,REC:1
-  const lessonIndicesMap = makeLessonIndicesMap(timetable);
+  const serializedLessonDetailsMap = makeSerializedLessonDetailsMap(timetable);
   return reduce(
     serializedModuleLessonConfig.split(LESSON_SEP),
     (accumulatedModuleLessonConfig, lessonTypeSerialized) => {
@@ -889,12 +928,16 @@ export function deserializeModuleLessonConfigV1(
       const [lessonTypeAbbr, classNo] = lessonTypeSerialized.split(LESSON_TYPE_KEY_VALUE_SEP);
       // ["LEC", "1"]
       const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
-      const lessonIndices = getLessonIndices(lessonIndicesMap, lessonType, classNo);
+      const serializedLessonDetails = getSerializedLessonDetails(
+        serializedLessonDetailsMap,
+        lessonType,
+        classNo,
+      );
       return {
         ...accumulatedModuleLessonConfig,
         [lessonType]: [
           ...(accumulatedModuleLessonConfig[lessonType] ?? []),
-          ...(lessonIndices ?? []),
+          ...(serializedLessonDetails ?? []),
         ],
       };
     },
@@ -950,7 +993,7 @@ function parseLessonConfigParams(
   accumulatedDeserializationResult: DeserializationResult,
   paramsKey: string,
   paramsValue: string | string[] | null,
-  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithIndex[],
+  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithSerializedDetails[],
   getTaModuleLessonConfig: (moduleCode: ModuleCode) => ModuleLessonConfig,
 ): DeserializationResult {
   const moduleCode = paramsKey;
@@ -967,7 +1010,7 @@ function parseLessonConfigParams(
   const moduleLessonConfig = reduce(
     castArray(paramsValue),
     (accumulatedModuleLessonConfig, serializedModuleLessonConfig) => {
-      // If using the lesson group serialization (v2)
+      // If using the lesson group serialization (v2) or the lesson details serialization (v3)
       // paramsKey = CS2103T
       // paramsValue = LEC:(0,1);TUT:(3)
       if (
@@ -1009,13 +1052,14 @@ function parseLessonConfigParams(
  * Checks serialization format and parses accordingly
  * - V1 format: `?CS1010S=LEC:1,TUT:1,REC:1&ta=CS1010S(LEC:1,TUT:1,TUT:2,REC:1)&hidden=CS1010S`
  * - V2 format: `?CS1010S=LEC:(0);TUT:(11,22);REC:(1)&ta=CS1010S&hidden=CS1010S`
+ * - V3 format: `?CS1010S=LEC:(1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13));TUT:(1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13),2|MON|1000|1100|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13));REC:(1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13))&ta=CS1010S&hidden=CS1010S`
  * @param serialized
  * @param getModuleSemesterTimetable
  * @returns
  */
 export function deserializeTimetable(
   serialized: string,
-  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithIndex[],
+  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithSerializedDetails[],
 ): {
   semTimetableConfig: SemTimetableConfig;
   ta: ModuleCode[];
@@ -1061,11 +1105,11 @@ export function deserializeTimetable(
 /**
  * A helper function to convert the lesson indices array in a semester timetable config to sets
  */
-function convertSemTimetableConfigLessonIndicesFromArrayToSets(
+function convertSemTimetableConfigSerializedLessonDetailsFromArrayToSets(
   semTimetableConfig: SemTimetableConfig,
 ): {
   [lessonType: LessonType]: {
-    [classNo: ClassNo]: Set<LessonIndex>;
+    [classNo: ClassNo]: Set<SerializedLessonDetails>;
   };
 } {
   return mapValues(semTimetableConfig, (moduleLessonConfig) =>
@@ -1075,8 +1119,8 @@ function convertSemTimetableConfigLessonIndicesFromArrayToSets(
 
 export function isSameTimetableConfig(t1: SemTimetableConfig, t2: SemTimetableConfig): boolean {
   return isEqual(
-    convertSemTimetableConfigLessonIndicesFromArrayToSets(t1),
-    convertSemTimetableConfigLessonIndicesFromArrayToSets(t2),
+    convertSemTimetableConfigSerializedLessonDetailsFromArrayToSets(t1),
+    convertSemTimetableConfigSerializedLessonDetailsFromArrayToSets(t2),
   );
 }
 
@@ -1097,7 +1141,7 @@ export function getHoverLesson(lesson: InteractableLesson): HoverLesson {
     classNo: lesson.classNo,
     moduleCode: lesson.moduleCode,
     lessonType: lesson.lessonType,
-    lessonIndex: lesson.lessonIndex,
+    serializedLessonDetails: lesson.serializedLessonDetails,
   };
 }
 
@@ -1108,7 +1152,7 @@ export function getHoverLesson(lesson: InteractableLesson): HoverLesson {
 export function isInteractable(
   lesson: ColoredLesson | InteractableLesson,
 ): lesson is InteractableLesson {
-  return 'lessonIndex' in lesson;
+  return 'serializedLessonDetails' in lesson;
 }
 
 /**
@@ -1116,6 +1160,15 @@ export function isInteractable(
  */
 export function getLessonIdentifier(lesson: Lesson): string {
   return `${lesson.moduleCode}-${LESSON_TYPE_ABBREV[lesson.lessonType]}-${lesson.classNo}`;
+}
+
+export function isV1(config: ClassNo | LessonIndex[] | SerializedLessonDetails[]): config is ClassNo {
+  return !isArray(config)
+}
+
+type LessonIndex = number;
+export function isV2(config: LessonIndex[] | SerializedLessonDetails[]): config is LessonIndex[] {
+  return isNumber(get(config, 0, undefined))
 }
 
 /**
@@ -1132,21 +1185,27 @@ export function migrateModuleLessonConfig(
   moduleLessonConfig: ModuleLessonConfig | ModuleLessonConfigV1,
   taModulesConfig: ModuleCode[] | TaModulesConfigV1,
   moduleCode: ModuleCode,
-  timetable: readonly RawLessonWithIndex[],
+  timetable: readonly RawLessonWithSerializedDetails[],
 ): {
   migratedModuleLessonConfig: ModuleLessonConfig;
   alreadyMigrated: boolean;
 } {
-  const lessonIndicesMap = makeLessonIndicesMap(timetable);
+  const serializedLessonDetailsMap = makeSerializedLessonDetailsMap(timetable);
   return reduce(
     moduleLessonConfig,
     (accumulatedModuleLessonConfig, lessonsIdentifier, lessonType) => {
-      if (isArray(lessonsIdentifier)) {
+      if (!isV1(lessonsIdentifier)) {
+        const migratedLessonConfig = isV2(lessonsIdentifier) ?
+          map(lessonsIdentifier, lessonIdentifier => {
+            return timetable[lessonIdentifier].serializedLessonDetails
+          }) :
+          lessonsIdentifier;
+
         return {
           ...accumulatedModuleLessonConfig,
           migratedModuleLessonConfig: {
             ...accumulatedModuleLessonConfig.migratedModuleLessonConfig,
-            [lessonType]: lessonsIdentifier,
+            [lessonType]: migratedLessonConfig,
           },
         };
       }
@@ -1159,26 +1218,32 @@ export function migrateModuleLessonConfig(
           );
       const classNos = taClassNos.length ? map(taClassNos, '1') : [lessonsIdentifier];
 
-      const lessonIndices = reduce(
+      const serializedLessonDetails = reduce(
         classNos,
-        (accumulatedLessonIndices, classNo) => {
-          const lessonIndicesWithClassNo = getLessonIndices(
-            lessonIndicesMap,
+        (accumulatedSerializedLessonDetails, classNo) => {
+          const serializedLessonDetailsWithClassNo = getSerializedLessonDetails(
+            serializedLessonDetailsMap,
             lessonType,
             classNo,
-          ) as (LessonIndex | undefined)[];
-          if (!lessonIndicesWithClassNo || lessonIndicesWithClassNo.includes(undefined)) {
+          ) as (SerializedLessonDetails | undefined)[];
+          if (
+            !serializedLessonDetailsWithClassNo ||
+            serializedLessonDetailsWithClassNo.includes(undefined)
+          ) {
             throw new Error('Lesson indices missing');
           }
-          return [...accumulatedLessonIndices, ...(lessonIndicesWithClassNo as LessonIndex[])];
+          return [
+            ...accumulatedSerializedLessonDetails,
+            ...(serializedLessonDetailsWithClassNo as SerializedLessonDetails[]),
+          ];
         },
-        [] as LessonIndex[],
+        [] as SerializedLessonDetails[],
       );
 
       return {
         migratedModuleLessonConfig: {
           ...accumulatedModuleLessonConfig.migratedModuleLessonConfig,
-          [lessonType]: lessonIndices,
+          [lessonType]: serializedLessonDetails,
         },
         alreadyMigrated: false,
       };
@@ -1207,7 +1272,7 @@ export function migrateModuleLessonConfig(
 export function migrateSemTimetableConfig(
   semTimetableConfig: SemTimetableConfig | SemTimetableConfigV1,
   taModulesConfig: ModuleCode[] | TaModulesConfigV1,
-  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithIndex[],
+  getModuleSemesterTimetable: (moduleCode: ModuleCode) => readonly RawLessonWithSerializedDetails[],
 ): {
   migratedSemTimetableConfig: SemTimetableConfig;
   migratedTaModulesConfig: ModuleCode[];
@@ -1253,24 +1318,25 @@ export function migrateSemTimetableConfig(
 
 /**
  * Based on what lessons are currently in the lesson config, find the classNo that most of the lessons belong to
- * @param lessonIndicesMap {@link LessonIndicesMap|Lesson indices mapping} of the module
- * @param timetableLessonIndices lessons currently in lesson config
+ * @param serializedLessonDetailsMap {@link SerializedLessonDetailsMap|Lesson indices mapping} of the module
+ * @param timetableSerializedLessonDetails lessons currently in lesson config
  * @returns a lesson config consisting of lesson indices that best matches the TA lesson config
  */
 export function getClosestLessonConfig(
-  lessonIndicesMap: LessonIndicesMap,
-  timetableLessonIndices: ModuleLessonConfig,
+  serializedLessonDetailsMap: SerializedLessonDetailsMap,
+  timetableSerializedLessonDetails: ModuleLessonConfig,
 ): ModuleLessonConfig {
   return reduce(
-    lessonIndicesMap,
+    serializedLessonDetailsMap,
     (accumulatedModuleLessonConfig, lessonsWithLessonType, lessonType) => {
-      const timetableLessonsWithLessonType = timetableLessonIndices[lessonType];
+      const timetableLessonsWithLessonType = timetableSerializedLessonDetails[lessonType];
       const lessonGroupOccurrences = entries(
         reduce(
           lessonsWithLessonType,
-          (accumulated, lessonIndices, lessonGroup) => ({
+          (accumulated, serializedLessonDetails, lessonGroup) => ({
             ...accumulated,
-            [lessonGroup]: intersection(lessonIndices, timetableLessonsWithLessonType).length,
+            [lessonGroup]: intersection(serializedLessonDetails, timetableLessonsWithLessonType)
+              .length,
           }),
           {} as Record<ClassNo, number>,
         ),
@@ -1279,8 +1345,8 @@ export function getClosestLessonConfig(
       const closestLessonGroups = maxBy(lessonGroupOccurrences, ([, occurrences]) => occurrences);
       if (!closestLessonGroups) return accumulatedModuleLessonConfig;
       const [closestLessonGroupKey] = closestLessonGroups;
-      const closestLessonGroup = getLessonIndices(
-        lessonIndicesMap,
+      const closestLessonGroup = getSerializedLessonDetails(
+        serializedLessonDetailsMap,
         lessonType,
         closestLessonGroupKey,
       );
@@ -1292,4 +1358,21 @@ export function getClosestLessonConfig(
     },
     {} as ModuleLessonConfig,
   );
+}
+
+export function serializeLessonDetails<T extends RawLesson>(lesson: T): string {
+  const { lessonType, classNo, day, startTime, endTime, venue, weeks } = lesson;
+
+  const abbreviatedLessonType = LESSON_TYPE_ABBREV[lessonType];
+  const abbreviatedDayOfWeek = DAY_OF_WEEK_ABBREV[day as DayOfWeek];
+
+  return [
+    abbreviatedLessonType,
+    classNo,
+    abbreviatedDayOfWeek,
+    startTime,
+    endTime,
+    venue,
+    weeks,
+  ].join('|');
 }

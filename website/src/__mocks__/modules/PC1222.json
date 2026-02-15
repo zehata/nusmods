@@ -22,7 +22,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 0
+          "serializedLessonDetails": "M02|MON|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "U02",
@@ -32,7 +32,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 1
+          "serializedLessonDetails": "U02|TUE|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "W01",
@@ -42,7 +42,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 2
+          "serializedLessonDetails": "W01|WED|1400|1700|S12-0402|3_5_7_9_11"
         },
         {
           "classNo": "W02",
@@ -52,7 +52,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 3
+          "serializedLessonDetails": "W02|WED|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "SL1",
@@ -62,7 +62,7 @@
           "startTime": "1000",
           "endTime": "1200",
           "venue": "LT31",
-          "lessonIndex": 4
+          "serializedLessonDetails": "SL1|TUE|1000|1200|LT31|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "SL1",
@@ -72,7 +72,7 @@
           "startTime": "1000",
           "endTime": "1200",
           "venue": "LT31",
-          "lessonIndex": 5
+          "serializedLessonDetails": "SL1|FRI|1000|1200|LT31|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "ST1",
@@ -82,7 +82,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S12-0401",
-          "lessonIndex": 6
+          "serializedLessonDetails": "ST1|MON|1700|1800|S12-0401|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "ST2",
@@ -92,7 +92,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S12-0401",
-          "lessonIndex": 7
+          "serializedLessonDetails": "ST2|TUE|1700|1800|S12-0401|1_2_3_4_5_6_7_8_9_10_11_12_13"
         }
       ],
       "LecturePeriods": ["Tuesday Morning", "Friday Morning"],
@@ -110,7 +110,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 0
+          "serializedLessonDetails": "F01|FRI|1400|1700|S12-0402|3_5_7_9_11"
         },
         {
           "classNo": "F02",
@@ -120,7 +120,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 1
+          "serializedLessonDetails": "F02|FRI|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "M01",
@@ -130,7 +130,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 2
+          "serializedLessonDetails": "M01|MON|1400|1700|S12-0402|3_5_7_9_11"
         },
         {
           "classNo": "M02",
@@ -140,7 +140,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 3
+          "serializedLessonDetails": "M02|MON|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "T01",
@@ -150,7 +150,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 4
+          "serializedLessonDetails": "T01|THU|1400|1700|S12-0402|3_5_7_9_11"
         },
         {
           "classNo": "T02",
@@ -160,7 +160,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 5
+          "serializedLessonDetails": "T02|THU|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "U01",
@@ -170,7 +170,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 6
+          "serializedLessonDetails": "U01|TUE|1400|1700|S12-0402|3_5_7_9_11"
         },
         {
           "classNo": "U02",
@@ -180,7 +180,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 7
+          "serializedLessonDetails": "U02|TUE|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "W02",
@@ -190,7 +190,7 @@
           "startTime": "1400",
           "endTime": "1700",
           "venue": "S12-0402",
-          "lessonIndex": 8
+          "serializedLessonDetails": "W02|WED|1400|1700|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "WM2",
@@ -200,7 +200,7 @@
           "startTime": "0900",
           "endTime": "1200",
           "venue": "S12-0402",
-          "lessonIndex": 9
+          "serializedLessonDetails": "WM2|WED|0900|1200|S12-0402|4_6_8_10_12"
         },
         {
           "classNo": "SL1",
@@ -210,7 +210,7 @@
           "startTime": "1200",
           "endTime": "1400",
           "venue": "LT25",
-          "lessonIndex": 10
+          "serializedLessonDetails": "SL1|TUE|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "SL1",
@@ -220,7 +220,7 @@
           "startTime": "1200",
           "endTime": "1400",
           "venue": "LT25",
-          "lessonIndex": 11
+          "serializedLessonDetails": "SL1|FRI|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T1",
@@ -230,7 +230,7 @@
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S11-0204",
-          "lessonIndex": 12
+          "serializedLessonDetails": "T1|MON|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T10",
@@ -240,7 +240,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S11-0204",
-          "lessonIndex": 13
+          "serializedLessonDetails": "T10|FRI|1700|1800|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T11",
@@ -250,7 +250,7 @@
           "startTime": "0900",
           "endTime": "1000",
           "venue": "CQT/SR0315",
-          "lessonIndex": 14
+          "serializedLessonDetails": "T11|WED|0900|1000|CQT/SR0315|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T2",
@@ -260,7 +260,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S11-0204",
-          "lessonIndex": 15
+          "serializedLessonDetails": "T2|MON|1700|1800|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T3",
@@ -270,7 +270,7 @@
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S11-0204",
-          "lessonIndex": 16
+          "serializedLessonDetails": "T3|TUE|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T4",
@@ -280,7 +280,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S11-0204",
-          "lessonIndex": 17
+          "serializedLessonDetails": "T4|TUE|1700|1800|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T5",
@@ -290,7 +290,7 @@
           "startTime": "1500",
           "endTime": "1600",
           "venue": "S11-0204",
-          "lessonIndex": 18
+          "serializedLessonDetails": "T5|THU|1500|1600|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T6",
@@ -300,7 +300,7 @@
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S11-0204",
-          "lessonIndex": 19
+          "serializedLessonDetails": "T6|THU|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T7",
@@ -310,7 +310,7 @@
           "startTime": "1700",
           "endTime": "1800",
           "venue": "S11-0204",
-          "lessonIndex": 20
+          "serializedLessonDetails": "T7|THU|1700|1800|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T8",
@@ -320,7 +320,7 @@
           "startTime": "1500",
           "endTime": "1600",
           "venue": "S11-0204",
-          "lessonIndex": 21
+          "serializedLessonDetails": "T8|FRI|1500|1600|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "T9",
@@ -330,7 +330,7 @@
           "startTime": "1600",
           "endTime": "1700",
           "venue": "S11-0204",
-          "lessonIndex": 22
+          "serializedLessonDetails": "T9|FRI|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13"
         }
       ],
       "LecturePeriods": ["Tuesday Afternoon", "Friday Afternoon"],

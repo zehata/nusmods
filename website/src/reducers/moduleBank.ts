@@ -15,6 +15,7 @@ import {
   SET_EXPORTED_DATA,
 } from 'actions/constants';
 import { SUCCESS_KEY } from 'middlewares/requests-middleware';
+import { serializeLessonDetails } from 'utils/timetables';
 
 const defaultModuleBankState: ModuleBank = {
   moduleList: [], // List of basic modules data (module code, name, semester)
@@ -54,9 +55,9 @@ function moduleBank(state: ModuleBank = defaultModuleBankState, action: Actions)
             timestamp: Date.now(),
             semesterData: map(action.payload.semesterData, (semesterData) => ({
               ...semesterData,
-              timetable: map(semesterData.timetable, (lesson, lessonIndex) => ({
+              timetable: map(semesterData.timetable, (lesson) => ({
                 ...lesson,
-                lessonIndex,
+                serializedLessonDetails: serializeLessonDetails(lesson),
               })),
             })),
           },

@@ -1,6 +1,6 @@
 import {
   ClassNo,
-  LessonIndex,
+  SerializedLessonDetails,
   LessonType,
   ModuleCode,
   ModuleTitle,
@@ -9,7 +9,7 @@ import {
 } from './modules';
 
 export type ModuleLessonConfig = {
-  [lessonType: LessonType]: LessonIndex[];
+  [lessonType: LessonType]: SerializedLessonDetails[];
 };
 
 //
@@ -50,7 +50,9 @@ export type Lesson = RawLesson & {
   title: ModuleTitle;
 };
 
-export type LessonWithIndex = Lesson & { readonly lessonIndex: LessonIndex };
+export type LessonWithSerializedDetails = Lesson & {
+  readonly serializedLessonDetails: SerializedLessonDetails;
+};
 
 export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
 
@@ -63,7 +65,7 @@ export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
  * - is currently in the lesson config
  */
 export type InteractableLesson = ColoredLesson & {
-  readonly lessonIndex: LessonIndex;
+  readonly serializedLessonDetails: SerializedLessonDetails;
   isTaInTimetable?: boolean;
   canBeSelectedAsActiveLesson?: boolean;
   canBeAddedToLessonConfig?: boolean;
@@ -72,7 +74,7 @@ export type InteractableLesson = ColoredLesson & {
 
 //  The array of Lessons must belong to that lessonType.
 export type ModuleLessonConfigWithLessons = {
-  [lessonType: LessonType]: LessonWithIndex[];
+  [lessonType: LessonType]: LessonWithSerializedDetails[];
 };
 
 // SemTimetableConfig is the timetable data for each semester with lessons data.
@@ -113,7 +115,7 @@ export type HoverLesson = {
   readonly classNo: ClassNo;
   readonly moduleCode: ModuleCode;
   readonly lessonType: LessonType;
-  readonly lessonIndex: LessonIndex;
+  readonly serializedLessonDetails: SerializedLessonDetails;
 };
 
 export type ColorIndex = number;

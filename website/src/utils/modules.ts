@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import type {
   Module,
   ModuleCode,
-  RawLessonWithIndex,
+  RawLessonWithSerializedDetails,
   Semester,
   SemesterData,
   SemesterDataCondensed,
@@ -32,7 +32,7 @@ export function getModuleSemesterData(
 export function getModuleTimetable(
   module: Module,
   semester: Semester,
-): readonly RawLessonWithIndex[] {
+): readonly RawLessonWithSerializedDetails[] {
   return _.get(getModuleSemesterData(module, semester), 'timetable', []);
 }
 

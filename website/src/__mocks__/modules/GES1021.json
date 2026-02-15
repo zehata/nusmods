@@ -27,7 +27,7 @@
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 0
+          "serializedLessonDetails": "SL1|MON|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "SL1",
@@ -37,7 +37,7 @@
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 1
+          "serializedLessonDetails": "SL1|THU|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13"
         }
       ],
       "LecturePeriods": [
@@ -57,7 +57,7 @@
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 0
+          "serializedLessonDetails": "SL1|MON|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13"
         },
         {
           "classNo": "SL1",
@@ -67,7 +67,7 @@
           "startTime": "1600",
           "endTime": "1800",
           "venue": "LT27",
-          "lessonIndex": 1
+          "serializedLessonDetails": "SL1|WED|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13"
         }
       ]
     }
