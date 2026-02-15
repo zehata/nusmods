@@ -98,14 +98,14 @@ test('hydrateSemTimetableWithLessons should replace ClassNo with lessons', () =>
   const config: SemTimetableConfig = {
     [moduleCode]: {
       Tutorial: [
-        "8|MON|1600|1700|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)",
-        "9|MON|1700|1800|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)",
+        "8|MON|1600|1700|AS6-0208|3_4_5_6_7_8_9_10_11_12_13",
+        "9|MON|1700|1800|AS6-0208|3_4_5_6_7_8_9_10_11_12_13",
       ],
       Recitation: [
-        "4|THU|1700|1800|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
+        "4|THU|1700|1800|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13",
       ],
       Lecture: [
-        "1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
+        "1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13",
       ],
     },
   };
@@ -428,11 +428,14 @@ describe('timetable serialization/deserialization', () => {
       {},
       { CS1010S: {} },
       {
-        GER1000: { Tutorial: ["B01|MON|0800|1000|BIZ2-0118|(3,5,7,9,11)"] },
+        GER1000: { Tutorial: ["B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11"] },
       },
       {
-        CS4243: { Laboratory: ["3|TUE|1830|2030|AS6-0421|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|MON|1830|2030|LT15|(1,2,3,4,5,6,7,8,9,10,11,12,13)"] },
-        GER1000: { Tutorial: ["B01|MON|0800|1000|BIZ2-0118|(3,5,7,9,11)"] },
+        CS4243: {
+          Laboratory: ["3|TUE|1830|2030|AS6-0421|3_4_5_6_7_8_9_10_11_12_13"],
+          Lecture: ["1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13"]
+        },
+        GER1000: { Tutorial: ["B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11"] },
       },
     ];
 
@@ -655,8 +658,8 @@ test('isSameTimetableConfig', () => {
   // Change lessonType order
   expect(
     isSameTimetableConfig(
-      { CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"] } },
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
+      { CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
     ),
   ).toBe(true);
 
@@ -664,12 +667,12 @@ test('isSameTimetableConfig', () => {
   expect(
     isSameTimetableConfig(
       {
-        CS2104: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
       },
       {
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
-        CS2104: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
       },
     ),
   ).toBe(true);
@@ -677,8 +680,8 @@ test('isSameTimetableConfig', () => {
   // Different values
   expect(
     isSameTimetableConfig(
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"] } },
     ),
   ).toBe(false);
 
@@ -686,11 +689,11 @@ test('isSameTimetableConfig', () => {
   expect(
     isSameTimetableConfig(
       {
-        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
       },
       {
-        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"] },
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
       },
     ),
   ).toBe(false);
@@ -733,8 +736,8 @@ describe(validateTimetableModules, () => {
 describe(validateModuleLessons, () => {
   const semester: Semester = 1;
   const lessons: ModuleLessonConfig = {
-    Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
-    Recitation: ["10|THU|1200|1300|RMI-SR1|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+    Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+    Recitation: ["10|THU|1200|1300|RMI-SR1|1_2_3_4_5_6_7_8_9_10_11_12_13"],
     Tutorial: ["11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"],
   };
 
@@ -752,7 +755,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Laboratory: ["1|WED|1200|1400|LT32|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], // CS1010S has no lab
+            Laboratory: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], // CS1010S has no lab
           },
           CS1010S,
           false,
@@ -766,7 +769,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Lecture: ["10|FRI|1300|1400|S14-0620|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], // lesson is not a lecture
+            Lecture: ["10|FRI|1300|1400|S14-0620|1_2_3_4_5_6_7_8_9_10_11_12_13"], // lesson is not a lecture
           },
           CS1010S,
           false,
@@ -809,7 +812,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Laboratory: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+            Laboratory: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           },
           CS1010S,
           true,
@@ -826,7 +829,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Lecture: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"], // lesson is not a lecture
+            Lecture: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"], // lesson is not a lecture
           },
           CS1010S,
           true,
@@ -940,7 +943,7 @@ describe('v1 config migration', () => {
   test('should do nothing if already migrated', () => {
     const migrationResult = migrateModuleLessonConfig(
       {
-        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
       [],
       'CS1010S',
@@ -1009,7 +1012,7 @@ describe('v1 config migration', () => {
 
 describe(getClosestLessonConfig, () => {
   test('ignore if lesson type has no classNo', () => {
-    expect(getClosestLessonConfig({ Lecture: {} }, { Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"] })).toEqual({});
+    expect(getClosestLessonConfig({ Lecture: {} }, { Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"] })).toEqual({});
   });
 });
 

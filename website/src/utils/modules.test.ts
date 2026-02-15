@@ -40,7 +40,7 @@ test('getModuleSemesterData should return semester data if semester is present',
         startTime: '1830',
         endTime: '2030',
         venue: 'VCRm',
-        serializedLessonDetails: "1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)",
+        serializedLessonDetails: "1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13",
       },
     ],
   };

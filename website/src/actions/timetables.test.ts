@@ -76,9 +76,9 @@ describe('disabling ta module', () => {
     lessons: {
       [semester]: {
         CS1010S: {
-          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
-          Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
       },
     },
@@ -101,9 +101,9 @@ describe('disabling ta module', () => {
     expect(firstAction).toEqual({
       payload: {
         lessonConfig: {
-          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
-          Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         } as ModuleLessonConfig,
         moduleCode: 'CS1010S',
         semester: 1,
@@ -129,9 +129,9 @@ describe('disabling ta module', () => {
     expect(firstAction).toEqual({
       payload: {
         lessonConfig: {
-          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
-          Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
         moduleCode: 'CS1010S',
         semester: 1,
@@ -153,9 +153,9 @@ describe('fillTimetableBlanks', () => {
   test('do nothing if timetable is already full', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-        Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
     };
 
@@ -168,7 +168,7 @@ describe('fillTimetableBlanks', () => {
   test('fill missing lessons with randomly generated modules', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
       },
       CS3216: {},
@@ -185,9 +185,9 @@ describe('fillTimetableBlanks', () => {
         semester,
         moduleCode: 'CS1010S',
         lessonConfig: {
-          Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-          Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
       },
     });
@@ -198,7 +198,7 @@ describe('fillTimetableBlanks', () => {
         semester,
         moduleCode: 'CS3216',
         lessonConfig: {
-          Lecture: ["1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+          Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         } as ModuleLessonConfig,
       },
     });
@@ -248,12 +248,12 @@ describe('fillTimetableBlanks', () => {
 
     const migratedTimetable: SemTimetableConfig = {
       CS1010S: {
-        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
-        Recitation: ["2|THU|1300|1400|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+        Recitation: ["2|THU|1300|1400|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         Tutorial: ["2|MON|1000|1100|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13)"],
       },
       CS3216: {
-        Lecture: ["1|MON|1830|2030|VCRm|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
     };
     const migratedTaModules: ModuleCode[] = ['CS1010S'];
@@ -273,9 +273,9 @@ describe('fillTimetableBlanks', () => {
   test('should not error when module cannot be found', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: ["1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
-        Recitation: ["1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13)"],
+        Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
     };
     const moduleBankWithoutModule = {

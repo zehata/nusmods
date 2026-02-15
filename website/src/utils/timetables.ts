@@ -1052,7 +1052,7 @@ function parseLessonConfigParams(
  * Checks serialization format and parses accordingly
  * - V1 format: `?CS1010S=LEC:1,TUT:1,REC:1&ta=CS1010S(LEC:1,TUT:1,TUT:2,REC:1)&hidden=CS1010S`
  * - V2 format: `?CS1010S=LEC:(0);TUT:(11,22);REC:(1)&ta=CS1010S&hidden=CS1010S`
- * - V3 format: `?CS1010S=LEC:(1|WED|1000|1200|LT26|(1,2,3,4,5,6,7,8,9,10,11,12,13));TUT:(1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13),2|MON|1000|1100|COM1-0217|(3,4,5,6,7,8,9,10,11,12,13));REC:(1|THU|1200|1300|S14-0619|(1,2,3,4,5,6,7,8,9,10,11,12,13))&ta=CS1010S&hidden=CS1010S`
+ * - V3 format: `?CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13);TUT:(1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13,2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13;REC:(1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13)&ta=CS1010S&hidden=CS1010S`
  * @param serialized
  * @param getModuleSemesterTimetable
  * @returns
