@@ -87,7 +87,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
+        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13",
       },
     })
       .wrapper.find('button')
@@ -183,7 +183,7 @@ describe(TimetableCell, () => {
         moduleCode: 'CS1010',
         classNo: '1',
         lessonType: 'Tutorial',
-        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
+        serializedLessonDetails: "1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13",
       },
     })
       .wrapper.find('button')

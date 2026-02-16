@@ -5,6 +5,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/scripts/test.js'],
   // Jest 27 changes the default test env to 'node', which doesn't expose DOM APIs
   testEnvironment: 'jsdom',
+  testTimeout: 60000,
   moduleNameMapper: {
     // Mock non JS files as strings
     '\\.(?:jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':

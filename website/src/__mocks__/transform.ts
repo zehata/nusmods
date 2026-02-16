@@ -17,7 +17,6 @@ const transformFile = (file_path: string) =>
     const modifiedLessons = mapValues(modules, (module) => {
       return mapValues(module, lessons => {
           return map(lessons, lesson => {
-            console.log(lesson.classNo)
             const lessonWithoutLessonIndex = omit(lesson, 'lessonIndex');
             const serializedLessonDetails = serializeLessonDetails(lessonWithoutLessonIndex);
             return {
@@ -74,7 +73,7 @@ export function serializeLessonDetails<T extends RawLesson>(lesson: T): string {
   const { classNo, day, startTime, endTime, venue, weeks } = lesson;
 
   const abbreviatedDayOfWeek = DAY_OF_WEEK_ABBREV[day as DayOfWeek];
-  const serializedWeeks = isWeekRange(weeks) ? JSON.stringify(weeks) : `(${weeks.join('_')})`;
+  const serializedWeeks = isWeekRange(weeks) ? JSON.stringify(weeks) : `${weeks.join('_')}`;
 
   return [classNo, abbreviatedDayOfWeek, startTime, endTime, venue, serializedWeeks].join('|');
 }

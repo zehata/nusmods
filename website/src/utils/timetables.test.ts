@@ -115,7 +115,6 @@ test('hydrateSemTimetableWithLessons should replace ClassNo with lessons', () =>
     modulesMap,
     sem,
   );
-  console.log(configWithLessons)
   expect(configWithLessons[moduleCode].Tutorial[0].classNo).toBe('8');
   expect(configWithLessons[moduleCode].Tutorial[1].classNo).toBe('9');
   expect(configWithLessons[moduleCode].Recitation[0].classNo).toBe('4');
@@ -456,10 +455,10 @@ describe('timetable serialization/deserialization', () => {
     ).toEqual({
       semTimetableConfig: {
         CS1010S: {
-          Lecture: [0],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
         CS3216: {
-          Lecture: [0],
+          Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
       },
       ta: ['CS1010S'],
@@ -474,10 +473,10 @@ describe('timetable serialization/deserialization', () => {
           .semTimetableConfig,
       ).toEqual({
         CS1010S: {
-          Lecture: [0],
-          Recitation: [1],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
-      });
+      } as SemTimetableConfig);
     });
 
     test('no lessons', () => {
@@ -490,9 +489,9 @@ describe('timetable serialization/deserialization', () => {
         CS2105: {},
         CS3217: {},
         CS1010S: {
-          Lecture: [0],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
         },
-      });
+      } as SemTimetableConfig);
     });
 
     test('should ignore invalid lesson indices', () => {
@@ -520,11 +519,14 @@ describe('timetable serialization/deserialization', () => {
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
-            Tutorial: [21, 30],
+            Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+            Tutorial: [
+              "2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13",
+              "3|MON|1100|1200|COM1-0217|3_4_5_6_7_8_9_10_11_12_13",
+            ],
           },
           CS3216: {
-            Lecture: [0],
+            Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
         ta: ['CS3216', 'CS1010S'],
@@ -541,7 +543,7 @@ describe('timetable serialization/deserialization', () => {
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Tutorial: [21],
+            Tutorial: ["2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
         ta: ['CS1010S'],
@@ -572,7 +574,7 @@ describe('timetable serialization/deserialization', () => {
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Tutorial: [21],
+            Tutorial: ["2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
         ta: ['CS1010S'],
@@ -615,9 +617,9 @@ describe('timetable serialization/deserialization', () => {
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
-            Recitation: [1],
-            Tutorial: [30],
+            Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+            Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+            Tutorial: ["3|MON|1100|1200|COM1-0217|3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
         ta: [],
@@ -634,7 +636,7 @@ describe('timetable serialization/deserialization', () => {
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
+            Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
         ta: ['CS1010S'],
@@ -658,8 +660,8 @@ test('isSameTimetableConfig', () => {
   // Change lessonType order
   expect(
     isSameTimetableConfig(
-      { CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] } },
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
+      { CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] } },
     ),
   ).toBe(true);
 
@@ -667,12 +669,12 @@ test('isSameTimetableConfig', () => {
   expect(
     isSameTimetableConfig(
       {
-        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] },
       },
       {
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
-        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] },
+        CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] },
       },
     ),
   ).toBe(true);
@@ -680,8 +682,8 @@ test('isSameTimetableConfig', () => {
   // Different values
   expect(
     isSameTimetableConfig(
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] } },
-      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] } },
+      { CS2104: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["10|TUE|0900|1000|COM1-0209|3_4_5_6_7_8_9_10_11_12_13"] } },
     ),
   ).toBe(false);
 
@@ -689,11 +691,11 @@ test('isSameTimetableConfig', () => {
   expect(
     isSameTimetableConfig(
       {
-        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
+        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
       },
       {
-        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
-        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|(3,4,5,6,7,8,9,10,11,12,13)"] },
+        CS2104: { Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"], Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"] },
+        CS2105: { Lecture: ["1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13"], Tutorial: ["1|MON|0900|1000|AS6-0208|3_4_5_6_7_8_9_10_11_12_13"] },
       },
     ),
   ).toBe(false);
@@ -737,8 +739,8 @@ describe(validateModuleLessons, () => {
   const semester: Semester = 1;
   const lessons: ModuleLessonConfig = {
     Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
-    Recitation: ["10|THU|1200|1300|RMI-SR1|1_2_3_4_5_6_7_8_9_10_11_12_13"],
-    Tutorial: ["11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"],
+    Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+    Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
   };
 
   describe('validate non ta module lessons', () => {
@@ -782,16 +784,16 @@ describe(validateModuleLessons, () => {
         validateModuleLessons(
           semester,
           {
-            Tutorial: ["11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"],
+            Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
           },
           CS1010S,
           false,
         ),
       ).toEqual({
         validatedLessonConfig: {
-          Lecture: [0],
-          Recitation: [1],
-          Tutorial: [13],
+          Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Recitation: ["1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
+          Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
         },
         valid: false,
       });
@@ -951,7 +953,7 @@ describe('v1 config migration', () => {
     );
     expect(migrationResult).toEqual({
       migratedModuleLessonConfig: {
-        Lecture: [0],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
       alreadyMigrated: true,
     });
@@ -966,7 +968,7 @@ describe('v1 config migration', () => {
     );
     expect(migrationResult).toEqual({
       migratedModuleLessonConfig: {
-        Lecture: [0],
+        Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
       },
       alreadyMigrated: false,
     });

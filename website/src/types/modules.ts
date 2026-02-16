@@ -25,6 +25,7 @@ export type WeekRange = {
   // Week intervals for modules with uneven spacing between lessons
   weeks?: number[];
 };
+export type LessonIndex = number;
 export type SerializedLessonDetails = string;
 
 // Recursive tree of module codes and boolean operators for the prereq tree

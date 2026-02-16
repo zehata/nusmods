@@ -41,6 +41,7 @@ import {
   Semester,
   ClassNo,
   SerializedLessonDetailsMap,
+  isWeekRange,
 } from 'types/modules';
 
 import {
@@ -95,6 +96,7 @@ export const DAY_OF_WEEK_ABBREV: { [x in DayOfWeek]: string } = {
   Saturday: 'SAT',
   Sunday: 'SUN',
 };
+const DAY_OF_WEEK_FULL = invert(DAY_OF_WEEK_ABBREV);
 
 // Reverse lookup map of LESSON_TYPE_ABBREV
 export const LESSON_ABBREV_TYPE: { [key: string]: LessonType } = invert(LESSON_TYPE_ABBREV);
@@ -552,15 +554,9 @@ export function validateNonTaModuleLesson(
       const lessonTypeInLessonConfig = lessonTypesInLessonConfig.includes(lessonType);
       const configSerializedLessonDetails = lessonConfig[lessonType];
       const firstSerializedLessonDetails = first(configSerializedLessonDetails);
+      const lessonTypeValidSerializedLessonDetails = map(lessonsWithLessonType, "serializedLessonDetails");
 
-      if (
-        !(
-          lessonTypeInLessonConfig &&
-          configSerializedLessonDetails.length &&
-          isNumber(firstSerializedLessonDetails) &&
-          firstSerializedLessonDetails < validLessons.length
-        )
-      ) {
+      if (!lessonTypeInLessonConfig || !firstSerializedLessonDetails || !lessonTypeValidSerializedLessonDetails.includes(firstSerializedLessonDetails)) {
         const validSerializedLessonDetails =
           getRecoverySerializedLessonDetails(lessonsWithLessonType);
         return {
@@ -571,9 +567,8 @@ export function validateNonTaModuleLesson(
           valid: false,
         };
       }
-
-      const firstLesson = get(validLessons, firstSerializedLessonDetails);
-      const { classNo } = firstLesson;
+      
+      const { classNo } = deserializeLessonDetails(firstSerializedLessonDetails);
       const classNoSerializedLessonDetails = map(
         filter(lessonsWithLessonType, (lesson) => lesson.classNo === classNo),
         'serializedLessonDetails',
@@ -872,7 +867,6 @@ export function deserializeModuleLessonConfig(
       const [lessonTypeAbbr, serializedLessonDetailsSerialized] =
         lessonTypeSerialized.split(LESSON_TYPE_KEY_VALUE_SEP);
       // ["LEC", "0,1"]
-      console.log(serializedLessonDetailsSerialized)
       const unwrappedSerializedLessonDetailsSerialized =
         serializedLessonDetailsSerialized.match(/(?<=\()(.*)(?=\))/);
       if (!unwrappedSerializedLessonDetailsSerialized) {
@@ -881,9 +875,12 @@ export function deserializeModuleLessonConfig(
       const serializedLessonDetails: SerializedLessonDetails[] = map(
         unwrappedSerializedLessonDetailsSerialized[0].split(LESSON_SEP),
         lessonIdentifier => {
-          let lessonIndex = parseInt(lessonIdentifier, 10);
-          // TODO
-          return isNaN(lessonIndex) ? lessonIdentifier : timetable[lessonIndex].serializedLessonDetails;
+          // parseInt coerces "1|..." to 1
+          if (/^\d+$/.test(lessonIdentifier)) {
+            const lessonIndex = parseInt(lessonIdentifier, 10);
+            return timetable[lessonIndex].serializedLessonDetails
+          }
+          return lessonIdentifier
         }
       ); // [0, 1]
       const lessonType = LESSON_ABBREV_TYPE[lessonTypeAbbr];
@@ -1361,18 +1358,24 @@ export function getClosestLessonConfig(
 }
 
 export function serializeLessonDetails<T extends RawLesson>(lesson: T): string {
-  const { lessonType, classNo, day, startTime, endTime, venue, weeks } = lesson;
+  const { classNo, day, startTime, endTime, venue, weeks } = lesson;
 
-  const abbreviatedLessonType = LESSON_TYPE_ABBREV[lessonType];
   const abbreviatedDayOfWeek = DAY_OF_WEEK_ABBREV[day as DayOfWeek];
+  const serializedWeeks = isWeekRange(weeks) ? JSON.stringify(weeks) : `${weeks.join('_')}`;
 
-  return [
-    abbreviatedLessonType,
+  return [classNo, abbreviatedDayOfWeek, startTime, endTime, venue, serializedWeeks].join('|');
+}
+
+export function deserializeLessonDetails(serializedLessonDetails: string): Omit<RawLesson, "lessonType"> {
+  const [classNo, abbreviatedDayOfWeek, startTime, endTime, venue, serializedWeeks] = serializedLessonDetails.split("|");
+  return {
     classNo,
-    abbreviatedDayOfWeek,
+    day: DAY_OF_WEEK_FULL[abbreviatedDayOfWeek],
     startTime,
     endTime,
     venue,
-    weeks,
-  ].join('|');
+    weeks: serializedWeeks.split("_").map(week => {
+      return parseInt(week, 10)
+    }),
+  }
 }

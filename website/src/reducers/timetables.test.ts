@@ -17,7 +17,7 @@ import {
 import { TimetablesState } from 'types/reducers';
 import config from 'config';
 import { SerializedLessonDetails } from 'types/modules';
-import { TimetableConfig } from 'types/timetables';
+import { ModuleLessonConfig, TimetableConfig } from 'types/timetables';
 
 const initialState = defaultTimetableState;
 
@@ -177,7 +177,7 @@ describe('lesson reducer', () => {
           Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           Recitation: ["3|THU|1600|1700|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
-        }),
+        } as ModuleLessonConfig),
       ),
     ).toMatchObject({
       lessons: {
@@ -185,7 +185,7 @@ describe('lesson reducer', () => {
           CS1010S: {
             Lecture: ["1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13"],
             Recitation: ["3|THU|1600|1700|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13"],
-            Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+            Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
           },
           CS3216: {
             Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
@@ -196,7 +196,7 @@ describe('lesson reducer', () => {
             Lecture: ["1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
-      },
+      } as TimetableConfig,
     });
   });
 
@@ -207,9 +207,9 @@ describe('lesson reducer', () => {
         1: {
           CS1010S: {
             Tutorial: [
-              "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
-              "10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)",
-              "11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)",
+              "1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13",
+              "10|TUE|0900|1000|COM1-0209|3_4_5_6_7_8_9_10_11_12_13",
+              "11|TUE|1000|1100|COM1-0208|3_4_5_6_7_8_9_10_11_12_13",
             ],
           },
         },
@@ -218,10 +218,10 @@ describe('lesson reducer', () => {
 
     expect(
       reducer(timetableState, removeLesson(1, 'CS1010S', 'Tutorial', [
-        "10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)",
-        "11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)"
+        "10|TUE|0900|1000|COM1-0209|3_4_5_6_7_8_9_10_11_12_13",
+        "11|TUE|1000|1100|COM1-0208|3_4_5_6_7_8_9_10_11_12_13"
       ])),
-    ).toHaveProperty('lessons.1.CS1010S.Tutorial', ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"] as SerializedLessonDetails[]);
+    ).toHaveProperty('lessons.1.CS1010S.Tutorial', ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"] as SerializedLessonDetails[]);
   });
 
   test('should replace lessons with those in payload', () => {
@@ -231,9 +231,9 @@ describe('lesson reducer', () => {
         1: {
           CS1010S: {
             Tutorial: [
-              "1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)",
-              "10|TUE|0900|1000|COM1-0209|(3,4,5,6,7,8,9,10,11,12,13)",
-              "11|TUE|1000|1100|COM1-0208|(3,4,5,6,7,8,9,10,11,12,13)",
+              "1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13",
+              "10|TUE|0900|1000|COM1-0209|3_4_5_6_7_8_9_10_11_12_13",
+              "11|TUE|1000|1100|COM1-0208|3_4_5_6_7_8_9_10_11_12_13",
             ],
           },
         },
@@ -242,12 +242,12 @@ describe('lesson reducer', () => {
 
     expect(
       reducer(timetableState, changeLesson(1, 'CS1010S', 'Tutorial', [
-        "12|TUE|1100|1200|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)",
-        "13|TUE|1200|1300|COM1-0114|(3,4,5,6,7,8,9,10,11,12,13)",
+        "12|TUE|1100|1200|COM1-0207|3_4_5_6_7_8_9_10_11_12_13",
+        "13|TUE|1200|1300|COM1-0114|3_4_5_6_7_8_9_10_11_12_13",
       ])),
     ).toHaveProperty('lessons.1.CS1010S.Tutorial', [
-      "12|TUE|1100|1200|COM1-0207|(3,4,5,6,7,8,9,10,11,12,13)",
-      "13|TUE|1200|1300|COM1-0114|(3,4,5,6,7,8,9,10,11,12,13)",
+      "12|TUE|1100|1200|COM1-0207|3_4_5_6_7_8_9_10_11_12_13",
+      "13|TUE|1200|1300|COM1-0114|3_4_5_6_7_8_9_10_11_12_13",
     ] as SerializedLessonDetails[]);
   });
 
@@ -257,7 +257,7 @@ describe('lesson reducer', () => {
       lessons: {
         1: {
           CS1010S: {
-            Tutorial: ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"],
+            Tutorial: ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"],
           },
         },
       },
@@ -266,7 +266,7 @@ describe('lesson reducer', () => {
       },
     };
 
-    expect(reducer(withTaModules, addLesson(1, 'CS1010S', 'Tutorial', ["1|MON|0900|1000|COM1-0203|(3,4,5,6,7,8,9,10,11,12,13)"]))).toMatchObject(
+    expect(reducer(withTaModules, addLesson(1, 'CS1010S', 'Tutorial', ["1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13"]))).toMatchObject(
       withTaModules,
     );
   });

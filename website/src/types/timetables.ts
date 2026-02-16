@@ -6,6 +6,7 @@ import {
   ModuleTitle,
   RawLesson,
   Semester,
+  LessonIndex,
 } from './modules';
 
 export type ModuleLessonConfig = {
@@ -14,9 +15,18 @@ export type ModuleLessonConfig = {
 
 //
 /**
- * ModuleLessonConfig is the v1 representation of module configs\
- * It is a mapping of lessonType to classNo\
+ * ModuleLessonConfigV2 is the v2 representation of module configs\
+ * It is a mapping of lessonType to lessonIndex\
  * It is only used for type annotations in the migration logic
+ */
+export type ModuleLessonConfigV2 = {
+  [lessonType: LessonType]: LessonIndex;
+};
+
+//
+/**
+ * ModuleLessonConfigV1 is the v1 representation of module configs\
+ * It is a mapping of lessonType to classNo\
  */
 export type ModuleLessonConfigV1 = {
   [lessonType: LessonType]: ClassNo;
