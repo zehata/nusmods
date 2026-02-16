@@ -142,7 +142,7 @@ describe(TimetableContainerComponent, () => {
   test('should eventually display imported timetable if there is one', async () => {
     const semester = 1;
     const importedTimetable = {
-      [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': ["A1|MON|1400|1700|BIZ1-0303|(1,2,3,4,5,6)"] }, // BFS1001 doesn't have Lecture, only SectionalTeaching
+      [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': ["A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6"] }, // BFS1001 doesn't have Lecture, only SectionalTeaching
     };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
@@ -165,7 +165,7 @@ describe(TimetableContainerComponent, () => {
 
   test('should eventually display imported timetable without any modules loaded', async () => {
     const semester = 1;
-    const importedTimetable = { [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': ["A1|MON|1400|1700|BIZ1-0303|(1,2,3,4,5,6)"] } };
+    const importedTimetable = { [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': ["A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6"] } };
     const location = timetableShare(semester, importedTimetable, [moduleCodeThatCanBeLoaded], []);
     make(location);
 
@@ -187,7 +187,7 @@ describe(TimetableContainerComponent, () => {
 
   test('should ignore invalid modules in imported timetable', () => {
     const semester = 1;
-    const importedTimetable = { TRUMP2020: { Lecture: ["A1|MON|1400|1700|BIZ1-0303|(1,2,3,4,5,6)"] } };
+    const importedTimetable = { TRUMP2020: { Lecture: ["A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6"] } };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
 
