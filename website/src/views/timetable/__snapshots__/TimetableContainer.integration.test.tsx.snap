@@ -1,0 +1,682 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimetableContainerComponent timetable 1`] = `
+<div
+  class="page-container container verticalMode"
+  data-testid="timetable"
+>
+  <div
+    class="alert alert-success no-export announcement"
+  >
+    <div
+      data-testid="react-feather Heart icon"
+    />
+    <div
+      class="body"
+    >
+      <h3>
+        AY2025/26 courses now available!
+      </h3>
+      <p
+        class="bodyElement"
+      >
+        NUSMods now has AY2025/26 course information available. The data is accurate but subject to changes.
+      </p>
+      <p
+        class="bodyElement"
+      >
+        If there are any discrepancies with course data, please contact your respective faculty's office. Happy new academic year!
+      </p>
+    </div>
+    <div
+      class="buttons"
+    >
+      <button
+        aria-label="Close"
+        class="close"
+        type="button"
+      >
+        <div
+          data-testid="react-feather X icon"
+        />
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="semesterSwitcher"
+    >
+      <button
+        aria-label="Previous Semester"
+        class="btn btn-link"
+        data-testid="previous-semester"
+        type="button"
+      >
+        <div
+          data-testid="react-feather ChevronLeft icon"
+        />
+      </button>
+      <span
+        class="sr-only"
+      >
+        Current semester:
+      </span>
+      <span
+        class="semesterName"
+      >
+        Semester 2
+      </span>
+      <button
+        aria-label="Next Semester"
+        class="btn btn-link"
+        data-testid="next-semester"
+        type="button"
+      >
+        <div
+          data-testid="react-feather ChevronRight icon"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col-md-8"
+    >
+      <div
+        class="timetableWrapper"
+      >
+        <div>
+          <div
+            class="container timetable"
+          >
+            <div
+              class="timings"
+            >
+              <time
+                class="time"
+              >
+                1000
+              </time>
+              <time
+                class="time"
+              >
+                1100
+              </time>
+              <time
+                class="time"
+              >
+                1200
+              </time>
+              <time
+                class="time"
+              >
+                1300
+              </time>
+              <time
+                class="time"
+              >
+                1400
+              </time>
+              <time
+                class="time"
+              >
+                1500
+              </time>
+              <time
+                class="time"
+              >
+                1600
+              </time>
+              <time
+                class="time"
+              >
+                1700
+              </time>
+              <span />
+            </div>
+            <ol
+              class="days"
+            >
+              <li
+                class="day"
+              >
+                <div
+                  class="dayName"
+                >
+                  <span
+                    class="dayNameText"
+                  >
+                    Mon
+                  </span>
+                </div>
+                <div
+                  class="dayRows"
+                  style="background-size: 25% 25%; height: 38.4rem;"
+                >
+                  <div
+                    class="no-export currentTimeIndicator"
+                    style="margin-left: 69.79166666666667%; top: 69.79166666666667%;"
+                  >
+                    <div
+                      class="circularPart"
+                    />
+                    <div
+                      class="linePart"
+                    />
+                  </div>
+                  <div
+                    class="timetableRow"
+                  />
+                </div>
+                <div
+                  class="no-export currentDay"
+                />
+              </li>
+              <li
+                class="day"
+              >
+                <div
+                  class="dayName"
+                >
+                  <span
+                    class="dayNameText"
+                  >
+                    Tue
+                  </span>
+                </div>
+                <div
+                  class="dayRows"
+                  style="background-size: 25% 25%; height: 38.4rem;"
+                >
+                  <div
+                    class="no-export currentTimeIndicator"
+                    style="opacity: 0;"
+                  >
+                    <div
+                      class="circularPart"
+                    />
+                    <div
+                      class="linePart"
+                    />
+                  </div>
+                  <div
+                    class="timetableRow"
+                  />
+                </div>
+              </li>
+              <li
+                class="day"
+              >
+                <div
+                  class="dayName"
+                >
+                  <span
+                    class="dayNameText"
+                  >
+                    Wed
+                  </span>
+                </div>
+                <div
+                  class="dayRows"
+                  style="background-size: 25% 25%; height: 38.4rem;"
+                >
+                  <div
+                    class="no-export currentTimeIndicator"
+                    style="opacity: 0;"
+                  >
+                    <div
+                      class="circularPart"
+                    />
+                    <div
+                      class="linePart"
+                    />
+                  </div>
+                  <div
+                    class="timetableRow"
+                  />
+                </div>
+              </li>
+              <li
+                class="day"
+              >
+                <div
+                  class="dayName"
+                >
+                  <span
+                    class="dayNameText"
+                  >
+                    Thu
+                  </span>
+                </div>
+                <div
+                  class="dayRows"
+                  style="background-size: 25% 25%; height: 38.4rem;"
+                >
+                  <div
+                    class="no-export currentTimeIndicator"
+                    style="opacity: 0;"
+                  >
+                    <div
+                      class="circularPart"
+                    />
+                    <div
+                      class="linePart"
+                    />
+                  </div>
+                  <div
+                    class="timetableRow"
+                  />
+                </div>
+              </li>
+              <li
+                class="day"
+              >
+                <div
+                  class="dayName"
+                >
+                  <span
+                    class="dayNameText"
+                  >
+                    Fri
+                  </span>
+                </div>
+                <div
+                  class="dayRows"
+                  style="background-size: 25% 25%; height: 38.4rem;"
+                >
+                  <div
+                    class="no-export currentTimeIndicator"
+                    style="opacity: 0;"
+                  >
+                    <div
+                      class="circularPart"
+                    />
+                    <div
+                      class="linePart"
+                    />
+                  </div>
+                  <div
+                    class="timetableRow"
+                  />
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-md-4"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col-12 no-export"
+        >
+          <div
+            aria-label="Timetable utilities"
+            class="btn-toolbar justify-content-between"
+            role="toolbar"
+          >
+            <div
+              aria-label="Timetable manipulation"
+              class="buttonGroup"
+              role="group"
+            >
+              <button
+                class="btn btn-outline-primary btn-svg"
+                type="button"
+              >
+                <div
+                  data-testid="react-feather Sidebar icon"
+                />
+                Horizontal Mode
+              </button>
+              <button
+                class="calendarBtn exam-calendar-btn btn-outline-primary btn btn-svg"
+                type="button"
+              >
+                <div
+                  data-testid="react-feather Calendar icon"
+                />
+                 Exam Calendar
+              </button>
+            </div>
+            <div
+              aria-label="Timetable exporting"
+              class="buttonGroup"
+              role="group"
+            >
+              <div
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-labelledby="downshift-2-label"
+                class="exportMenu"
+                role="combobox"
+              >
+                <button
+                  class="toggle btn btn-outline-primary btn-svg"
+                  type="button"
+                >
+                  <div
+                    data-testid="react-feather Download icon"
+                  />
+                  Download
+                  <div
+                    data-testid="react-feather ChevronDown icon"
+                  />
+                </button>
+                <div
+                  aria-labelledby="downshift-2-label"
+                  class="dropdown-menu dropdownMenu"
+                  id="downshift-2-menu"
+                  role="listbox"
+                >
+                  <a
+                    aria-selected="false"
+                    class="dropdown-item"
+                    href="https://export.nusmods.com/api/export/image?data=%7B%22semester%22%3A2%2C%22timetable%22%3A%7B%22CS1010S%22%3A%7B%22Lecture%22%3A%5B%221%7CWED%7C1200%7C1400%7CLT32%7C1_2_3_4_5_6_7_8_9_10_11_12_13%22%5D%2C%22Recitation%22%3A%5B%229%7CFRI%7C1200%7C1300%7CS14-0620%7C1_2_3_4_5_6_7_8_9_10_11_12_13%22%5D%2C%22Tutorial%22%3A%5B%222%7CMON%7C1000%7C1100%7CAS6-0208%7C3_4_5_6_7_8_9_10_11_12_13%22%5D%7D%7D%2C%22colors%22%3A%7B%22CS1010S%22%3A3%7D%2C%22hidden%22%3A%5B%22CS1010S%22%5D%2C%22ta%22%3A%5B%22CS1010S%22%5D%2C%22theme%22%3A%7B%22id%22%3A%22eighties%22%2C%22timetableOrientation%22%3A%22VERTICAL%22%2C%22showTitle%22%3Afalse%2C%22_persist%22%3A%7B%22version%22%3A-1%2C%22rehydrated%22%3Atrue%7D%7D%2C%22settings%22%3A%7B%22colorScheme%22%3A%22DARK_COLOR_SCHEME%22%7D%7D&pixelRatio=1"
+                    id="downshift-2-item-0"
+                    role="option"
+                  >
+                    <div
+                      data-testid="react-feather Image icon"
+                    />
+                     Image (.png)
+                  </a>
+                  <a
+                    aria-selected="false"
+                    class="dropdown-item"
+                    href="https://export.nusmods.com/api/export/pdf?data=%7B%22semester%22%3A2%2C%22timetable%22%3A%7B%22CS1010S%22%3A%7B%22Lecture%22%3A%5B%221%7CWED%7C1200%7C1400%7CLT32%7C1_2_3_4_5_6_7_8_9_10_11_12_13%22%5D%2C%22Recitation%22%3A%5B%229%7CFRI%7C1200%7C1300%7CS14-0620%7C1_2_3_4_5_6_7_8_9_10_11_12_13%22%5D%2C%22Tutorial%22%3A%5B%222%7CMON%7C1000%7C1100%7CAS6-0208%7C3_4_5_6_7_8_9_10_11_12_13%22%5D%7D%7D%2C%22colors%22%3A%7B%22CS1010S%22%3A3%7D%2C%22hidden%22%3A%5B%22CS1010S%22%5D%2C%22ta%22%3A%5B%22CS1010S%22%5D%2C%22theme%22%3A%7B%22id%22%3A%22eighties%22%2C%22timetableOrientation%22%3A%22VERTICAL%22%2C%22showTitle%22%3Afalse%2C%22_persist%22%3A%7B%22version%22%3A-1%2C%22rehydrated%22%3Atrue%7D%7D%2C%22settings%22%3A%7B%22colorScheme%22%3A%22DARK_COLOR_SCHEME%22%7D%7D"
+                    id="downshift-2-item-1"
+                    role="option"
+                  >
+                    <div
+                      data-testid="react-feather FileText icon"
+                    />
+                     PDF (.pdf)
+                  </a>
+                  <button
+                    aria-selected="false"
+                    class="dropdown-item"
+                    id="downshift-2-item-2"
+                    role="option"
+                    type="button"
+                  >
+                    <div
+                      data-testid="react-feather Calendar icon"
+                    />
+                    iCalendar File (.ics)
+                    <br />
+                    (For Google Calendar / Outlook)
+                  </button>
+                </div>
+              </div>
+              <button
+                class="btn btn-outline-primary btn-svg"
+                type="button"
+              >
+                <div
+                  data-testid="react-feather Repeat icon"
+                />
+                Share/Sync
+              </button>
+              <button
+                class="btn btn-outline-primary btn-svg"
+                type="button"
+              >
+                <div
+                  data-testid="react-feather XSquare icon"
+                />
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modulesSelect"
+        >
+          <div
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-labelledby="downshift-3-label"
+            class="container"
+            role="combobox"
+          >
+            <label
+              class="sr-only"
+              for="downshift-3-input"
+              id="downshift-3-label"
+            >
+              Add course to timetable
+            </label>
+            <input
+              aria-autocomplete="list"
+              aria-labelledby="downshift-3-label"
+              autocomplete="off"
+              class="input add-module-input"
+              id="downshift-3-input"
+              placeholder="Add course to timetable"
+              value="010"
+            />
+          </div>
+        </div>
+        <div
+          class="col-12"
+        >
+          <div
+            class="modulesTable module-table row"
+          >
+            <div
+              class="modulesTableRow col-sm-6 col-md-12"
+            >
+              <div
+                class="moduleColor"
+              >
+                <div
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-labelledby="downshift-5-label"
+                  class="container hidden ta"
+                  role="combobox"
+                >
+                  <button
+                    aria-haspopup="true"
+                    aria-label="open menu"
+                    class="btn btn-block hoverable color-3 moduleColor hidden ta"
+                    data-toggle="true"
+                    role="button"
+                    title="Change CS1010S timetable color"
+                    type="button"
+                  />
+                  <div
+                    aria-labelledby="downshift-5-label"
+                    class="palette isClosed"
+                    id="downshift-5-menu"
+                    role="listbox"
+                  >
+                    <button
+                      aria-selected="false"
+                      class="option color-0"
+                      id="downshift-5-item-0"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-1"
+                      id="downshift-5-item-1"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-2"
+                      id="downshift-5-item-2"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-3 selected"
+                      id="downshift-5-item-3"
+                      role="option"
+                      type="button"
+                    >
+                      <svg />
+                    </button>
+                    <button
+                      aria-selected="false"
+                      class="option color-4"
+                      id="downshift-5-item-4"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-5"
+                      id="downshift-5-item-5"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-6"
+                      id="downshift-5-item-6"
+                      role="option"
+                      type="button"
+                    />
+                    <button
+                      aria-selected="false"
+                      class="option color-7"
+                      id="downshift-5-item-7"
+                      role="option"
+                      type="button"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="moduleInfo"
+              >
+                <div
+                  class="moduleActionButtons"
+                >
+                  <div
+                    class="btn-group"
+                  >
+                    <button
+                      aria-label="Remove CS1010S from timetable"
+                      class="btn btn-outline-secondary btn-svg moduleAction"
+                      type="button"
+                    >
+                      <div
+                        data-testid="react-feather Trash icon"
+                      />
+                    </button>
+                    <button
+                      aria-label="Show CS1010S"
+                      class="btn btn-outline-secondary btn-svg moduleAction"
+                      type="button"
+                    >
+                      <div
+                        data-testid="react-feather Eye icon"
+                      />
+                    </button>
+                    <button
+                      aria-label="Disable TA for CS1010S"
+                      class="btn btn-outline-secondary btn-svg moduleAction"
+                      type="button"
+                    >
+                      <div
+                        data-testid="react-feather BookOpen icon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <a
+                  href="/courses/CS1010S/programming-methodology"
+                >
+                  CS1010S
+                   
+                  Programming Methodology
+                </a>
+                <div
+                  class="moduleExam"
+                >
+                  Exam: 07-May-2018 5:00 PM
+                   • 
+                  2 hrs
+                   • 
+                  4 Units
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-12"
+        >
+          <div
+            class="footer row align-items-center"
+          >
+            <div
+              class="col-12"
+            >
+              <hr />
+            </div>
+            <div
+              class="col"
+            >
+              <div>
+                Active Units: 
+                <strong>
+                  0 Units
+                </strong>
+              </div>
+              <div>
+                Total Units: 
+                <strong>
+                  4 Units
+                </strong>
+              </div>
+            </div>
+            <div
+              class="moduleOrder col no-export"
+            >
+              <label
+                for="moduleOrder"
+              >
+                Order
+              </label>
+              <select
+                class="moduleOrder form-control form-control-sm"
+                id="moduleOrder"
+              >
+                <option
+                  value="exam"
+                >
+                  Exam Date
+                </option>
+                <option
+                  value="mc"
+                >
+                  Course Credits
+                </option>
+                <option
+                  value="code"
+                >
+                  Course Code
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

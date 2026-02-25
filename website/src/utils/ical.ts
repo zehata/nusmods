@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { map } from 'lodash';
 import type { EventOption } from 'ical-generator';
 import { addDays, addMinutes, addWeeks, isValid } from 'date-fns';
 
@@ -14,7 +14,7 @@ import {
   StartTime,
   WeekRange,
 } from 'types/modules';
-import { SemTimetableConfigWithLessons } from 'types/timetables';
+import { Lesson, SemTimetableConfigWithLessons } from 'types/timetables';
 
 import config from 'config';
 import academicCalendar from 'data/academic-calendar';
@@ -174,7 +174,7 @@ export function iCalEventForLesson(
 
 export default function iCalForTimetable(
   semester: Semester,
-  timetable: SemTimetableConfigWithLessons,
+  timetable: SemTimetableConfigWithLessons<Lesson>,
   moduleData: { [moduleCode: string]: Module },
   hiddenModules: ModuleCode[],
   taModules: ModuleCode[],
@@ -191,7 +191,7 @@ export default function iCalForTimetable(
     const isTa = taModules.includes(moduleCode);
 
     _.each(lessonConfig, (lessons) => {
-      lessons.forEach((lesson) => {
+      map(lessons).forEach((lesson) => {
         events.push(
           iCalEventForLesson(lesson, moduleData[moduleCode], semester, firstDayOfSchool, isTa),
         );

@@ -76,7 +76,9 @@ describe(AddModuleDropdownComponent, () => {
 
   test('should show remove button when the module is in timetable', () => {
     // eslint-disable-next-line no-useless-computed-key
-    const container = make(CS3216, { [1]: { CS3216: { Lecture: [0] } } });
+    const container = make(CS3216, {
+      1: { CS3216: { Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'] } },
+    });
     const button = container.wrapper.find('button');
 
     expect(button.text()).toMatch('Remove');

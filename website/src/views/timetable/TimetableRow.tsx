@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { HoverLesson, ColoredLesson, InteractableLesson } from 'types/timetables';
+import { ColoredLesson, HoverLesson, InteractableLesson } from 'types/timetables';
 import { OnHoverCell, OnModifyCell } from 'types/views';
 
 import { convertTimeToIndex } from 'utils/timify';

@@ -1,28 +1,20 @@
 import NUSModerator from 'nusmoderator';
-import _, { get } from 'lodash';
+import _, { map } from 'lodash';
 import { parseISO } from 'date-fns';
 import {
-  TaModulesConfigV1,
   ColoredLesson,
+  Lesson,
   ModuleLessonConfig,
   SemTimetableConfig,
   SemTimetableConfigWithLessons,
   TimetableArrangement,
   TimetableDayArrangement,
   TimetableDayFormat,
-  ModuleLessonConfigV1,
 } from 'types/timetables';
-import {
-  LessonType,
-  ModuleCode,
-  RawLesson,
-  RawLessonWithIndex,
-  Semester,
-  Weeks,
-} from 'types/modules';
+import { LessonType, RawLesson, Semester, Weeks } from 'types/modules';
 import { ModulesMap } from 'types/reducers';
 
-import { getModuleSemesterData, getModuleTimetable } from 'utils/modules';
+import { getModuleLessonMap, getModuleSemesterData, getModuleTimetable } from 'utils/modules';
 
 import { CS1010S, CS3216, CS4243, PC1222, CS1010A, GER1000 } from '__mocks__/modules';
 import moduleCodeMapJSON from '__mocks__/module-code-map.json';
@@ -47,13 +39,12 @@ import {
   formatNumericWeeks,
   getClosestLessonConfig,
   getEndTimeAsDate,
-  getRecoveryLessonIndices,
+  getRecoveryLessonKeys,
   getStartTimeAsDate,
   groupLessonsByDay,
   hydrateSemTimetableWithLessons,
   isLessonAvailable,
   isLessonOngoing,
-  isSameTimetableConfig,
   isValidSemester,
   lessonsForLessonType,
   migrateModuleLessonConfig,
@@ -97,21 +88,25 @@ test('hydrateSemTimetableWithLessons should replace ClassNo with lessons', () =>
   const modulesMap: ModulesMap = { [moduleCode]: CS1010S };
   const config: SemTimetableConfig = {
     [moduleCode]: {
-      Tutorial: [42, 43],
-      Recitation: [5],
-      Lecture: [0],
+      Tutorial: [
+        '8|MON|1600|1700|AS6-0208|3_4_5_6_7_8_9_10_11_12_13',
+        '9|MON|1700|1800|AS6-0208|3_4_5_6_7_8_9_10_11_12_13',
+      ],
+      Recitation: ['4|THU|1700|1800|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
     },
   };
 
-  const configWithLessons: SemTimetableConfigWithLessons = hydrateSemTimetableWithLessons(
+  const configWithLessons: SemTimetableConfigWithLessons<Lesson> = hydrateSemTimetableWithLessons(
     config,
     modulesMap,
     sem,
   );
-  expect(configWithLessons[moduleCode].Tutorial[0].classNo).toBe('8');
-  expect(configWithLessons[moduleCode].Tutorial[1].classNo).toBe('9');
-  expect(configWithLessons[moduleCode].Recitation[0].classNo).toBe('4');
-  expect(configWithLessons[moduleCode].Lecture[0].classNo).toBe('1');
+  expect(new Set(map(configWithLessons[moduleCode].Tutorial, 'classNo'))).toEqual(
+    new Set(['8', '9']),
+  );
+  expect(new Set(map(configWithLessons[moduleCode].Recitation, 'classNo'))).toEqual(new Set(['4']));
+  expect(new Set(map(configWithLessons[moduleCode].Lecture, 'classNo'))).toEqual(new Set(['1']));
 });
 
 test('lessonsForLessonType should return all lessons belonging to a particular lessonType', () => {
@@ -403,32 +398,33 @@ test('findExamClashes should return non-empty object if exams starting at differ
 });
 
 describe('timetable serialization/deserialization', () => {
-  const mockSemesterTimetable: { [moduleCode: ModuleCode]: readonly RawLessonWithIndex[] } = {
-    CS1010S: getModuleTimetable(CS1010S, 1),
-    CS3216: getModuleTimetable(CS3216, 1),
-    GER1000: getModuleTimetable(GER1000, 1),
-    CS4243: getModuleTimetable(CS4243, 1),
-  };
-  const mockGetModuleSemesterTimetable = (moduleCode: ModuleCode): readonly RawLessonWithIndex[] =>
-    get(mockSemesterTimetable, moduleCode);
+  const modules = {
+    CS1010S,
+    CS3216,
+    GER1000,
+    CS4243,
+  } as ModulesMap;
+  const semester: Semester = 1;
 
   test('timetable serialization/deserialization', () => {
     const configs: SemTimetableConfig[] = [
       {},
       { CS1010S: {} },
       {
-        GER1000: { Tutorial: [13] },
+        GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
       },
       {
-        CS4243: { Laboratory: [2], Lecture: [5] },
-        GER1000: { Tutorial: [13] },
+        CS4243: {
+          Laboratory: ['3|TUE|1830|2030|AS6-0421|3_4_5_6_7_8_9_10_11_12_13'],
+          Lecture: ['1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        },
+        GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
       },
     ];
 
     configs.forEach((config) => {
       expect(
-        deserializeTimetable(serializeTimetable(config), mockGetModuleSemesterTimetable)
-          .semTimetableConfig,
+        deserializeTimetable(serializeTimetable(config), modules, semester).semTimetableConfig,
       ).toEqual(config);
     });
   });
@@ -436,16 +432,17 @@ describe('timetable serialization/deserialization', () => {
   test('deserializing timetable with ta and hidden modules', () => {
     expect(
       deserializeTimetable(
-        'CS1010S=LEC:(0)&CS3216=LEC:(0)&ta=CS1010S&hidden=CS3216',
-        mockGetModuleSemesterTimetable,
+        'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS3216=LEC:(1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13)&ta=CS1010S&hidden=CS3216',
+        modules,
+        semester,
       ),
     ).toEqual({
       semTimetableConfig: {
         CS1010S: {
-          Lecture: [0],
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
         CS3216: {
-          Lecture: [0],
+          Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
       },
       ta: ['CS1010S'],
@@ -456,34 +453,53 @@ describe('timetable serialization/deserialization', () => {
   describe('deserializing edge cases', () => {
     test('duplicate module code', () => {
       expect(
-        deserializeTimetable('CS1010S=LEC:(0)&CS1010S=REC:(1)', mockGetModuleSemesterTimetable)
-          .semTimetableConfig,
+        deserializeTimetable(
+          'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS1010S=REC:(1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13)',
+          modules,
+          semester,
+        ).semTimetableConfig,
       ).toEqual({
         CS1010S: {
-          Lecture: [0],
-          Recitation: [1],
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
-      });
+      } as SemTimetableConfig);
     });
 
     test('no lessons', () => {
       expect(
         deserializeTimetable(
-          'CS2105&CS3217&CS1010S=LEC:(0)&ta=&hidden=',
-          mockGetModuleSemesterTimetable,
+          'GER1000&CS4243=LEC:&CS3216=LEC:)&CS1010S=LEC:()&ta=&hidden=',
+          modules,
+          semester,
         ).semTimetableConfig,
       ).toEqual({
-        CS2105: {},
-        CS3217: {},
-        CS1010S: {
-          Lecture: [0],
+        GER1000: {},
+        CS4243: {
+          Lecture: [],
         },
-      });
+        CS3216: {
+          Lecture: [],
+        },
+        CS1010S: {
+          Lecture: [],
+        },
+      } as SemTimetableConfig);
+    });
+
+    test('missing module', () => {
+      expect(
+        deserializeTimetable(
+          'GER1001&CS4244=&CS3217=LEC:&CS1011S=LEC:()&ta=&hidden=',
+          modules,
+          semester,
+        ).semTimetableConfig,
+      ).toEqual({} as SemTimetableConfig);
     });
 
     test('should ignore invalid lesson indices', () => {
       expect(
-        deserializeTimetable('CS1010S=LEC:(20)', mockGetModuleSemesterTimetable).semTimetableConfig,
+        deserializeTimetable('CS1010S=LEC:(20)', modules, semester).semTimetableConfig,
       ).toEqual({
         CS1010S: {
           Lecture: [],
@@ -501,16 +517,20 @@ describe('timetable serialization/deserialization', () => {
       expect(
         deserializeTimetable(
           'CS1010S=LEC:1,TUT:8&CS3216=LEC:1&ta=CS3216(LEC:1),CS1010S(LEC:1,TUT:2,TUT:3)&hidden=CS3216',
-          mockGetModuleSemesterTimetable,
+          modules,
+          semester,
         ),
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
-            Tutorial: [21, 30],
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+            Tutorial: [
+              '2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13',
+              '3|MON|1100|1200|COM1-0217|3_4_5_6_7_8_9_10_11_12_13',
+            ],
           },
           CS3216: {
-            Lecture: [0],
+            Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
           },
         },
         ta: ['CS3216', 'CS1010S'],
@@ -522,12 +542,13 @@ describe('timetable serialization/deserialization', () => {
       expect(
         deserializeTimetable(
           'CS1010S=LEC:1&ta=CS1010S(TUT:2,INVALIDLESSONTYPE:1)',
-          mockGetModuleSemesterTimetable,
+          modules,
+          semester,
         ),
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Tutorial: [21],
+            Tutorial: ['2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13'],
           },
         },
         ta: ['CS1010S'],
@@ -536,9 +557,7 @@ describe('timetable serialization/deserialization', () => {
     });
 
     test('should ignore invalid classNo', () => {
-      expect(
-        deserializeTimetable('CS1010S=LEC:INVALIDCLASSNO', mockGetModuleSemesterTimetable),
-      ).toEqual({
+      expect(deserializeTimetable('CS1010S=LEC:INVALIDCLASSNO', modules, semester)).toEqual({
         semTimetableConfig: {
           CS1010S: {
             Lecture: [],
@@ -551,14 +570,11 @@ describe('timetable serialization/deserialization', () => {
 
     test('use only last ta param', () => {
       expect(
-        deserializeTimetable(
-          'CS1010S=LEC:1&ta=CS3216(LEC:1)&ta=CS1010S(TUT:2)',
-          mockGetModuleSemesterTimetable,
-        ),
+        deserializeTimetable('CS1010S=LEC:1&ta=CS3216(LEC:1)&ta=CS1010S(TUT:2)', modules, semester),
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Tutorial: [21],
+            Tutorial: ['2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13'],
           },
         },
         ta: ['CS1010S'],
@@ -567,9 +583,7 @@ describe('timetable serialization/deserialization', () => {
     });
 
     test('should ignore invalid ta lessons', () => {
-      expect(
-        deserializeTimetable('CS1010S=LEC:1&ta=CS1010S(LEC:2)', mockGetModuleSemesterTimetable),
-      ).toEqual({
+      expect(deserializeTimetable('CS1010S=LEC:1&ta=CS1010S(LEC:2)', modules, semester)).toEqual({
         semTimetableConfig: {
           CS1010S: {
             Lecture: [],
@@ -581,9 +595,7 @@ describe('timetable serialization/deserialization', () => {
     });
 
     test('ta module config without lessons', () => {
-      expect(
-        deserializeTimetable('CS1010S=LEC:1,TUT:3&ta=CS1010S()', mockGetModuleSemesterTimetable),
-      ).toEqual({
+      expect(deserializeTimetable('CS1010S=LEC:1,TUT:3&ta=CS1010S()', modules, semester)).toEqual({
         semTimetableConfig: {
           CS1010S: {},
         },
@@ -594,16 +606,13 @@ describe('timetable serialization/deserialization', () => {
 
     test('ignore modules without semester data', () => {
       expect(
-        deserializeTimetable(
-          'CS1010S=LEC:1,REC:1,TUT:3&ta=CS3217(LEC:1)',
-          mockGetModuleSemesterTimetable,
-        ),
+        deserializeTimetable('CS1010S=LEC:1,REC:1,TUT:3&ta=CS3217(LEC:1)', modules, semester),
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
-            Recitation: [1],
-            Tutorial: [30],
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+            Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+            Tutorial: ['3|MON|1100|1200|COM1-0217|3_4_5_6_7_8_9_10_11_12_13'],
           },
         },
         ta: [],
@@ -615,12 +624,13 @@ describe('timetable serialization/deserialization', () => {
       expect(
         deserializeTimetable(
           'CS1010S=LEC:1,REC:1,TUT:3&ta=INVALID),CS1010S(LEC:1)',
-          mockGetModuleSemesterTimetable,
+          modules,
+          semester,
         ),
       ).toEqual({
         semTimetableConfig: {
           CS1010S: {
-            Lecture: [0],
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
           },
         },
         ta: ['CS1010S'],
@@ -635,54 +645,6 @@ describe('timetable serialization/deserialization', () => {
       ]);
     });
   });
-});
-
-test('isSameTimetableConfig', () => {
-  // Empty timetable
-  expect(isSameTimetableConfig({}, {})).toBe(true);
-
-  // Change lessonType order
-  expect(
-    isSameTimetableConfig(
-      { CS2104: { Tutorial: [1], Lecture: [2] } },
-      { CS2104: { Lecture: [2], Tutorial: [1] } },
-    ),
-  ).toBe(true);
-
-  // Change module order
-  expect(
-    isSameTimetableConfig(
-      {
-        CS2104: { Lecture: [1], Tutorial: [2] },
-        CS2105: { Lecture: [1], Tutorial: [1] },
-      },
-      {
-        CS2105: { Lecture: [1], Tutorial: [1] },
-        CS2104: { Lecture: [1], Tutorial: [2] },
-      },
-    ),
-  ).toBe(true);
-
-  // Different values
-  expect(
-    isSameTimetableConfig(
-      { CS2104: { Lecture: [1], Tutorial: [2] } },
-      { CS2104: { Lecture: [2], Tutorial: [1] } },
-    ),
-  ).toBe(false);
-
-  // One is subset of the other
-  expect(
-    isSameTimetableConfig(
-      {
-        CS2104: { Tutorial: [1], Lecture: [2] },
-      },
-      {
-        CS2104: { Tutorial: [1], Lecture: [2] },
-        CS2105: { Lecture: [1], Tutorial: [1] },
-      },
-    ),
-  ).toBe(false);
 });
 
 describe(validateTimetableModules, () => {
@@ -722,9 +684,9 @@ describe(validateTimetableModules, () => {
 describe(validateModuleLessons, () => {
   const semester: Semester = 1;
   const lessons: ModuleLessonConfig = {
-    Lecture: [0],
-    Recitation: [2],
-    Tutorial: [13],
+    Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+    Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+    Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
   };
 
   describe('validate non ta module lessons', () => {
@@ -741,7 +703,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Laboratory: [0], // CS1010S has no lab
+            Laboratory: ['1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13'], // CS1010S has no lab
           },
           CS1010S,
           false,
@@ -755,7 +717,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Lecture: [2], // CS1010S lesson index 2 is not a lecture
+            Lecture: ['10|FRI|1300|1400|S14-0620|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
           },
           CS1010S,
           false,
@@ -768,16 +730,16 @@ describe(validateModuleLessons, () => {
         validateModuleLessons(
           semester,
           {
-            Tutorial: [13],
+            Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
           },
           CS1010S,
           false,
         ),
       ).toEqual({
         validatedLessonConfig: {
-          Lecture: [0],
-          Recitation: [1],
-          Tutorial: [13],
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
         },
         valid: false,
       });
@@ -798,7 +760,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Laboratory: [0],
+            Laboratory: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
           },
           CS1010S,
           true,
@@ -815,7 +777,7 @@ describe(validateModuleLessons, () => {
           semester,
           {
             ...lessons,
-            Lecture: [1],
+            Lecture: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
           },
           CS1010S,
           true,
@@ -926,18 +888,20 @@ describe('v1 config migration', () => {
     Lecture: '1',
   };
   const moduleTimetable = getModuleTimetable(CS1010S, 1);
+  const lessonMap = getModuleLessonMap(CS1010S, 1);
   test('should do nothing if already migrated', () => {
     const migrationResult = migrateModuleLessonConfig(
       {
-        Lecture: [0],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
       [],
       'CS1010S',
       moduleTimetable,
+      lessonMap,
     );
     expect(migrationResult).toEqual({
       migratedModuleLessonConfig: {
-        Lecture: [0],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
       alreadyMigrated: true,
     });
@@ -949,61 +913,30 @@ describe('v1 config migration', () => {
       [],
       'CS1010S',
       moduleTimetable,
+      lessonMap,
     );
     expect(migrationResult).toEqual({
       migratedModuleLessonConfig: {
-        Lecture: [0],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
       alreadyMigrated: false,
     });
-  });
-
-  test('should error if migration is missing data to migrate from the old config', () => {
-    const taModuleConfig = {
-      CS1010S: [['Lecture', '1']],
-    } as TaModulesConfigV1;
-    expect(() =>
-      migrateModuleLessonConfig(moduleLessonConfig, taModuleConfig, 'CS1010S', []),
-    ).toThrow(Error('Lesson indices missing'));
-  });
-
-  test('should error if migration cannot find the lesson indices for non-ta module classNo', () => {
-    const invalidModuleLessonConfig = {
-      Lecture: '2',
-    } as ModuleLessonConfigV1;
-    expect(() =>
-      migrateModuleLessonConfig(
-        invalidModuleLessonConfig,
-        {
-          CS1010S: [],
-        },
-        'CS1010S',
-        moduleTimetable,
-      ),
-    ).toThrow(Error('Lesson indices missing'));
-  });
-
-  test('should error if migration cannot find the lesson indices for ta module classNo', () => {
-    const taModuleConfig = {
-      CS1010S: [
-        ['Lecture', '1'],
-        ['Lecture', '2'],
-      ],
-    } as TaModulesConfigV1;
-    expect(() =>
-      migrateModuleLessonConfig(moduleLessonConfig, taModuleConfig, 'CS1010S', moduleTimetable),
-    ).toThrow(Error('Lesson indices missing'));
   });
 });
 
 describe(getClosestLessonConfig, () => {
   test('ignore if lesson type has no classNo', () => {
-    expect(getClosestLessonConfig({ Lecture: {} }, { Lecture: [0] })).toEqual({});
+    expect(
+      getClosestLessonConfig(
+        { Lecture: {} },
+        { Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'] },
+      ),
+    ).toEqual({});
   });
 });
 
-describe(getRecoveryLessonIndices, () => {
+describe(getRecoveryLessonKeys, () => {
   test('guard against empty lessons input', () => {
-    expect(getRecoveryLessonIndices([])).toEqual([]);
+    expect(getRecoveryLessonKeys({})).toEqual([]);
   });
 });

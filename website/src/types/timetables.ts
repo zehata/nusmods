@@ -1,22 +1,32 @@
 import {
   ClassNo,
-  LessonIndex,
   LessonType,
   ModuleCode,
   ModuleTitle,
   RawLesson,
   Semester,
+  LessonIndex,
+  LessonKey,
 } from './modules';
 
 export type ModuleLessonConfig = {
+  [lessonType: LessonType]: LessonKey[];
+};
+
+//
+/**
+ * ModuleLessonConfigV2 is the v2 representation of module configs\
+ * It is a mapping of lessonType to lessonIndex\
+ * It is only used for type annotations in the migration logic
+ */
+export type ModuleLessonConfigV2 = {
   [lessonType: LessonType]: LessonIndex[];
 };
 
 //
 /**
- * ModuleLessonConfig is the v1 representation of module configs\
+ * ModuleLessonConfigV1 is the v1 representation of module configs\
  * It is a mapping of lessonType to classNo\
- * It is only used for type annotations in the migration logic
  */
 export type ModuleLessonConfigV1 = {
   [lessonType: LessonType]: ClassNo;
@@ -50,8 +60,6 @@ export type Lesson = RawLesson & {
   title: ModuleTitle;
 };
 
-export type LessonWithIndex = Lesson & { readonly lessonIndex: LessonIndex };
-
 export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
 
 /**
@@ -63,21 +71,21 @@ export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
  * - is currently in the lesson config
  */
 export type InteractableLesson = ColoredLesson & {
-  readonly lessonIndex: LessonIndex;
-  isTaInTimetable?: boolean;
-  canBeSelectedAsActiveLesson?: boolean;
-  canBeAddedToLessonConfig?: boolean;
-  isActive?: boolean;
+  isTaInTimetable: boolean;
+  canBeSelectedAsActiveLesson: boolean;
+  canBeAddedToLessonConfig: boolean;
+  isActive: boolean;
+  lessonKey: LessonKey;
 };
 
 //  The array of Lessons must belong to that lessonType.
-export type ModuleLessonConfigWithLessons = {
-  [lessonType: LessonType]: LessonWithIndex[];
+export type ModuleLessonConfigWithLessons<T extends Lesson> = {
+  [lessonType: LessonType]: Record<LessonKey, T>;
 };
 
 // SemTimetableConfig is the timetable data for each semester with lessons data.
-export type SemTimetableConfigWithLessons = {
-  [moduleCode: ModuleCode]: ModuleLessonConfigWithLessons;
+export type SemTimetableConfigWithLessons<T extends Lesson> = {
+  [moduleCode: ModuleCode]: ModuleLessonConfigWithLessons<T>;
 };
 
 /**
@@ -113,7 +121,7 @@ export type HoverLesson = {
   readonly classNo: ClassNo;
   readonly moduleCode: ModuleCode;
   readonly lessonType: LessonType;
-  readonly lessonIndex: LessonIndex;
+  readonly lessonKey: LessonKey;
 };
 
 export type ColorIndex = number;

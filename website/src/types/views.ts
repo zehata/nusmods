@@ -1,7 +1,7 @@
 import type { QueryObject } from 'json2mq';
 import { Module, ModuleCondensed } from './modules';
 import { ModuleList } from './reducers';
-import { ColorIndex, HoverLesson, Lesson, InteractableLesson } from './timetables';
+import { ColorIndex, Lesson, InteractableLesson, HoverLesson } from './timetables';
 import { Venue, VenueList } from './venues';
 import { RegPeriod } from '../config';
 

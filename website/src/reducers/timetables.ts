@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import { createMigrate } from 'redux-persist';
 
 import { PersistConfig } from 'storage/persistReducer';
-import { LessonIndex, ModuleCode } from 'types/modules';
+import { LessonKey, ModuleCode } from 'types/modules';
 import { ModuleLessonConfig, SemTimetableConfig } from 'types/timetables';
 import { ColorMapping, TimetablesState } from 'types/reducers';
 
@@ -94,29 +94,29 @@ function moduleLessonConfig(
 
   switch (action.type) {
     case CHANGE_LESSON: {
-      const { lessonIndices, lessonType } = action.payload;
-      if (!(lessonIndices && lessonType)) return state;
+      const { lessonKeys, lessonType } = action.payload;
+      if (!(lessonKeys && lessonType)) return state;
       return {
         ...state,
-        [lessonType]: lessonIndices,
+        [lessonType]: lessonKeys,
       };
     }
     case ADD_LESSON: {
-      const { lessonIndices, lessonType } = action.payload;
-      if (!(lessonIndices && lessonType)) return state;
+      const { lessonKeys, lessonType } = action.payload;
+      if (!(lessonKeys && lessonType)) return state;
       return {
         ...state,
-        [lessonType]: uniq([...lessonIndices, ...state[lessonType]]),
+        [lessonType]: uniq([...lessonKeys, ...state[lessonType]]),
       };
     }
     case REMOVE_LESSON: {
-      const { lessonIndices: lessonIndicesToExclude, lessonType } = action.payload;
-      if (!(lessonIndicesToExclude && lessonType)) return state;
+      const { lessonKeys: lessonKeysToExclude, lessonType } = action.payload;
+      if (!(lessonKeysToExclude && lessonType)) return state;
       return {
         ...state,
         [lessonType]: [
           ...state[lessonType].filter(
-            (lessonIndex: LessonIndex) => !lessonIndicesToExclude.includes(lessonIndex),
+            (lessonKey: LessonKey) => !lessonKeysToExclude.includes(lessonKey),
           ),
         ],
       };

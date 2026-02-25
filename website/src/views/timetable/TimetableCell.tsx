@@ -1,6 +1,5 @@
 import * as React from 'react';
 import classnames from 'classnames';
-import { noop } from 'lodash';
 import { addWeeks, format, parseISO } from 'date-fns';
 import NUSModerator, { AcadWeekInfo } from 'nusmoderator';
 
@@ -56,7 +55,7 @@ function checkHover(
 
   if (!lesson.isTaInTimetable && lesson.classNo === hoverLesson.classNo) return true;
 
-  if (lesson.isTaInTimetable && lesson.lessonIndex === hoverLesson.lessonIndex) return true;
+  if (lesson.isTaInTimetable && lesson.lessonKey === hoverLesson.lessonKey) return true;
 
   return false;
 }
@@ -148,12 +147,16 @@ const TimetableCell: React.FC<Props> = (props) => {
     },
   );
 
+  const onEnter = React.useCallback(() => {
+    if (isInteractable(lesson)) onHover(getHoverLesson(lesson));
+  }, [lesson, onHover]);
+
   return (
     <Cell
       className={className}
       style={props.style}
-      onMouseEnter={isInteractable(lesson) ? () => onHover(getHoverLesson(lesson)) : noop}
-      onTouchStart={isInteractable(lesson) ? () => onHover(getHoverLesson(lesson)) : noop}
+      onMouseEnter={onEnter}
+      onTouchStart={onEnter}
       onMouseLeave={() => onHover(null)}
       onTouchEnd={() => onHover(null)}
       autoFocus={isInteractable(lesson) && lesson.isActive}
@@ -162,8 +165,7 @@ const TimetableCell: React.FC<Props> = (props) => {
       <div className={styles.cellContainer}>
         <div className={styles.cellHeaader}>
           <div className={styles.moduleName}>
-            {moduleName}
-            {isInteractable(lesson) && lesson.isTaInTimetable && ' (TA)'}
+            {`${moduleName} ${isInteractable(lesson) && lesson.isTaInTimetable && '(TA)'}`}
           </div>
 
           {isInteractable(lesson) &&
