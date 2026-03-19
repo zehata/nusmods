@@ -165,7 +165,8 @@ const TimetableCell: React.FC<Props> = (props) => {
       <div className={styles.cellContainer}>
         <div className={styles.cellHeaader}>
           <div className={styles.moduleName}>
-            {`${moduleName} ${isInteractable(lesson) && lesson.isTaInTimetable && '(TA)'}`}
+            {`${moduleName}`}
+            {isInteractable(lesson) && lesson.isTaInTimetable && '(TA)'}
           </div>
 
           {isInteractable(lesson) &&
