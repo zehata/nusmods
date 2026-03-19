@@ -3,7 +3,6 @@
   "title": "Quantitative Reasoning",
   "acadYear": "2017/2018",
   "department": "Office Of The Provost",
-  "faculty": "NUS",
   "description": "This module aims to equip undergraduates with basic reasoning skills on using data to address real world issues. What are some potential complications to keep in mind as we plan what data to collect and how to use them to address our particular issue? When two things are related (e.g. smoking and cancer), how can we tell whether the relationship is causal (e.g. smoking causes cancer)? How can quantitative reasoning help us deal with uncertainty or elucidate complex relationships? These and other questions will be discussed using real world examples.",
   "moduleCredit": "4",
   "workload": [2, 1, 0, 3, 4],
@@ -19,8 +18,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 0
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A02",
@@ -29,8 +27,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 1
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A03",
@@ -39,8 +36,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 2
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A04",
@@ -49,8 +45,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 3
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A07",
@@ -59,8 +54,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 4
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A08",
@@ -69,8 +63,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 5
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A09",
@@ -79,8 +72,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "AS1-0207",
-          "lessonIndex": 6
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A10",
@@ -89,8 +81,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "AS1-0207",
-          "lessonIndex": 7
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A11",
@@ -99,8 +90,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 8
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A12",
@@ -109,8 +99,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 9
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A13",
@@ -119,8 +108,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 10
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A14",
@@ -129,8 +117,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 11
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A15",
@@ -139,8 +126,7 @@
           "day": "Friday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 12
+          "venue": "AS1-0207"
         },
         {
           "classNo": "B01",
@@ -149,8 +135,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 13
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B02",
@@ -159,8 +144,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 14
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B03",
@@ -169,8 +153,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 15
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B04",
@@ -179,8 +162,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 16
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B05",
@@ -189,8 +171,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 17
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B06",
@@ -199,8 +180,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 18
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B07",
@@ -209,8 +189,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 19
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B08",
@@ -219,8 +198,7 @@
           "day": "Friday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0224",
-          "lessonIndex": 20
+          "venue": "BIZ2-0224"
         },
         {
           "classNo": "C01",
@@ -229,8 +207,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "COM2-0108",
-          "lessonIndex": 21
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C02",
@@ -239,8 +216,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "COM2-0108",
-          "lessonIndex": 22
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C03",
@@ -249,8 +225,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "COM2-0108",
-          "lessonIndex": 23
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C04",
@@ -259,8 +234,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "COM2-0108",
-          "lessonIndex": 24
+          "venue": "COM2-0108"
         },
         {
           "classNo": "D01",
@@ -269,8 +243,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "SDE-SR14",
-          "lessonIndex": 25
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D02",
@@ -279,8 +252,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "SDE-SR14",
-          "lessonIndex": 26
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D03",
@@ -289,8 +261,7 @@
           "day": "Thursday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR12",
-          "lessonIndex": 27
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D04",
@@ -299,8 +270,7 @@
           "day": "Thursday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR12",
-          "lessonIndex": 28
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D05",
@@ -309,8 +279,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "SDE-SR14",
-          "lessonIndex": 29
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D06",
@@ -319,8 +288,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "SDE-SR14",
-          "lessonIndex": 30
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D07",
@@ -329,8 +297,7 @@
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "SDE-SR12",
-          "lessonIndex": 31
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D08",
@@ -339,8 +306,7 @@
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "SDE-SR12",
-          "lessonIndex": 32
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "E03",
@@ -349,8 +315,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E4-04-03",
-          "lessonIndex": 33
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E04",
@@ -359,8 +324,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E4-04-03",
-          "lessonIndex": 34
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E05",
@@ -369,8 +333,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E4-04-03",
-          "lessonIndex": 35
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E06",
@@ -379,8 +342,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E4-04-03",
-          "lessonIndex": 36
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E07",
@@ -389,8 +351,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E4-04-03",
-          "lessonIndex": 37
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E08",
@@ -399,8 +360,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E4-04-03",
-          "lessonIndex": 38
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E09",
@@ -409,8 +369,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E4-04-03",
-          "lessonIndex": 39
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E10",
@@ -419,8 +378,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "E4-04-03",
-          "lessonIndex": 40
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E11",
@@ -429,8 +387,7 @@
           "day": "Thursday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E4-04-03",
-          "lessonIndex": 41
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E13",
@@ -439,8 +396,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E4-04-03",
-          "lessonIndex": 42
+          "venue": "E4-04-03"
         },
         {
           "classNo": "E14",
@@ -449,8 +405,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E4-04-03",
-          "lessonIndex": 43
+          "venue": "E4-04-03"
         },
         {
           "classNo": "S01",
@@ -459,8 +414,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 44
+          "venue": "S16-0309"
         },
         {
           "classNo": "S02",
@@ -469,8 +423,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 45
+          "venue": "S16-0309"
         },
         {
           "classNo": "S03",
@@ -479,8 +432,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 46
+          "venue": "S16-0309"
         },
         {
           "classNo": "S04",
@@ -489,8 +441,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 47
+          "venue": "S16-0309"
         },
         {
           "classNo": "S05",
@@ -499,8 +450,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 48
+          "venue": "S16-0309"
         },
         {
           "classNo": "S06",
@@ -509,8 +459,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 49
+          "venue": "S16-0309"
         },
         {
           "classNo": "S08",
@@ -519,8 +468,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 50
+          "venue": "S16-0309"
         },
         {
           "classNo": "S09",
@@ -529,8 +477,7 @@
           "day": "Friday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0202",
-          "lessonIndex": 51
+          "venue": "S16-0202"
         },
         {
           "classNo": "S10",
@@ -539,8 +486,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "S16-0202",
-          "lessonIndex": 52
+          "venue": "S16-0202"
         },
         {
           "classNo": "S11",
@@ -549,8 +495,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "S16-0202",
-          "lessonIndex": 53
+          "venue": "S16-0202"
         },
         {
           "classNo": "U01",
@@ -559,8 +504,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "ERC-SR10",
-          "lessonIndex": 54
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U02",
@@ -569,8 +513,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "ERC-SR10",
-          "lessonIndex": 55
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U03",
@@ -579,8 +522,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR8",
-          "lessonIndex": 56
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U04",
@@ -589,8 +531,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR8",
-          "lessonIndex": 57
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U05",
@@ -599,8 +540,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR8",
-          "lessonIndex": 58
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U06",
@@ -609,8 +549,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR8",
-          "lessonIndex": 59
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U07",
@@ -619,8 +558,7 @@
           "day": "Wednesday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "ERC-GLR",
-          "lessonIndex": 60
+          "venue": "ERC-GLR"
         },
         {
           "classNo": "U08",
@@ -629,8 +567,7 @@
           "day": "Wednesday",
           "startTime": "1300",
           "endTime": "1500",
-          "venue": "ERC-GLR",
-          "lessonIndex": 61
+          "venue": "ERC-GLR"
         },
         {
           "classNo": "U09",
@@ -639,8 +576,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR10",
-          "lessonIndex": 62
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U10",
@@ -649,8 +585,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR10",
-          "lessonIndex": 63
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U11",
@@ -659,8 +594,7 @@
           "day": "Friday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "ERC-SR10",
-          "lessonIndex": 64
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U12",
@@ -669,8 +603,7 @@
           "day": "Friday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "ERC-SR10",
-          "lessonIndex": 65
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U13",
@@ -679,8 +612,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "ERC-SR10",
-          "lessonIndex": 66
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U14",
@@ -689,8 +621,7 @@
           "day": "Friday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "ERC-SR8",
-          "lessonIndex": 67
+          "venue": "ERC-SR8"
         }
       ]
     },
@@ -705,8 +636,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 0
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A02",
@@ -715,8 +645,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 1
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A03",
@@ -725,8 +654,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 2
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A04",
@@ -735,8 +663,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 3
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A05",
@@ -745,8 +672,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 4
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A06",
@@ -755,8 +681,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 5
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A07",
@@ -765,8 +690,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 6
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A08",
@@ -775,8 +699,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 7
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A09",
@@ -785,8 +708,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 8
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A10",
@@ -795,8 +717,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 9
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A11",
@@ -805,8 +726,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 10
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A12",
@@ -815,8 +735,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 11
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A13",
@@ -825,8 +744,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS1-0207",
-          "lessonIndex": 12
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A14",
@@ -835,8 +753,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS1-0207",
-          "lessonIndex": 13
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A17",
@@ -845,8 +762,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "AS1-0207",
-          "lessonIndex": 14
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A18",
@@ -855,8 +771,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "AS1-0207",
-          "lessonIndex": 15
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A19",
@@ -865,8 +780,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 16
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A20",
@@ -875,8 +789,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 17
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A21",
@@ -885,8 +798,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 18
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A22",
@@ -895,8 +807,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 19
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A23",
@@ -905,8 +816,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 20
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A24",
@@ -915,8 +825,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 21
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A25",
@@ -925,8 +834,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS1-0207",
-          "lessonIndex": 22
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A26",
@@ -935,8 +843,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS1-0207",
-          "lessonIndex": 23
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A27",
@@ -945,8 +852,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS1-0207",
-          "lessonIndex": 24
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A28",
@@ -955,8 +861,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "AS1-0207",
-          "lessonIndex": 25
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A29",
@@ -965,8 +870,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS1-0207",
-          "lessonIndex": 26
+          "venue": "AS1-0207"
         },
         {
           "classNo": "A30",
@@ -975,8 +879,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS1-0207",
-          "lessonIndex": 27
+          "venue": "AS1-0207"
         },
         {
           "classNo": "B01",
@@ -985,8 +888,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 28
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B02",
@@ -995,8 +897,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 29
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B03",
@@ -1005,8 +906,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 30
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B04",
@@ -1015,8 +915,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 31
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B05",
@@ -1025,8 +924,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 32
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B06",
@@ -1035,8 +933,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 33
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B07",
@@ -1045,8 +942,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 34
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B08",
@@ -1055,8 +951,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 35
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B09",
@@ -1065,8 +960,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 36
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B10",
@@ -1075,8 +969,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 37
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B11",
@@ -1085,8 +978,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 38
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B12",
@@ -1095,8 +987,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 39
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B13",
@@ -1105,8 +996,7 @@
           "day": "Thursday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 40
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B14",
@@ -1115,8 +1005,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "BIZ2-0224",
-          "lessonIndex": 41
+          "venue": "BIZ2-0224"
         },
         {
           "classNo": "B15",
@@ -1125,8 +1014,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 42
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "B16",
@@ -1135,8 +1023,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0224",
-          "lessonIndex": 43
+          "venue": "BIZ2-0224"
         },
         {
           "classNo": "B17",
@@ -1145,8 +1032,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "BIZ2-0118",
-          "lessonIndex": 44
+          "venue": "BIZ2-0118"
         },
         {
           "classNo": "C01",
@@ -1155,8 +1041,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "COM2-0108",
-          "lessonIndex": 45
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C02",
@@ -1165,8 +1050,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "COM2-0108",
-          "lessonIndex": 46
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C03",
@@ -1175,8 +1059,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "COM2-0108",
-          "lessonIndex": 47
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C04",
@@ -1185,8 +1068,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "COM2-0108",
-          "lessonIndex": 48
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C05",
@@ -1195,8 +1077,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "COM2-0108",
-          "lessonIndex": 49
+          "venue": "COM2-0108"
         },
         {
           "classNo": "C06",
@@ -1205,8 +1086,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "COM2-0108",
-          "lessonIndex": 50
+          "venue": "COM2-0108"
         },
         {
           "classNo": "D01",
@@ -1215,8 +1095,7 @@
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "SDE-SR14",
-          "lessonIndex": 51
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D02",
@@ -1225,8 +1104,7 @@
           "day": "Monday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "SDE-SR14",
-          "lessonIndex": 52
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D03",
@@ -1235,8 +1113,7 @@
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1500",
-          "venue": "SDE-SR12",
-          "lessonIndex": 53
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D04",
@@ -1245,8 +1122,7 @@
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1500",
-          "venue": "SDE-SR12",
-          "lessonIndex": 54
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D05",
@@ -1255,8 +1131,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR14",
-          "lessonIndex": 55
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D06",
@@ -1265,8 +1140,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR14",
-          "lessonIndex": 56
+          "venue": "SDE-SR14"
         },
         {
           "classNo": "D07",
@@ -1275,8 +1149,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR12",
-          "lessonIndex": 57
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D08",
@@ -1285,8 +1158,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1100",
-          "venue": "SDE-SR12",
-          "lessonIndex": 58
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "D09",
@@ -1295,8 +1167,7 @@
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1300",
-          "venue": "SDE-SR12",
-          "lessonIndex": 59
+          "venue": "SDE-SR12"
         },
         {
           "classNo": "E01",
@@ -1305,8 +1176,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E1-06-16",
-          "lessonIndex": 60
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E02",
@@ -1315,8 +1185,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E1-06-16",
-          "lessonIndex": 61
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E03",
@@ -1325,8 +1194,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 62
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E04",
@@ -1335,8 +1203,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 63
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E05",
@@ -1345,8 +1212,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E1-06-16",
-          "lessonIndex": 64
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E06",
@@ -1355,8 +1221,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E1-06-16",
-          "lessonIndex": 65
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E07",
@@ -1365,8 +1230,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 66
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E08",
@@ -1375,8 +1239,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 67
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E09",
@@ -1385,8 +1248,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E1-06-16",
-          "lessonIndex": 68
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E10",
@@ -1395,8 +1257,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "E1-06-16",
-          "lessonIndex": 69
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E11",
@@ -1405,8 +1266,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 70
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E12",
@@ -1415,8 +1275,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 71
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E13",
@@ -1425,8 +1284,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E1-06-16",
-          "lessonIndex": 72
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E14",
@@ -1435,8 +1293,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E1-06-16",
-          "lessonIndex": 73
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E15",
@@ -1445,8 +1302,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 74
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E16",
@@ -1455,8 +1311,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 75
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E17",
@@ -1465,8 +1320,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "E1-06-16",
-          "lessonIndex": 76
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E18",
@@ -1475,8 +1329,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "E1-06-16",
-          "lessonIndex": 77
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E19",
@@ -1485,8 +1338,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 78
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E20",
@@ -1495,8 +1347,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "E1-06-16",
-          "lessonIndex": 79
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E21",
@@ -1505,8 +1356,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 80
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E22",
@@ -1515,8 +1365,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 81
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E23",
@@ -1525,8 +1374,7 @@
           "day": "Thursday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "E1-06-16",
-          "lessonIndex": 82
+          "venue": "E1-06-16"
         },
         {
           "classNo": "E24",
@@ -1535,8 +1383,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "E1-06-16",
-          "lessonIndex": 83
+          "venue": "E1-06-16"
         },
         {
           "classNo": "S01",
@@ -1545,8 +1392,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 84
+          "venue": "S16-0309"
         },
         {
           "classNo": "S02",
@@ -1555,8 +1401,7 @@
           "day": "Monday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 85
+          "venue": "S16-0309"
         },
         {
           "classNo": "S03",
@@ -1565,8 +1410,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 86
+          "venue": "S16-0309"
         },
         {
           "classNo": "S04",
@@ -1575,8 +1419,7 @@
           "day": "Monday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 87
+          "venue": "S16-0309"
         },
         {
           "classNo": "S05",
@@ -1585,8 +1428,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 88
+          "venue": "S16-0309"
         },
         {
           "classNo": "S06",
@@ -1595,8 +1437,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 89
+          "venue": "S16-0309"
         },
         {
           "classNo": "S07",
@@ -1605,8 +1446,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 90
+          "venue": "S16-0309"
         },
         {
           "classNo": "S08",
@@ -1615,8 +1455,7 @@
           "day": "Tuesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 91
+          "venue": "S16-0309"
         },
         {
           "classNo": "S09",
@@ -1625,8 +1464,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 92
+          "venue": "S16-0309"
         },
         {
           "classNo": "S10",
@@ -1635,8 +1473,7 @@
           "day": "Tuesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 93
+          "venue": "S16-0309"
         },
         {
           "classNo": "S11",
@@ -1645,8 +1482,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 94
+          "venue": "S16-0309"
         },
         {
           "classNo": "S12",
@@ -1655,8 +1491,7 @@
           "day": "Tuesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 95
+          "venue": "S16-0309"
         },
         {
           "classNo": "S13",
@@ -1665,8 +1500,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 96
+          "venue": "S16-0309"
         },
         {
           "classNo": "S14",
@@ -1675,8 +1509,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 97
+          "venue": "S16-0309"
         },
         {
           "classNo": "S15",
@@ -1685,8 +1518,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 98
+          "venue": "S16-0309"
         },
         {
           "classNo": "S16",
@@ -1695,8 +1527,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 99
+          "venue": "S16-0309"
         },
         {
           "classNo": "S17",
@@ -1705,8 +1536,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 100
+          "venue": "S16-0309"
         },
         {
           "classNo": "S18",
@@ -1715,8 +1545,7 @@
           "day": "Wednesday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 101
+          "venue": "S16-0309"
         },
         {
           "classNo": "S19",
@@ -1725,8 +1554,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 102
+          "venue": "S16-0309"
         },
         {
           "classNo": "S20",
@@ -1735,8 +1563,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 103
+          "venue": "S16-0309"
         },
         {
           "classNo": "S21",
@@ -1745,8 +1572,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 104
+          "venue": "S16-0309"
         },
         {
           "classNo": "S22",
@@ -1755,8 +1581,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 105
+          "venue": "S16-0309"
         },
         {
           "classNo": "S23",
@@ -1765,8 +1590,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "S16-0309",
-          "lessonIndex": 106
+          "venue": "S16-0309"
         },
         {
           "classNo": "S24",
@@ -1775,8 +1599,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "S16-0309",
-          "lessonIndex": 107
+          "venue": "S16-0309"
         },
         {
           "classNo": "S25",
@@ -1785,8 +1608,7 @@
           "day": "Thursday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "S16-0309",
-          "lessonIndex": 108
+          "venue": "S16-0309"
         },
         {
           "classNo": "S26",
@@ -1795,8 +1617,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0309",
-          "lessonIndex": 109
+          "venue": "S16-0309"
         },
         {
           "classNo": "S27",
@@ -1805,8 +1626,7 @@
           "day": "Thursday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "S16-0309",
-          "lessonIndex": 110
+          "venue": "S16-0309"
         },
         {
           "classNo": "S28",
@@ -1815,8 +1635,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "S16-0437",
-          "lessonIndex": 111
+          "venue": "S16-0437"
         },
         {
           "classNo": "S29",
@@ -1825,8 +1644,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 112
+          "venue": "S16-0309"
         },
         {
           "classNo": "S30",
@@ -1835,8 +1653,7 @@
           "day": "Monday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "S16-0309",
-          "lessonIndex": 113
+          "venue": "S16-0309"
         },
         {
           "classNo": "U01",
@@ -1845,8 +1662,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "TP-SR9",
-          "lessonIndex": 114
+          "venue": "TP-SR9"
         },
         {
           "classNo": "U02",
@@ -1855,8 +1671,7 @@
           "day": "Monday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "TP-SR9",
-          "lessonIndex": 115
+          "venue": "TP-SR9"
         },
         {
           "classNo": "U03",
@@ -1865,8 +1680,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "UTSRC-GLR",
-          "lessonIndex": 116
+          "venue": "UTSRC-GLR"
         },
         {
           "classNo": "U04",
@@ -1875,8 +1689,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "UTSRC-GLR",
-          "lessonIndex": 117
+          "venue": "UTSRC-GLR"
         },
         {
           "classNo": "U05",
@@ -1885,8 +1698,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "ERC-SR9CAM",
-          "lessonIndex": 118
+          "venue": "ERC-SR9CAM"
         },
         {
           "classNo": "U06",
@@ -1895,8 +1707,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "ERC-SR9CAM",
-          "lessonIndex": 119
+          "venue": "ERC-SR9CAM"
         },
         {
           "classNo": "U07",
@@ -1905,8 +1716,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "ERC-SR10",
-          "lessonIndex": 120
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U08",
@@ -1915,8 +1725,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1400",
-          "venue": "ERC-SR10",
-          "lessonIndex": 121
+          "venue": "ERC-SR10"
         },
         {
           "classNo": "U09",
@@ -1925,8 +1734,7 @@
           "day": "Thursday",
           "startTime": "0800",
           "endTime": "1000",
-          "venue": "ERC-SR8",
-          "lessonIndex": 122
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U10",
@@ -1935,8 +1743,7 @@
           "day": "Thursday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "UTSRC-GLR",
-          "lessonIndex": 123
+          "venue": "UTSRC-GLR"
         },
         {
           "classNo": "U11",
@@ -1945,8 +1752,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "TP-SR9",
-          "lessonIndex": 124
+          "venue": "TP-SR9"
         },
         {
           "classNo": "U12",
@@ -1955,8 +1761,7 @@
           "day": "Tuesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "TP-SR9",
-          "lessonIndex": 125
+          "venue": "TP-SR9"
         },
         {
           "classNo": "U13",
@@ -1965,8 +1770,7 @@
           "day": "Wednesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "ERC-SR8",
-          "lessonIndex": 126
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U14",
@@ -1975,8 +1779,7 @@
           "day": "Wednesday",
           "startTime": "1900",
           "endTime": "2100",
-          "venue": "ERC-SR8",
-          "lessonIndex": 127
+          "venue": "ERC-SR8"
         },
         {
           "classNo": "U15",
@@ -1985,8 +1788,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "UTSRC-GLR",
-          "lessonIndex": 128
+          "venue": "UTSRC-GLR"
         },
         {
           "classNo": "U16",
@@ -1995,8 +1797,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "UTSRC-GLR",
-          "lessonIndex": 129
+          "venue": "UTSRC-GLR"
         }
       ]
     }

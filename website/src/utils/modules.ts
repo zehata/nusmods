@@ -1,9 +1,10 @@
 import { get } from 'lodash-es';
 import { format } from 'date-fns';
 import type {
+  LessonMap,
   Module,
   ModuleCode,
-  RawLessonWithIndex,
+  RawLesson,
   Semester,
   SemesterData,
   SemesterDataCondensed,
@@ -29,11 +30,13 @@ export function getModuleSemesterData(
 }
 
 // Returns a flat array of lessons of a module for the corresponding semester.
-export function getModuleTimetable(
-  module: Module,
-  semester: Semester,
-): readonly RawLessonWithIndex[] {
+export function getModuleTimetable(module: Module, semester: Semester): readonly RawLesson[] {
   return get(getModuleSemesterData(module, semester), 'timetable', []);
+}
+
+// Returns a map of lessons to lessonType of a module for the corresponding semester.
+export function getModuleLessonMap(module: Module, semester: Semester): Readonly<LessonMap> {
+  return get(getModuleSemesterData(module, semester), 'lessonMap', {});
 }
 
 /**

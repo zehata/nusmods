@@ -1,5 +1,10 @@
 import { ModuleCode, Semester } from 'types/modules';
-import { SemTimetableConfig, LessonWithIndex, TimetableConfigV1 } from 'types/timetables';
+import {
+  SemTimetableConfig,
+  Lesson,
+  TimetableConfigV1,
+  ModuleLessonConfig,
+} from 'types/timetables';
 
 import lessons from '__mocks__/lessons-array.json';
 import { CS1010A, CS1010S, CS3216 } from '__mocks__/modules';
@@ -14,6 +19,7 @@ import {
 } from 'types/reducers';
 import { defaultTimetableState } from 'reducers/timetables';
 import * as actions from './timetables';
+import { serializeLessonDetails } from 'utils/timetables';
 
 const jest = vi;
 const initialState = defaultTimetableState;
@@ -41,15 +47,17 @@ test('removeLesson should return information to remove module', () => {
 });
 
 test('modifyLesson should return lesson payload', () => {
-  const activeLesson: LessonWithIndex = lessons[0];
+  const activeLesson: Lesson = lessons[0];
   expect(actions.modifyLesson(activeLesson)).toMatchSnapshot();
 });
 
 test('changeLesson should return updated information to change lesson', () => {
   const semester: Semester = 1;
-  const lesson: LessonWithIndex = lessons[1];
+  const lesson: Lesson = lessons[1];
   expect(
-    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [lesson.lessonIndex]),
+    actions.changeLesson(semester, lesson.moduleCode, lesson.lessonType, [
+      serializeLessonDetails(lesson),
+    ]),
   ).toMatchSnapshot();
 });
 
@@ -70,9 +78,9 @@ describe('disabling ta module', () => {
     lessons: {
       [semester]: {
         CS1010S: {
-          Lecture: [0],
-          Tutorial: [11],
-          Recitation: [1],
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
       },
     },
@@ -95,10 +103,10 @@ describe('disabling ta module', () => {
     expect(firstAction).toEqual({
       payload: {
         lessonConfig: {
-          Lecture: [0],
-          Recitation: [1],
-          Tutorial: [11],
-        },
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        } as ModuleLessonConfig,
         moduleCode: 'CS1010S',
         semester: 1,
       },
@@ -122,10 +130,10 @@ describe('disabling ta module', () => {
     expect(firstAction).toEqual({
       payload: {
         lessonConfig: {
-          Lecture: [0],
-          Recitation: [1],
-          Tutorial: [11],
-        },
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        } as ModuleLessonConfig,
         moduleCode: 'CS1010S',
         semester: 1,
       },
@@ -146,9 +154,9 @@ describe('fillTimetableBlanks', () => {
   test('do nothing if timetable is already full', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
-        Recitation: [1],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+        Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
     };
 
@@ -161,8 +169,8 @@ describe('fillTimetableBlanks', () => {
   test('fill missing lessons with randomly generated modules', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
       },
       CS3216: {},
     };
@@ -178,9 +186,9 @@ describe('fillTimetableBlanks', () => {
         semester,
         moduleCode: 'CS1010S',
         lessonConfig: {
-          Lecture: [0],
-          Tutorial: [11],
-          Recitation: [1],
+          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
       },
     });
@@ -191,7 +199,7 @@ describe('fillTimetableBlanks', () => {
         semester,
         moduleCode: 'CS3216',
         lessonConfig: {
-          Lecture: [0],
+          Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
         },
       },
     });
@@ -241,12 +249,12 @@ describe('fillTimetableBlanks', () => {
 
     const migratedTimetable: SemTimetableConfig = {
       CS1010S: {
-        Lecture: [0],
-        Recitation: [3],
-        Tutorial: [21],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Recitation: ['2|THU|1300|1400|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13'],
       },
       CS3216: {
-        Lecture: [0],
+        Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
     };
     const migratedTaModules: ModuleCode[] = ['CS1010S'];
@@ -266,9 +274,9 @@ describe('fillTimetableBlanks', () => {
   test('should not error when module cannot be found', async () => {
     const timetable = {
       CS1010S: {
-        Lecture: [0],
-        Tutorial: [11],
-        Recitation: [1],
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+        Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
       },
     };
     const moduleBankWithoutModule = {

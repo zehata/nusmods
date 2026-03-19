@@ -31,7 +31,7 @@ describe('ShareTimetable', () => {
 
   const timetable = {
     CS1010S: {
-      Lecture: [0],
+      Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
     },
   };
 

@@ -144,7 +144,9 @@ describe(TimetableContainerComponent, () => {
   test('should eventually display imported timetable if there is one', async () => {
     const semester = 1;
     const importedTimetable = {
-      [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': [0] }, // BFS1001 doesn't have Lecture, only SectionalTeaching
+      [moduleCodeThatCanBeLoaded]: {
+        'Sectional Teaching': ['A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6'],
+      }, // BFS1001 doesn't have Lecture, only SectionalTeaching
     };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
@@ -167,7 +169,11 @@ describe(TimetableContainerComponent, () => {
 
   test('should eventually display imported timetable without any modules loaded', async () => {
     const semester = 1;
-    const importedTimetable = { [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': [0] } };
+    const importedTimetable = {
+      [moduleCodeThatCanBeLoaded]: {
+        'Sectional Teaching': ['A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6'],
+      },
+    };
     const location = timetableShare(semester, importedTimetable, [moduleCodeThatCanBeLoaded], []);
     make(location);
 
@@ -189,7 +195,9 @@ describe(TimetableContainerComponent, () => {
 
   test('should ignore invalid modules in imported timetable', () => {
     const semester = 1;
-    const importedTimetable = { TRUMP2020: { Lecture: [1] } };
+    const importedTimetable = {
+      TRUMP2020: { Lecture: ['A1|MON|1400|1700|BIZ1-0303|1_2_3_4_5_6'] },
+    };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
 
@@ -215,7 +223,10 @@ describe(TimetableContainerComponent, () => {
 
     // Populate mock timetable
     await act(async () => {
-      const timetable = { CS1010S: { Lecture: [0] }, CS3216: { Lecture: [0] } };
+      const timetable = {
+        CS1010S: { Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'] },
+        CS3216: { Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'] },
+      };
       (store.dispatch as Dispatch)(setTimetable(semester, timetable));
     });
 

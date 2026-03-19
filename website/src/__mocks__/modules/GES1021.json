@@ -20,8 +20,7 @@
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "LT27",
-          "lessonIndex": 0
+          "venue": "LT27"
         },
         {
           "classNo": "SL1",
@@ -30,8 +29,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "LT27",
-          "lessonIndex": 1
+          "venue": "LT27"
         }
       ],
       "LecturePeriods": ["Monday Afternoon", "Thursday Afternoon"]
@@ -47,8 +45,7 @@
           "day": "Monday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "LT27",
-          "lessonIndex": 0
+          "venue": "LT27"
         },
         {
           "classNo": "SL1",
@@ -57,8 +54,7 @@
           "day": "Wednesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "LT27",
-          "lessonIndex": 1
+          "venue": "LT27"
         }
       ]
     }
