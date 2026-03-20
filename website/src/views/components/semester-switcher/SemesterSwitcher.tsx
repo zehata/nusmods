@@ -29,6 +29,7 @@ const SemesterSwitcher = memo<Props>(({ readOnly, semester, onSelectSemester }) 
           className="btn btn-link"
           type="button"
           aria-label="Previous Semester"
+          data-testid="previous-semester"
           onClick={() => {
             switchSemester(-1);
           }}
@@ -44,6 +45,7 @@ const SemesterSwitcher = memo<Props>(({ readOnly, semester, onSelectSemester }) 
           className="btn btn-link"
           type="button"
           aria-label="Next Semester"
+          data-testid="next-semester"
           onClick={() => {
             switchSemester(1);
           }}

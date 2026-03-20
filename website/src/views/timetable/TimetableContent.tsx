@@ -137,7 +137,7 @@ function maintainScrollPosition(container: HTMLElement, modifiedCell: ModifiedCe
   container.scrollLeft = x; // eslint-disable-line no-param-reassign
 }
 
-const FunctionalTimetableContent: React.FC<Props> = ({
+export const TimetableContent: React.FC<Props> = ({
   // Own props
   readOnly,
   header,
@@ -194,6 +194,72 @@ const FunctionalTimetableContent: React.FC<Props> = ({
     resetScrollPosition();
   }, [activeLesson]);
 
+  // Returns modules currently in the timetable
+  const addedModules = React.useMemo((): Module[] => {
+    const semesterModules = getSemesterModules(timetableWithLessons, modules);
+    return sortBy(semesterModules, (module: Module) => getExamDate(module, semester));
+  }, [modules, semester, timetableWithLessons]);
+
+  const isTaInTimetable = React.useCallback(
+    (moduleCode: ModuleCode) => taInTimetable.includes(moduleCode),
+    [taInTimetable],
+  );
+
+  const isHiddenInTimetable = React.useCallback(
+    (moduleCode: ModuleCode) => hiddenInTimetable.includes(moduleCode),
+    [hiddenInTimetable],
+  );
+
+  // Separate added modules into sections of clashing modules.
+  // Note: exclude hidden courses and TA-ed courses from exam clash detection.
+  const examinableModules = React.useMemo(
+    () =>
+      filter(
+        addedModules,
+        (module) => !isHiddenInTimetable(module.moduleCode) && !isTaInTimetable(module.moduleCode),
+      ),
+    [addedModules, isHiddenInTimetable, isTaInTimetable],
+  );
+
+  const clashes = React.useMemo(
+    () => findExamClashes(examinableModules, semester),
+    [examinableModules, semester],
+  );
+
+  const nonClashingMods: Module[] = React.useMemo(
+    () => difference(addedModules, flatten(values(clashes))),
+    [addedModules, clashes],
+  );
+
+  const isVerticalOrientation = React.useMemo(
+    () => timetableOrientation !== HORIZONTAL,
+    [timetableOrientation],
+  );
+
+  const isShowingTitle = React.useMemo(
+    () => !isVerticalOrientation && showTitle,
+    [isVerticalOrientation, showTitle],
+  );
+
+  const timetableLessons = omit(timetableWithLessons, hiddenInTimetable);
+
+  const interactableLessonsMap = React.useMemo(
+    () =>
+      getInteractableLessons(
+        timetableLessons,
+        taInTimetable,
+        modules,
+        semester,
+        colors,
+        readOnly,
+        activeLesson,
+      ),
+    [timetableLessons, taInTimetable, modules, semester, colors, readOnly, activeLesson],
+  );
+
+  const interactableLessons: InteractableLesson[] = timetableLessonsArray(interactableLessonsMap);
+  const arrangedLessons = arrangeLessonsForWeek(interactableLessons);
+
   const modifyTaCell = React.useCallback(
     (
       sameLessonTypeLessons: Record<LessonKey, InteractableLesson>,
@@ -221,33 +287,6 @@ const FunctionalTimetableContent: React.FC<Props> = ({
     },
     [cancelModifyAndResetScroll, semester],
   );
-
-  const isTaInTimetable = React.useCallback(
-    (moduleCode: ModuleCode) => taInTimetable.includes(moduleCode),
-    [taInTimetable],
-  );
-  const isHiddenInTimetable = React.useCallback(
-    (moduleCode: ModuleCode) => hiddenInTimetable.includes(moduleCode),
-    [hiddenInTimetable],
-  );
-
-  const timetableLessons = omit(timetableWithLessons, hiddenInTimetable);
-
-  const interactableLessonsMap = React.useMemo(
-    () =>
-      getInteractableLessons(
-        timetableLessons,
-        taInTimetable,
-        modules,
-        semester,
-        colors,
-        readOnly,
-        activeLesson,
-      ),
-    [timetableLessons, taInTimetable, modules, semester, colors, readOnly, activeLesson],
-  );
-  const interactableLessons: InteractableLesson[] = timetableLessonsArray(interactableLessonsMap);
-  const arrangedLessons = arrangeLessonsForWeek(interactableLessons);
 
   const modifyCell = React.useCallback(
     (lesson: InteractableLesson, position: ClientRect): void => {
@@ -287,20 +326,6 @@ const FunctionalTimetableContent: React.FC<Props> = ({
     [interactableLessonsMap, activeLesson, isTaInTimetable, modifyTaCell, semester],
   );
 
-  const addSemesterModule = React.useCallback(
-    (moduleCode: ModuleCode) => {
-      addModule(semester, moduleCode);
-      setTombstone(null);
-    },
-    [semester],
-  );
-
-  // Returns modules currently in the timetable
-  const addedModules = React.useMemo((): Module[] => {
-    const semesterModules = getSemesterModules(timetableWithLessons, modules);
-    return sortBy(semesterModules, (module: Module) => getExamDate(module, semester));
-  }, [modules, semester, timetableWithLessons]);
-
   const toModuleWithColor = React.useCallback(
     (module: Module): ModuleWithColor => ({
       ...module,
@@ -309,6 +334,14 @@ const FunctionalTimetableContent: React.FC<Props> = ({
       isTaInTimetable: isTaInTimetable(module.moduleCode),
     }),
     [colors, isHiddenInTimetable, isTaInTimetable],
+  );
+
+  const addSemesterModule = React.useCallback(
+    (moduleCode: ModuleCode) => {
+      addModule(semester, moduleCode);
+      setTombstone(null);
+    },
+    [semester],
   );
 
   const removeModuleAndSetTombstone = React.useCallback(
@@ -326,36 +359,6 @@ const FunctionalTimetableContent: React.FC<Props> = ({
   );
 
   const resetSemesterTimetable = React.useCallback(() => resetTimetable(semester), [semester]);
-
-  const isVerticalOrientation = React.useMemo(
-    () => timetableOrientation !== HORIZONTAL,
-    [timetableOrientation],
-  );
-  const isShowingTitle = React.useMemo(
-    () => !isVerticalOrientation && showTitle,
-    [isVerticalOrientation, showTitle],
-  );
-
-  // Separate added modules into sections of clashing modules.
-  // Note: exclude hidden courses and TA-ed courses from exam clash detection.
-  const examinableModules = React.useMemo(
-    () =>
-      filter(
-        addedModules,
-        (module) => !isHiddenInTimetable(module.moduleCode) && !isTaInTimetable(module.moduleCode),
-      ),
-    [addedModules, isHiddenInTimetable, isTaInTimetable],
-  );
-
-  const clashes = React.useMemo(
-    () => findExamClashes(examinableModules, semester),
-    [examinableModules, semester],
-  );
-
-  const nonClashingMods: Module[] = React.useMemo(
-    () => difference(addedModules, flatten(values(clashes))),
-    [addedModules, clashes],
-  );
 
   return (
     <div
@@ -533,4 +536,4 @@ export default connect(mapStateToProps, {
   addLesson,
   removeLesson,
   cancelModifyLesson,
-})(FunctionalTimetableContent);
+})(TimetableContent);

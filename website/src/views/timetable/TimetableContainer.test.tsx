@@ -24,6 +24,7 @@ import { BFS1001, CS1010S, CS3216 } from '__mocks__/modules';
 import modulesList from '__mocks__/moduleList.json';
 
 import { TimetableContainerComponent } from './TimetableContainer';
+import userEvent from '@testing-library/user-event';
 
 const jest = vi;
 /**
@@ -239,5 +240,33 @@ describe(TimetableContainerComponent, () => {
 
     // Expect import header not to be present
     expect(screen.queryByRole('button', { name: 'Import' })).not.toBeInTheDocument();
+  });
+
+  test('Switch semester', async () => {
+    const semester = 1;
+    const location = timetablePage(semester);
+    const { store } = make(location);
+    const user = userEvent.setup();
+
+    // Populate moduleBank using "succeeded" requests-middleware requests
+    await act(async () => {
+      store.dispatch({ type: SUCCESS_KEY(FETCH_MODULE), payload: CS1010S });
+    });
+
+    // Populate mock timetable
+    await act(async () => {
+      const timetable = {
+        CS1010S: { Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'] },
+      };
+      (store.dispatch as Dispatch)(setTimetable(semester, timetable));
+    });
+
+    expect(screen.queryByText(/CS1010S Programming Methodology/)).toBeInTheDocument();
+
+    const previousSemesterButton = screen.getByTestId(/next-semester/);
+    await user.click(previousSemesterButton);
+    expect(screen.getByText(/Semester 2/)).toBeInTheDocument();
+
+    expect(screen.queryByText(/CS1010S Programming Methodology/)).not.toBeInTheDocument();
   });
 });
