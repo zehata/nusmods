@@ -192,7 +192,7 @@ export const TimetableContent: React.FC<Props> = ({
     }
     cancelModifyLesson();
     resetScrollPosition();
-  }, [activeLesson]);
+  }, [cancelModifyLesson, activeLesson]);
 
   // Returns modules currently in the timetable
   const addedModules = React.useMemo((): Module[] => {
@@ -285,7 +285,7 @@ export const TimetableContent: React.FC<Props> = ({
 
       return () => cancelModifyAndResetScroll();
     },
-    [cancelModifyAndResetScroll, semester],
+    [addLesson, removeLesson, cancelModifyLesson, cancelModifyAndResetScroll, semester],
   );
 
   const modifyCell = React.useCallback(
@@ -323,7 +323,16 @@ export const TimetableContent: React.FC<Props> = ({
         });
       }
     },
-    [interactableLessonsMap, activeLesson, isTaInTimetable, modifyTaCell, semester],
+    [
+      changeLesson,
+      modifyLesson,
+      cancelModifyLesson,
+      interactableLessonsMap,
+      activeLesson,
+      isTaInTimetable,
+      modifyTaCell,
+      semester,
+    ],
   );
 
   const toModuleWithColor = React.useCallback(
@@ -341,7 +350,7 @@ export const TimetableContent: React.FC<Props> = ({
       addModule(semester, moduleCode);
       setTombstone(null);
     },
-    [semester],
+    [addModule, semester],
   );
 
   const removeModuleAndSetTombstone = React.useCallback(
@@ -355,10 +364,13 @@ export const TimetableContent: React.FC<Props> = ({
       // A tombstone is displayed in place of a deleted module
       setTombstone({ ...moduleWithColor, index });
     },
-    [addedModules, semester, toModuleWithColor],
+    [removeModule, addedModules, semester, toModuleWithColor],
   );
 
-  const resetSemesterTimetable = React.useCallback(() => resetTimetable(semester), [semester]);
+  const resetSemesterTimetable = React.useCallback(
+    () => resetTimetable(semester),
+    [resetTimetable, semester],
+  );
 
   return (
     <div
