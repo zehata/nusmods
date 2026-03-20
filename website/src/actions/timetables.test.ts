@@ -271,6 +271,66 @@ describe('fillTimetableBlanks', () => {
     });
   });
 
+  test('migrate v2 config', async () => {
+    const colors: ColorMapping = {
+      CS1010S: 0,
+      CS3216: 1,
+    };
+    const hiddenModules: ModuleCode[] = [];
+    const timetables = {
+      lessons: {
+        [semester]: {
+          CS1010S: {
+            Lecture: [0],
+            Recitation: [3],
+            Tutorial: [21],
+          },
+          CS3216: {
+            Lecture: [0],
+          },
+        },
+      },
+      colors: {
+        [semester]: colors,
+      } as SemesterColorMap,
+      hidden: {
+        [semester]: hiddenModules,
+      } as HiddenModulesMap,
+      ta: {
+        [semester]: ['CS1010S'],
+      },
+    };
+
+    const state: any = { timetables, moduleBank };
+    const dispatch = jest.fn();
+    await expect(action(dispatch, () => state)).resolves.not.toThrow(Error);
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    const [[firstAction]] = dispatch.mock.calls;
+
+    const migratedTimetable: SemTimetableConfig = {
+      CS1010S: {
+        Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Recitation: ['2|THU|1300|1400|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['2|MON|1000|1100|COM1-0217|3_4_5_6_7_8_9_10_11_12_13'],
+      },
+      CS3216: {
+        Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+    };
+    const migratedTaModules: ModuleCode[] = ['CS1010S'];
+
+    expect(firstAction).toEqual({
+      type: 'SET_TIMETABLE',
+      payload: {
+        semester,
+        timetable: migratedTimetable,
+        colors,
+        hiddenModules,
+        taModules: migratedTaModules,
+      },
+    });
+  });
+
   test('should not error when module cannot be found', async () => {
     const timetable = {
       CS1010S: {

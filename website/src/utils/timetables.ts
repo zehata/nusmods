@@ -1150,7 +1150,8 @@ export function migrateModuleLessonConfig(
     moduleLessonConfig,
     (accumulatedModuleLessonConfig, lessonsIdentifier, lessonType) => {
       if (!isV1(lessonsIdentifier)) {
-        const migratedLessonConfig = isV2(lessonsIdentifier)
+        const configIsV2 = isV2(lessonsIdentifier);
+        const migratedLessonConfig = configIsV2
           ? map(lessonsIdentifier, (lessonIndex) => serializeLessonDetails(timetable[lessonIndex]))
           : lessonsIdentifier;
 
@@ -1160,6 +1161,7 @@ export function migrateModuleLessonConfig(
             ...accumulatedModuleLessonConfig.migratedModuleLessonConfig,
             [lessonType]: migratedLessonConfig,
           },
+          alreadyMigrated: !configIsV2,
         };
       }
 
