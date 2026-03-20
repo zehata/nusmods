@@ -905,110 +905,163 @@ describe('timetable serialization/deserialization', () => {
   } as ModulesMap;
   const semester: Semester = 1;
 
-  test('timetable serialization/deserialization', () => {
-    const configs: SemTimetableConfig[] = [
-      {},
-      { CS1010S: {} },
-      {
-        GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
-      },
-      {
-        CS4243: {
-          Laboratory: ['3|TUE|1830|2030|AS6-0421|3_4_5_6_7_8_9_10_11_12_13'],
-          Lecture: ['1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+  describe('v3 timetable serialization/deserialization', () => {
+    test('timetable serialization/deserialization', () => {
+      const configs: SemTimetableConfig[] = [
+        {},
+        { CS1010S: {} },
+        {
+          GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
         },
-        GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
-      },
-    ];
+        {
+          CS4243: {
+            Laboratory: ['3|TUE|1830|2030|AS6-0421|3_4_5_6_7_8_9_10_11_12_13'],
+            Lecture: ['1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+          GER1000: { Tutorial: ['B01|MON|0800|1000|BIZ2-0118|3_5_7_9_11'] },
+        },
+      ];
 
-    configs.forEach((config) => {
-      expect(
-        deserializeTimetable(serializeTimetable(config), modules, semester).semTimetableConfig,
-      ).toEqual(config);
-    });
-  });
-
-  test('deserializing timetable with ta and hidden modules', () => {
-    expect(
-      deserializeTimetable(
-        'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS3216=LEC:(1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13)&ta=CS1010S&hidden=CS3216',
-        modules,
-        semester,
-      ),
-    ).toEqual({
-      semTimetableConfig: {
-        CS1010S: {
-          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-        },
-        CS3216: {
-          Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-        },
-      },
-      ta: ['CS1010S'],
-      hidden: ['CS3216'],
-    });
-  });
-
-  describe('deserializing edge cases', () => {
-    test('duplicate module code', () => {
-      expect(
-        deserializeTimetable(
-          'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS1010S=REC:(1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13)',
-          modules,
-          semester,
-        ).semTimetableConfig,
-      ).toEqual({
-        CS1010S: {
-          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-        },
-      } as SemTimetableConfig);
-    });
-
-    test('no lessons', () => {
-      expect(
-        deserializeTimetable(
-          'GER1000&CS4243=LEC:&CS3216=LEC:)&CS1010S=LEC:()&ta=&hidden=',
-          modules,
-          semester,
-        ).semTimetableConfig,
-      ).toEqual({
-        GER1000: {},
-        CS4243: {
-          Lecture: [],
-        },
-        CS3216: {
-          Lecture: [],
-        },
-        CS1010S: {
-          Lecture: [],
-        },
-      } as SemTimetableConfig);
-    });
-
-    test('missing module', () => {
-      expect(
-        deserializeTimetable(
-          'GER1001&CS4244=&CS3217=LEC:&CS1011S=LEC:()&ta=&hidden=',
-          modules,
-          semester,
-        ).semTimetableConfig,
-      ).toEqual({} as SemTimetableConfig);
-    });
-
-    test('should ignore invalid lesson indices', () => {
-      expect(
-        deserializeTimetable('CS1010S=LEC:(20)', modules, semester).semTimetableConfig,
-      ).toEqual({
-        CS1010S: {
-          Lecture: [],
-        },
+      configs.forEach((config) => {
+        expect(
+          deserializeTimetable(serializeTimetable(config), modules, semester).semTimetableConfig,
+        ).toEqual(config);
       });
     });
+
+    test('deserializing timetable with ta and hidden modules', () => {
+      expect(
+        deserializeTimetable(
+          'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS3216=LEC:(1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13)&ta=CS1010S&hidden=CS3216',
+          modules,
+          semester,
+        ),
+      ).toEqual({
+        semTimetableConfig: {
+          CS1010S: {
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+          CS3216: {
+            Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+        },
+        ta: ['CS1010S'],
+        hidden: ['CS3216'],
+      });
+    });
+
+    describe('deserializing edge cases', () => {
+      test('duplicate module code', () => {
+        expect(
+          deserializeTimetable(
+            'CS1010S=LEC:(1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)&CS1010S=REC:(1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13)',
+            modules,
+            semester,
+          ).semTimetableConfig,
+        ).toEqual({
+          CS1010S: {
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+            Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+        } as SemTimetableConfig);
+      });
+
+      test('no lessons', () => {
+        expect(
+          deserializeTimetable(
+            'GER1000&CS4243=LEC:&CS3216=LEC:)&CS1010S=LEC:()&ta=&hidden=',
+            modules,
+            semester,
+          ).semTimetableConfig,
+        ).toEqual({
+          GER1000: {},
+          CS4243: {
+            Lecture: [],
+          },
+          CS3216: {
+            Lecture: [],
+          },
+          CS1010S: {
+            Lecture: [],
+          },
+        } as SemTimetableConfig);
+      });
+
+      test('missing module', () => {
+        expect(
+          deserializeTimetable(
+            'GER1001&CS4244=&CS3217=LEC:&CS1011S=LEC:()&ta=&hidden=',
+            modules,
+            semester,
+          ).semTimetableConfig,
+        ).toEqual({} as SemTimetableConfig);
+      });
+
+      test('should ignore invalid lesson keys', () => {
+        expect(
+          deserializeTimetable(
+            'CS1010S=LEC:(2|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13)',
+            modules,
+            semester,
+          ).semTimetableConfig,
+        ).toEqual({
+          CS1010S: {
+            Lecture: [],
+          },
+        });
+      });
+    });
+
+    test('should return empty array if v2/v3 serialized', () => {
+      expect(parseTaModuleCodes('(CS1010S,CS3216)')).toEqual([]);
+    });
   });
 
-  test('should return empty array if v2 serialized', () => {
-    expect(parseTaModuleCodes('(CS1010S,CS3216)')).toEqual([]);
+  describe('v2 timetable serialization/deserialization', () => {
+    test('deserializing timetable with ta and hidden modules', () => {
+      expect(
+        deserializeTimetable(
+          'CS1010S=LEC:(0)&CS3216=LEC:(0)&ta=CS1010S&hidden=CS3216',
+          modules,
+          semester,
+        ),
+      ).toEqual({
+        semTimetableConfig: {
+          CS1010S: {
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+          CS3216: {
+            Lecture: ['1|MON|1830|2030|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+        },
+        ta: ['CS1010S'],
+        hidden: ['CS3216'],
+      });
+    });
+
+    describe('deserializing edge cases', () => {
+      test('duplicate module code', () => {
+        expect(
+          deserializeTimetable('CS1010S=LEC:(0)&CS1010S=REC:(1)', modules, semester)
+            .semTimetableConfig,
+        ).toEqual({
+          CS1010S: {
+            Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+            Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+          },
+        } as SemTimetableConfig);
+      });
+
+      test('should ignore invalid lesson indices', () => {
+        expect(
+          deserializeTimetable('CS1010S=LEC:(20)', modules, semester).semTimetableConfig,
+        ).toEqual({
+          CS1010S: {
+            Lecture: [],
+          },
+        });
+      });
+    });
   });
 
   describe('deserialize v1 config', () => {
