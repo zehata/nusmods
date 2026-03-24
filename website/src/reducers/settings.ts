@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash-es';
 import { produce } from 'immer';
-import { REHYDRATE, createMigrate } from 'redux-persist';
+import { createMigrate } from 'redux-persist';
 
 import { SettingsState } from 'types/reducers';
 import { Actions } from 'types/actions';
@@ -24,6 +24,7 @@ import { SYSTEM_COLOR_SCHEME_PREFERENCE } from 'types/settings';
 import config from 'config';
 import { isRoundDismissed } from 'selectors/modreg';
 import { colorSchemeToPreference } from 'utils/colorScheme';
+import { REMEMBER_REHYDRATED } from 'redux-remember';
 
 export const defaultModRegNotificationState = {
   semesterKey: config.getSemesterKey(),
@@ -122,7 +123,7 @@ function settings(state: SettingsState = defaultSettingsState, action: Actions):
         prereqTreeOnLeft: action.payload,
       };
 
-    case REHYDRATE: {
+    case REMEMBER_REHYDRATED: {
       let nextState = state;
 
       // Rehydrating from store - check that the key is the same, and if not,

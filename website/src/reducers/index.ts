@@ -1,6 +1,5 @@
 import { REMOVE_MODULE, SET_TIMETABLE } from 'actions/timetables';
 
-import persistReducer from 'storage/persistReducer';
 import { State } from 'types/state';
 import { Actions } from 'types/actions';
 
@@ -16,14 +15,9 @@ import timetablesReducer, { persistConfig as timetablesPersistConfig } from './t
 import themeReducer from './theme';
 import settingsReducer, { persistConfig as settingsPersistConfig } from './settings';
 import plannerReducer, { persistConfig as plannerPersistConfig } from './planner';
-
-// Persist reducers
-const moduleBank = persistReducer('moduleBank', moduleBankReducer, moduleBankPersistConfig);
-const venueBank = persistReducer('venueBank', venueBankReducer, venueBankPersistConfig);
-const timetables = persistReducer('timetables', timetablesReducer, timetablesPersistConfig);
-const theme = persistReducer('theme', themeReducer);
-const settings = persistReducer('settings', settingsReducer, settingsPersistConfig);
-const planner = persistReducer('planner', plannerReducer, plannerPersistConfig);
+import { rememberReducer } from 'redux-remember';
+import reduxRemember from './reduxRemember';
+import { UndoHistoryState } from 'types/reducers';
 
 // State default is delegated to its child reducers.
 const defaultState = {} as unknown as State;
@@ -33,18 +27,39 @@ const undoReducer = createUndoReducer<State>({
   storedKeyPaths: ['timetables', 'theme.colors'],
 });
 
-export default function reducers(state: State = defaultState, action: Actions): State {
+export default function reducer(state: State = defaultState, action: Actions): State {
   // Update every reducer except the undo reducer
-  const newState: State = {
-    moduleBank: moduleBank(state.moduleBank, action),
-    venueBank: venueBank(state.venueBank, action),
-    requests: requests(state.requests, action),
-    timetables: timetables(state.timetables, action),
-    app: app(state.app, action),
-    theme: theme(state.theme, action),
-    settings: settings(state.settings, action),
-    planner: planner(state.planner, action),
-    undoHistory: state.undoHistory,
+  // const newState: State = {
+  //   moduleBank: moduleBank(state.moduleBank, action),
+  //   venueBank: venueBank(state.venueBank, action),
+  //   requests: requests(state.requests, action),
+  //   timetables: timetables(state.timetables, action),
+  //   app: app(state.app, action),
+  //   theme: theme(state.theme, action),
+  //   settings: settings(state.settings, action),
+  //   planner: planner(state.planner, action),
+  //   undoHistory: state.undoHistory,
+  // };
+  const reducers = {
+    moduleBank: moduleBankReducer,
+    venueBank: venueBankReducer,
+    requests,
+    timetables: timetablesReducer,
+    app,
+    theme: themeReducer,
+    settings: settingsReducer,
+    planner: plannerReducer,
+    reduxRemember: reduxRemember.reducer,
+    undoHistory: (
+      state: UndoHistoryState<State> = {
+        past: [],
+        present: undefined, // Don't pretend to know the present
+        future: [],
+      },
+      _action: Actions,
+    ) => state,
   };
+  const reducer = rememberReducer(reducers);
+  const newState = reducer(state, action);
   return undoReducer(state, newState, action);
 }

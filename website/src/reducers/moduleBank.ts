@@ -1,7 +1,7 @@
 import { produce, Draft } from 'immer';
 import { keyBy, map, omit, size, zipObject } from 'lodash-es';
 
-import { createMigrate, REHYDRATE } from 'redux-persist';
+import { createMigrate } from 'redux-persist';
 import type { Actions } from 'types/actions';
 import type { Module } from 'types/modules';
 import type { ModuleBank, ModuleList } from 'types/reducers';
@@ -15,6 +15,7 @@ import {
   SET_EXPORTED_DATA,
 } from 'actions/constants';
 import { SUCCESS_KEY } from 'middlewares/requests-middleware';
+import { REMEMBER_REHYDRATED } from 'redux-remember';
 
 const defaultModuleBankState: ModuleBank = {
   moduleList: [], // List of basic modules data (module code, name, semester)
@@ -106,7 +107,7 @@ function moduleBank(state: ModuleBank = defaultModuleBankState, action: Actions)
         modules: keyBy(action.payload.modules, (module: Module) => module.moduleCode),
       };
 
-    case REHYDRATE:
+    case REMEMBER_REHYDRATED:
       if (!size(state.moduleCodes) && state.moduleList) {
         return {
           ...state,

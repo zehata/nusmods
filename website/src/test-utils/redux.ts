@@ -1,4 +1,4 @@
-import { REHYDRATE } from 'redux-persist';
+import { REMEMBER_REHYDRATED } from 'redux-remember';
 
 export function initAction() {
   return {
@@ -9,7 +9,7 @@ export function initAction() {
 
 export function rehydrateAction() {
   return {
-    type: REHYDRATE,
+    type: REMEMBER_REHYDRATED,
     payload: null,
-  };
+  } as const;
 }

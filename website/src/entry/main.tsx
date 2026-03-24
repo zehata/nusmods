@@ -18,7 +18,7 @@ import 'styles/main.scss';
 
 import App from './App';
 
-const { store, persistor } = configureStore();
+const store = configureStore();
 
 subscribeOnlineEvents(store);
 
@@ -30,7 +30,7 @@ if (!container) {
   throw new Error('#app element not found');
 }
 const root = createRoot(container);
-root.render(<App store={store} persistor={persistor} />);
+root.render(<App store={store} />);
 
 if (
   ((NUSMODS_ENV === 'preview' || NUSMODS_ENV === 'staging' || NUSMODS_ENV === 'production') &&

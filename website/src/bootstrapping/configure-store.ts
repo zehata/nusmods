@@ -1,5 +1,4 @@
-import { createStore, applyMiddleware, compose, PreloadedState } from 'redux';
-import { persistStore } from 'redux-persist';
+import { applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { setAutoFreeze } from 'immer';
 
@@ -12,6 +11,8 @@ import getLocalStorage from 'storage/localStorage';
 import type { GetState } from 'types/redux';
 import type { State } from 'types/state';
 import type { Actions } from 'types/actions';
+import { configureStore as RTKConfigureStore, StoreEnhancer } from '@reduxjs/toolkit';
+import { rememberEnhancer } from 'redux-remember';
 
 // For redux-devtools-extensions - see
 // https://github.com/zalmoxisus/redux-devtools-extension
@@ -45,18 +46,38 @@ export default function configureStore(defaultState?: State) {
 
   const storeEnhancer = applyMiddleware(...middlewares);
 
-  const store = createStore(
-    rootReducer,
-    // Redux typings does not seem to allow non-JSON serialized values in PreloadedState so this needs to be casted
-    defaultState as PreloadedState<State> | undefined,
-    composeEnhancers(storeEnhancer),
-  );
+  // const store = createStore(
+  //   rootReducer,
+  //   // Redux typings does not seem to allow non-JSON serialized values in PreloadedState so this needs to be casted
+  //   defaultState as PreloadedState<State> | undefined,
+  //   composeEnhancers(storeEnhancer),
+  // );
+
+  const store = RTKConfigureStore({
+    reducer: rootReducer,
+    preloadedState: defaultState,
+    enhancers: (getDefaultEnhancers) =>
+      getDefaultEnhancers().concat(
+        composeEnhancers(
+          storeEnhancer,
+          rememberEnhancer(window.localStorage, [
+            'moduleBank',
+            'venueBank',
+            'timetables',
+            'theme',
+            'settings',
+            'planner',
+          ]),
+        ) as StoreEnhancer,
+      ),
+  });
 
   if (module.hot) {
     // Enable webpack hot module replacement for reducers
     module.hot.accept('../reducers', () => store.replaceReducer(rootReducer));
   }
 
-  const persistor = persistStore(store);
-  return { persistor, store };
+  // const persistor = persistStore(store);
+  // return { persistor, store };
+  return store;
 }

@@ -1,0 +1,24 @@
+import { createAction, createSlice } from '@reduxjs/toolkit';
+import { REMEMBER_REHYDRATED, REMEMBER_PERSISTED } from 'redux-remember';
+
+const initialState = {
+  isRehydrated: false,
+  isPersisted: false,
+};
+
+const reduxRemember = createSlice({
+  name: 'redux-remember',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) =>
+    builder
+      .addCase(createAction(REMEMBER_REHYDRATED), (state, action) => {
+        console.log('Rehydrated state:', action.payload); // "action.payload" is the partial rehydrated state (only remembered keys)
+        state.isRehydrated = true;
+      })
+      .addCase(createAction(REMEMBER_PERSISTED), (state, _action) => {
+        state.isPersisted = true;
+      }),
+});
+
+export default reduxRemember;
