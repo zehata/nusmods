@@ -11,10 +11,6 @@ configureTestingLibrary({ asyncUtilTimeout: 5000 });
 
 configure({ adapter: new Adapter() });
 
-// immer uses Object.freeze on returned state objects, which is incompatible with
-// redux-persist. See https://github.com/rt2zz/redux-persist/issues/747
-setAutoFreeze(false);
-
 // Prevent causing errors during test runs due to unclosed BroadcastChannel
 vi.mock('redux-state-sync');
 

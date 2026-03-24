@@ -13,14 +13,13 @@ import type { State } from 'types/state';
 import type { Actions } from 'types/actions';
 import { configureStore as RTKConfigureStore, StoreEnhancer } from '@reduxjs/toolkit';
 import { rememberEnhancer } from 'redux-remember';
+import { migrate } from 'remigrate';
+import { TimetablesState } from 'types/reducers';
+import { stateReconciler } from 'reducers/timetables';
 
 // For redux-devtools-extensions - see
 // https://github.com/zalmoxisus/redux-devtools-extension
 const composeEnhancers: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-// immer uses Object.freeze on returned state objects, which is incompatible with
-// redux-persist. See https://github.com/rt2zz/redux-persist/issues/747
-setAutoFreeze(false);
 
 export default function configureStore(defaultState?: State) {
   // Clear legacy reduxState deprecated by https://github.com/nusmodifications/nusmods/pull/669
@@ -60,14 +59,24 @@ export default function configureStore(defaultState?: State) {
       getDefaultEnhancers().concat(
         composeEnhancers(
           storeEnhancer,
-          rememberEnhancer(window.localStorage, [
-            'moduleBank',
-            'venueBank',
-            'timetables',
-            'theme',
-            'settings',
-            'planner',
-          ]),
+          rememberEnhancer(
+            window.localStorage,
+            ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
+            {
+              migrate: (state: State): State => {
+                const newState: State = migrate(state);
+                const debug = process.env.NUSMODS_ENV === 'development';
+                return {
+                  ...newState,
+                  timetables: stateReconciler(
+                    newState.timetables,
+                    state.timetables,
+                    debug,
+                  ) as TimetablesState,
+                };
+              },
+            },
+          ),
         ) as StoreEnhancer,
       ),
   });

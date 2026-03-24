@@ -1,7 +1,6 @@
 import { produce, Draft } from 'immer';
 import { keyBy, map, omit, size, zipObject } from 'lodash-es';
 
-import { createMigrate } from 'redux-persist';
 import type { Actions } from 'types/actions';
 import type { Module } from 'types/modules';
 import type { ModuleBank, ModuleList } from 'types/reducers';
@@ -123,23 +122,3 @@ function moduleBank(state: ModuleBank = defaultModuleBankState, action: Actions)
 }
 
 export default moduleBank;
-
-export const persistConfig = {
-  version: 1,
-  throttle: 1000,
-  whitelist: ['modules', 'moduleList'],
-  migrate: createMigrate({
-    // Clear out modules - after switching to API v2 we need to flush all of the
-    // old module data
-    1: (state) => ({
-      ...state,
-      modules: {},
-      moduleList: [],
-      // FIXME: Remove the next line when _persist is optional again.
-      // Cause: https://github.com/rt2zz/redux-persist/pull/919
-      // Issue: https://github.com/rt2zz/redux-persist/pull/1170
-      // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-      _persist: state?._persist!,
-    }),
-  }),
-};

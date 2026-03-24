@@ -1,6 +1,5 @@
 import { isEqual } from 'lodash-es';
 import { produce } from 'immer';
-import { createMigrate } from 'redux-persist';
 
 import { SettingsState } from 'types/reducers';
 import { Actions } from 'types/actions';
@@ -143,16 +142,3 @@ function settings(state: SettingsState = defaultSettingsState, action: Actions):
 }
 
 export default settings;
-
-export const persistConfig = {
-  version: 1,
-  migrate: createMigrate({
-    // any is used because migration typing is hard
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    1: ({ corsNotification, ...state }: any) => ({
-      // Rename corsNotification to modRegNotification and set the default modRegScheduleType
-      modRegNotification: defaultSettingsState.modRegNotification,
-      ...state,
-    }),
-  }),
-};

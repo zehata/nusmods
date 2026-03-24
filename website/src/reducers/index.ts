@@ -9,12 +9,12 @@ import app from './app';
 import createUndoReducer from './undoHistory';
 
 // Persisted reducers
-import moduleBankReducer, { persistConfig as moduleBankPersistConfig } from './moduleBank';
-import venueBankReducer, { persistConfig as venueBankPersistConfig } from './venueBank';
-import timetablesReducer, { persistConfig as timetablesPersistConfig } from './timetables';
+import moduleBankReducer from './moduleBank';
+import venueBankReducer from './venueBank';
+import timetablesReducer from './timetables';
 import themeReducer from './theme';
-import settingsReducer, { persistConfig as settingsPersistConfig } from './settings';
-import plannerReducer, { persistConfig as plannerPersistConfig } from './planner';
+import settingsReducer from './settings';
+import plannerReducer from './planner';
 import { rememberReducer } from 'redux-remember';
 import reduxRemember from './reduxRemember';
 import { UndoHistoryState } from 'types/reducers';
