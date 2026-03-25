@@ -12,7 +12,7 @@ const reduxRemember = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
-      .addCase(createAction(REMEMBER_REHYDRATED), (state, action) => {
+      .addCase(createAction(REMEMBER_REHYDRATED), (state, _action) => {
         state.isRehydrated = true;
       })
       .addCase(createAction(REMEMBER_PERSISTED), (state, _action) => {

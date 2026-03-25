@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { each, max, min, pull } from 'lodash-es';
+import { max, min, pull } from 'lodash-es';
 
 import { PlannerState } from 'types/reducers';
 import { Actions } from 'types/actions';
