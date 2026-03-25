@@ -21,6 +21,10 @@ import { stateReconciler } from 'reducers/timetables';
 // https://github.com/zalmoxisus/redux-devtools-extension
 const composeEnhancers: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+// immer uses Object.freeze on returned state objects, which is incompatible with
+// redux-persist. See https://github.com/rt2zz/redux-persist/issues/747
+setAutoFreeze(false);
+
 export default function configureStore(defaultState?: State) {
   // Clear legacy reduxState deprecated by https://github.com/nusmodifications/nusmods/pull/669
   // to reduce the amount of data NUSMods is using
