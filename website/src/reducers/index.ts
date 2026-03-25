@@ -28,18 +28,6 @@ const undoReducer = createUndoReducer<State>({
 });
 
 export default function reducer(state: State = defaultState, action: Actions): State {
-  // Update every reducer except the undo reducer
-  // const newState: State = {
-  //   moduleBank: moduleBank(state.moduleBank, action),
-  //   venueBank: venueBank(state.venueBank, action),
-  //   requests: requests(state.requests, action),
-  //   timetables: timetables(state.timetables, action),
-  //   app: app(state.app, action),
-  //   theme: theme(state.theme, action),
-  //   settings: settings(state.settings, action),
-  //   planner: planner(state.planner, action),
-  //   undoHistory: state.undoHistory,
-  // };
   const reducers = {
     moduleBank: moduleBankReducer,
     venueBank: venueBankReducer,
