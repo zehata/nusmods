@@ -50,13 +50,6 @@ export default function configureStore(defaultState?: State, usePersistence: boo
 
   const storeEnhancer = applyMiddleware(...middlewares);
 
-  // const store = createStore(
-  //   rootReducer,
-  //   // Redux typings does not seem to allow non-JSON serialized values in PreloadedState so this needs to be casted
-  //   defaultState as PreloadedState<State> | undefined,
-  //   composeEnhancers(storeEnhancer),
-  // );
-
   const store = RTKConfigureStore({
     reducer: rootReducer,
     preloadedState: defaultState,
