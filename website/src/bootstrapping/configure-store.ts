@@ -59,7 +59,7 @@ export default function configureStore(defaultState?: State, usePersistence: boo
           storeEnhancer,
           usePersistence
             ? rememberEnhancer(
-                window.localStorage,
+                storage,
                 ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
                 {
                   migrate: (state: State): State => {
@@ -74,6 +74,8 @@ export default function configureStore(defaultState?: State, usePersistence: boo
                       ) as TimetablesState,
                     };
                   },
+                  serialize: (state, _key) => state,
+                  unserialize: (state, _key) => state,
                 },
               )
             : () => {},
