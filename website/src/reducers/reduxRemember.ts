@@ -13,7 +13,6 @@ const reduxRemember = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(createAction(REMEMBER_REHYDRATED), (state, action) => {
-        console.log('Rehydrated state:', action.payload); // "action.payload" is the partial rehydrated state (only remembered keys)
         state.isRehydrated = true;
       })
       .addCase(createAction(REMEMBER_PERSISTED), (state, _action) => {
