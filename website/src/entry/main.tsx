@@ -18,7 +18,7 @@ import 'styles/main.scss';
 
 import App from './App';
 
-const store = configureStore();
+const store = configureStore(undefined, true);
 
 subscribeOnlineEvents(store);
 

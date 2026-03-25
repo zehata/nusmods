@@ -26,7 +26,7 @@ const composeEnhancers: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPO
 // redux-persist. See https://github.com/rt2zz/redux-persist/issues/747
 setAutoFreeze(false);
 
-export default function configureStore(defaultState?: State) {
+export default function configureStore(defaultState?: State, usePersistence: boolean = false) {
   // Clear legacy reduxState deprecated by https://github.com/nusmodifications/nusmods/pull/669
   // to reduce the amount of data NUSMods is using
   getLocalStorage().removeItem('reduxState');
@@ -64,24 +64,26 @@ export default function configureStore(defaultState?: State) {
       getDefaultEnhancers().concat(
         composeEnhancers(
           storeEnhancer,
-          rememberEnhancer(
-            storage,
-            ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
-            {
-              migrate: (state: State): State => {
-                const newState: State = migrate(state);
-                const debug = NUSMODS_ENV === 'development';
-                return {
-                  ...newState,
-                  timetables: stateReconciler(
-                    newState.timetables,
-                    state.timetables,
-                    debug,
-                  ) as TimetablesState,
-                };
-              },
-            },
-          ),
+          usePersistence
+            ? rememberEnhancer(
+                storage,
+                ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
+                {
+                  migrate: (state: State): State => {
+                    const newState: State = migrate(state);
+                    const debug = NUSMODS_ENV === 'development';
+                    return {
+                      ...newState,
+                      timetables: stateReconciler(
+                        newState.timetables,
+                        state.timetables,
+                        debug,
+                      ) as TimetablesState,
+                    };
+                  },
+                },
+              )
+            : () => {},
         ) as StoreEnhancer,
       ),
   });
