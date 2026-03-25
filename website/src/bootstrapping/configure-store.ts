@@ -55,10 +55,10 @@ export default function configureStore(defaultState?: State, usePersistence: boo
     preloadedState: defaultState,
     enhancers: (getDefaultEnhancers) =>
       getDefaultEnhancers().concat(
-        composeEnhancers(
-          storeEnhancer,
-          usePersistence
-            ? rememberEnhancer(
+        (usePersistence
+          ? composeEnhancers(
+              storeEnhancer,
+              rememberEnhancer(
                 storage,
                 ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
                 {
@@ -74,12 +74,10 @@ export default function configureStore(defaultState?: State, usePersistence: boo
                       ) as TimetablesState,
                     };
                   },
-                  serialize: (state, _key) => state,
-                  unserialize: (state, _key) => state,
                 },
-              )
-            : () => {},
-        ) as StoreEnhancer,
+              ),
+            )
+          : storeEnhancer) as StoreEnhancer,
       ),
   });
 
