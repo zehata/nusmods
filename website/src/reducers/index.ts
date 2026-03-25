@@ -18,6 +18,7 @@ import plannerReducer from './planner';
 import { rememberReducer } from 'redux-remember';
 import reduxRemember from './reduxRemember';
 import { UndoHistoryState } from 'types/reducers';
+import { combineReducers } from 'redux';
 
 // State default is delegated to its child reducers.
 const defaultState = {} as unknown as State;
@@ -27,27 +28,28 @@ const undoReducer = createUndoReducer<State>({
   storedKeyPaths: ['timetables', 'theme.colors'],
 });
 
-export default function reducer(state: State = defaultState, action: Actions): State {
-  const reducers = {
-    moduleBank: moduleBankReducer,
-    venueBank: venueBankReducer,
-    requests,
-    timetables: timetablesReducer,
-    app,
-    theme: themeReducer,
-    settings: settingsReducer,
-    planner: plannerReducer,
-    reduxRemember: reduxRemember.reducer,
-    undoHistory: (
-      state: UndoHistoryState<State> = {
-        past: [],
-        present: undefined, // Don't pretend to know the present
-        future: [],
-      },
-      _action: Actions,
-    ) => state,
-  };
-  const reducer = rememberReducer(reducers);
+const reducers = {
+  moduleBank: moduleBankReducer,
+  venueBank: venueBankReducer,
+  requests,
+  timetables: timetablesReducer,
+  app,
+  theme: themeReducer,
+  settings: settingsReducer,
+  planner: plannerReducer,
+  reduxRemember: reduxRemember.reducer,
+  undoHistory: (
+    state: UndoHistoryState<State> = {
+      past: [],
+      present: undefined, // Don't pretend to know the present
+      future: [],
+    },
+    _action: Actions,
+  ) => state,
+};
+const reducer = rememberReducer(combineReducers(reducers));
+
+export default function rootReducer(state: State = defaultState, action: Actions): State {
   const newState = reducer(state, action);
   return undoReducer(state, newState, action);
 }
