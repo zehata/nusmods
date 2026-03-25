@@ -59,7 +59,7 @@ export default function configureStore(defaultState?: State, usePersistence: boo
           storeEnhancer,
           usePersistence
             ? rememberEnhancer(
-                storage,
+                window.localStorage,
                 ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
                 {
                   migrate: (state: State): State => {
