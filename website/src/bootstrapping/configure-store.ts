@@ -69,7 +69,7 @@ export default function configureStore(defaultState?: State) {
             {
               migrate: (state: State): State => {
                 const newState: State = migrate(state);
-                const debug = process.env.NUSMODS_ENV === 'development';
+                const debug = NUSMODS_ENV === 'development';
                 return {
                   ...newState,
                   timetables: stateReconciler(
