@@ -9,6 +9,7 @@ import * as undoHistory from 'actions/undoHistory';
 import * as venueBank from 'actions/venueBank';
 import { ExtractActionShape } from './redux';
 import { REMEMBER_REHYDRATED } from 'redux-remember';
+import { State } from 'types/state';
 
 type AppAction = ExtractActionShape<typeof app>;
 type ExportActionsAction = ExtractActionShape<typeof exportActions>;
@@ -31,7 +32,7 @@ type InitActions = {
 
 type ReduxPersistActions = {
   type: typeof REMEMBER_REHYDRATED;
-  payload: null;
+  payload: State;
 };
 
 export type Actions =

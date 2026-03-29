@@ -1,14 +1,14 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import { REMEMBER_REHYDRATED, REMEMBER_PERSISTED } from 'redux-remember';
 
-const initialState = {
+export const defaultReduxRememberState = {
   isRehydrated: false,
   isPersisted: false,
 };
 
 const reduxRemember = createSlice({
   name: 'redux-remember',
-  initialState,
+  initialState: defaultReduxRememberState,
   reducers: {},
   extraReducers: (builder) =>
     builder

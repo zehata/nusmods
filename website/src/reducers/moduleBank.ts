@@ -16,7 +16,7 @@ import {
 import { SUCCESS_KEY } from 'middlewares/requests-middleware';
 import { REMEMBER_REHYDRATED } from 'redux-remember';
 
-const defaultModuleBankState: ModuleBank = {
+export const defaultModuleBankState: ModuleBank = {
   moduleList: [], // List of basic modules data (module code, name, semester)
   modules: {}, // Object of Module code -> Module details
   moduleCodes: {},

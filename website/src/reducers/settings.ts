@@ -32,7 +32,7 @@ export const defaultModRegNotificationState = {
   scheduleType: 'Undergraduate' as const,
 };
 
-const defaultSettingsState: SettingsState = {
+export const defaultSettingsState: SettingsState = {
   newStudent: false,
   faculty: '',
   colorScheme: SYSTEM_COLOR_SCHEME_PREFERENCE,
