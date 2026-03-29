@@ -6,7 +6,7 @@ import { Actions } from 'types/actions';
 // Non-persisted reducers
 import requests from './requests';
 import app from './app';
-import createUndoReducer from './undoHistory';
+import createUndoReducer, { defaultUndoHistoryState } from './undoHistory';
 
 // Persisted reducers
 import moduleBankReducer from './moduleBank';
@@ -38,15 +38,13 @@ const reducers = {
   settings: settingsReducer,
   planner: plannerReducer,
   reduxRemember: reduxRemember.reducer,
-  undoHistory: (
-    state: UndoHistoryState<State> = {
-      past: [],
-      present: undefined, // Don't pretend to know the present
-      future: [],
-    },
-    _action: Actions,
-  ) => state,
+  // State members are required to have a reducer
+  // The reducer is required to return a state, but the history reducer runs after state reducer
+  // Thus we initialize undo history state if it was uninitialized
+  undoHistory: (state: UndoHistoryState<State> = defaultUndoHistoryState, _action: Actions) =>
+    state,
 };
+
 const reducer = rememberReducer(combineReducers(reducers));
 
 export default function rootReducer(state: State = defaultState, action: Actions): State {
