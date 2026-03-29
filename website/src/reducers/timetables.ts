@@ -26,6 +26,7 @@ import {
 import { getNewColor } from 'utils/colors';
 import { SET_EXPORTED_DATA } from 'actions/constants';
 import { Actions } from '../types/actions';
+import { REMEMBER_REHYDRATED } from 'redux-remember';
 
 export const stateReconciler = (
   inbound: TimetablesState,
@@ -283,6 +284,29 @@ function timetables(
       return produce(state, (draft) => {
         draft.ta[semester] = taModules;
       });
+    }
+
+    case REMEMBER_REHYDRATED: {
+      const inbound = action.payload.timetables;
+
+      if (inbound.academicYear === state.academicYear) {
+        return inbound;
+      }
+
+      if (NUSMODS_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log(
+          'New academic year detected - resetting timetable and adding timetable to archive',
+        );
+      }
+
+      return {
+        ...state,
+        archive: {
+          ...inbound.archive,
+          [inbound.academicYear]: inbound.lessons,
+        },
+      };
     }
 
     default:

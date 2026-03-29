@@ -14,8 +14,6 @@ import type { Actions } from 'types/actions';
 import { configureStore as RTKConfigureStore, StoreEnhancer } from '@reduxjs/toolkit';
 import { rememberEnhancer } from 'redux-remember';
 import { migrate } from 'remigrate';
-import { TimetablesState } from 'types/reducers';
-import { stateReconciler } from 'reducers/timetables';
 import storage from 'storage';
 
 // For redux-devtools-extensions - see
@@ -62,18 +60,9 @@ export default function configureStore(defaultState?: State, usePersistence: boo
                 storage,
                 ['moduleBank', 'venueBank', 'timetables', 'theme', 'settings', 'planner'],
                 {
-                  migrate: (state: State): State => {
-                    const newState: State = migrate(state);
-                    const debug = NUSMODS_ENV === 'development';
-                    return {
-                      ...newState,
-                      timetables: stateReconciler(
-                        newState.timetables,
-                        state.timetables,
-                        debug,
-                      ) as TimetablesState,
-                    };
-                  },
+                  migrate,
+                  serialize: (state, _key) => state,
+                  unserialize: (state, _key) => state,
                 },
               ),
             )
