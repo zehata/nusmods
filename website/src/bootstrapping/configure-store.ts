@@ -75,7 +75,5 @@ export default function configureStore(defaultState?: State, usePersistence: boo
     module.hot.accept('../reducers', () => store.replaceReducer(rootReducer));
   }
 
-  // const persistor = persistStore(store);
-  // return { persistor, store };
   return store;
 }
