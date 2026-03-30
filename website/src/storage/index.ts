@@ -34,7 +34,7 @@ export function rawGetItem(key: string): string | null {
   return getLocalStorage().getItem(key);
 }
 
-function getItem(key: string): any {
+function getItem(key: string): unknown {
   const reduxRememberValue = rawGetItem(key);
 
   if (reduxRememberValue === null) {
