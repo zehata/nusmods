@@ -1,7 +1,7 @@
 import { mapValues, omit } from 'lodash';
 import storage from 'storage';
 
-test('', () => {
+test('redux-persist JSON members should be parsed and _persist should be removed', () => {
   const mockData = {
     maps: {},
     arrays: [],
