@@ -7,10 +7,7 @@ export const getRememberPersistValue = (key: string): string | null => {
   const baseKey = get(key.match(/(?<=@@remember-)(.*)/), 0);
   if (isUndefined(baseKey)) return null;
   // baseKey = moduleBank
-  console.log(baseKey);
-  const persistKey = `persist:${baseKey}`;
-  // persist:moduleBank
-  return rawGetItem(persistKey);
+  return rawGetItem(`persist:${baseKey}`);
 };
 
 export const migratePersistToRemember = (persistValue: string): any => {
