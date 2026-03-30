@@ -1,6 +1,10 @@
 import { isString } from 'lodash-es';
 import { captureException } from 'utils/error';
 import getLocalStorage from './localStorage';
+import {
+  getRememberPersistValue,
+  migratePersistToRemember,
+} from 'bootstrapping/migrate-persist-to-remember';
 
 // Simple wrapper around localStorage to automagically parse and stringify payloads.
 function setItem(key: string, value: unknown) {
@@ -26,17 +30,26 @@ function setItem(key: string, value: unknown) {
   }
 }
 
-function getItem(key: string): unknown {
-  let value;
+export function rawGetItem(key: string): string | null {
+  return getLocalStorage().getItem(key);
+}
+
+function getItem(key: string): any {
+  const reduxRememberValue = rawGetItem(key);
+
+  if (reduxRememberValue === null) {
+    const reduxPersistValue = getRememberPersistValue(key);
+
+    if (reduxPersistValue === null) return null;
+
+    return migratePersistToRemember(reduxPersistValue);
+  }
+
   try {
-    value = getLocalStorage().getItem(key);
-    if (value && value !== '') {
-      return JSON.parse(value);
-    }
-    return undefined;
-  } catch (e) {
-    captureException(e);
-    return value;
+    return JSON.parse(reduxRememberValue);
+  } catch (error) {
+    captureException(error);
+    return reduxRememberValue;
   }
 }
 
