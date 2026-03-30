@@ -1,18 +1,16 @@
-import { get, isUndefined, mapValues, omit } from 'lodash-es';
-import { rawGetItem } from 'storage';
+import { mapValues, omit } from 'lodash-es';
 import { captureException } from 'utils/error';
 
-export const getRememberPersistValue = (key: string): string | null => {
-  // key = @@remember-moduleBank
-  const baseKey = get(key.match(/(?<=@@remember-)(.*)/), 0);
-  if (isUndefined(baseKey)) return null;
-  // baseKey = moduleBank
-  return rawGetItem(`persist:${baseKey}`);
-};
-
-export const migratePersistToRemember = (persistValue: string): any => {
+/**
+ * Each member in the redux-persist data is stringified, and the entire map is stringified\
+ * Redux-remember format stringifies the data without stringifying each member\
+ * This function takes the redux-persist JSON string and converts it to the redux-remember data format\
+ * @param persistJsonString
+ * @returns parsed data
+ */
+const migratePersistToRemember = (persistJsonString: string): any => {
   try {
-    const parsedValue = JSON.parse(persistValue);
+    const parsedValue = JSON.parse(persistJsonString);
     const data = omit(parsedValue, '_persist');
     return mapValues(data, JSON.parse);
   } catch (error) {
@@ -20,3 +18,5 @@ export const migratePersistToRemember = (persistValue: string): any => {
     return null;
   }
 };
+
+export default migratePersistToRemember;
