@@ -27,10 +27,6 @@ function setItem(key: string, value: unknown) {
   }
 }
 
-export function rawGetItem(key: string): string | null {
-  return getLocalStorage().getItem(key);
-}
-
 /**
  * This function is augmented with logic to migrate data from redux-persist to redux-remember\
  * Redux-remember uses the `@@remember-` prefix whereas redux-persist used the `persist:` prefix\
@@ -41,14 +37,14 @@ export function rawGetItem(key: string): string | null {
  * Otherwise, returns null.
  */
 function getItem(key: string): unknown {
-  const reduxRememberValue = rawGetItem(key);
+  const reduxRememberValue = getLocalStorage().getItem(key);
 
   if (reduxRememberValue === null) {
     const rememberPrefixMatches = key.match(/(?<=@@remember-)(.*)/);
     if (!rememberPrefixMatches) return null;
     const baseKey = get(rememberPrefixMatches, 0);
 
-    const persistValue = rawGetItem(`persist:${baseKey}`);
+    const persistValue = getLocalStorage().getItem(`persist:${baseKey}`);
     if (persistValue === null) return null;
 
     return migratePersistToRemember(persistValue);
