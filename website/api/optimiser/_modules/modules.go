@@ -58,9 +58,6 @@ func GetAllModuleSlots(
 		var moduleTimetable []models.ModuleSlot
 		for _, semester := range moduleData.SemesterData {
 			if semester.Semester == optimiserRequest.AcadSem {
-				for lessonIndex := range semester.Timetable {
-					semester.Timetable[lessonIndex].LessonIndex = lessonIndex
-				}
 				moduleTimetable = semester.Timetable
 				break
 			}
@@ -69,24 +66,17 @@ func GetAllModuleSlots(
 		// Parse the weeks
 		for i := range moduleTimetable {
 
-			// Note: if weeks is not a []int, then skip parsing
-			// Currently we are not handling week conflict for non-[]int weeks
-			if _, ok := moduleTimetable[i].Weeks.([]any); !ok {
+			moduleTimetable[i].WeeksSet = make(map[int]struct{})
+			var weeks models.WeeksArray
+			err := json.Unmarshal(moduleTimetable[i].Weeks, &weeks)
+			if err != nil {
 				continue
 			}
-
-			moduleTimetable[i].WeeksSet = make(map[int]struct{})
-			weeks := moduleTimetable[i].Weeks.([]any)
 			weeksStrings := make([]string, 0, len(weeks))
 
 			for _, week := range weeks {
-				weekFloat, ok := week.(float64)
-				if !ok {
-					continue
-				}
-				weekInt := int(weekFloat)
-				moduleTimetable[i].WeeksSet[weekInt] = struct{}{}
-				weeksStrings = append(weeksStrings, strconv.Itoa(weekInt))
+				moduleTimetable[i].WeeksSet[week] = struct{}{}
+				weeksStrings = append(weeksStrings, strconv.Itoa(week))
 			}
 			moduleTimetable[i].WeeksString = strings.Join(weeksStrings, ",")
 		}

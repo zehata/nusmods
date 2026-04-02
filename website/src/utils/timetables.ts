@@ -12,6 +12,7 @@ import {
   isEmpty,
   isEqual,
   isNumber,
+  isUndefined,
   keys,
   last,
   map,
@@ -42,6 +43,8 @@ import {
   isWeekRange,
   LessonKey,
   LessonMap,
+  Weeks,
+  WeekRange,
 } from 'types/modules';
 
 import {
@@ -1303,13 +1306,52 @@ export function getClosestLessonConfig(
   );
 }
 
+export function serializeWeekNumbers(weeks: readonly Number[]) {
+  return weeks.join('_');
+}
+
+export function serializeWeekRange({ start, end, weekInterval, weeks }: WeekRange) {
+  const serializedStartEndInterval = [start, end, weekInterval ?? 1].join('_');
+  if (!weeks) return serializedStartEndInterval;
+  return `${serializedStartEndInterval}_${serializeWeekNumbers(weeks)}`;
+}
+
 export function serializeLessonDetails<T extends RawLesson>(lesson: T): string {
   const { classNo, day, startTime, endTime, venue, weeks } = lesson;
 
   const abbreviatedDayOfWeek = DAY_OF_WEEK_ABBREV[day as DayOfWeek];
-  const serializedWeeks = isWeekRange(weeks) ? JSON.stringify(weeks) : `${weeks.join('_')}`;
+  const serializedWeeks = isWeekRange(weeks)
+    ? serializeWeekRange(weeks)
+    : `${serializeWeekNumbers(weeks)}`;
 
   return [classNo, abbreviatedDayOfWeek, startTime, endTime, venue, serializedWeeks].join('|');
+}
+
+function parseWeeks(serializedWeeks: string): Weeks {
+  if (/-/.test(serializedWeeks)) {
+    const parsedRegex =
+      /(?<start>[\-0-9]*)_(?<end>[\-0-9]*)_(?<weekInterval>[0-9])_?((?:_*[0-9])*)/.exec(
+        serializedWeeks,
+      );
+    const regexGroup = parsedRegex?.groups;
+    if (!regexGroup) return [];
+
+    const start = get(regexGroup, 'start');
+    const end = get(regexGroup, 'end');
+    const weekInterval = get(regexGroup, 'weekInterval');
+    const weeks = get(regexGroup, 'weeks') ?? [];
+
+    if (isUndefined(start) || isUndefined(end) || isUndefined(weekInterval)) return [];
+
+    return {
+      start,
+      end,
+      weekInterval: parseInt(weekInterval, 10),
+      weeks: map(weeks, (week) => parseInt(week, 10)),
+    };
+  }
+
+  return map(serializedWeeks.split('_'), (week) => parseInt(week, 10));
 }
 
 export function deserializeLessonDetails(
@@ -1317,13 +1359,14 @@ export function deserializeLessonDetails(
 ): Omit<RawLesson, 'lessonType'> {
   const [classNo, abbreviatedDayOfWeek, startTime, endTime, venue, serializedWeeks] =
     serializedLessonDetails.split('|');
+
   return {
     classNo,
     day: DAY_OF_WEEK_FULL[abbreviatedDayOfWeek],
     startTime,
     endTime,
     venue,
-    weeks: serializedWeeks.split('_').map((week) => parseInt(week, 10)),
+    weeks: parseWeeks(serializedWeeks),
   };
 }
 

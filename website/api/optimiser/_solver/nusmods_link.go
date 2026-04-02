@@ -1,6 +1,7 @@
 package solver
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -60,12 +61,50 @@ func GenerateNUSModsShareableLink(
 	return shareableURL, defaultShareableURL
 }
 
+func serializeWeekNumbers(weeks []int) string {
+	weeksStrings := make([]string, 0, len(weeks))
+	for _, week := range weeks {
+		weeksStrings = append(weeksStrings, strconv.Itoa(week))
+	}
+	return strings.Join(weeksStrings, constants.WeeksSeparator)
+}
+
+func serializeWeekRange(weekRange models.WeekRange) string {
+	serializedStartEndInterval := strings.Join([]string{weekRange.Start, weekRange.End, strconv.Itoa(weekRange.WeekInterval)}, constants.WeeksSeparator)
+
+	weeks := weekRange.Weeks
+	if weeks == nil {
+		return serializedStartEndInterval
+	}
+
+	return serializedStartEndInterval + "_" + serializeWeekNumbers(weeks)
+}
+
+func serializeModuleSlot(
+	slot models.ModuleSlot,
+) models.SerializedDetails {
+	abbreviatedDayOfWeek := constants.DayOfWeekAbbrev[slot.DayIndex]
+
+	serializedWeeks := ""
+	var weekRange models.WeekRange
+	err := json.Unmarshal(slot.Weeks, &weekRange)
+	if err == nil {
+		serializedWeeks = serializeWeekRange(weekRange)
+	} else {
+		weeksArray := new(models.WeeksArray)
+		json.Unmarshal(slot.Weeks, &weeksArray)
+	}
+
+	lessonDetails := []string{slot.ClassNo, abbreviatedDayOfWeek, slot.StartTime, slot.EndTime, slot.Venue, serializedWeeks}
+	return strings.Join(lessonDetails, constants.LessonDetailSeparator)
+}
+
 // Parses the assignments into a map of module codes to lesson types to class numbers
 func createConfig(
 	assignments map[string]string,
 	lessonToSlots map[string][][]models.ModuleSlot,
-) map[string]map[string][]models.LessonIndex {
-	config := make(map[string]map[string][]models.LessonIndex)
+) map[string]map[string][]models.SerializedDetails {
+	config := make(map[string]map[string][]models.SerializedDetails)
 
 	for lessonKey, classNo := range assignments {
 		// Parse lesson key: "MODULE|LESSONTYPE"
@@ -78,7 +117,7 @@ func createConfig(
 
 		// Initialize module config if not exists
 		if config[moduleCode] == nil {
-			config[moduleCode] = make(map[string][]models.LessonIndex)
+			config[moduleCode] = make(map[string][]models.SerializedDetails)
 		}
 
 		// Add lesson type and class number to config
@@ -88,7 +127,7 @@ func createConfig(
 			}
 
 			for _, lesson := range lessonsWithClassNo {
-				config[moduleCode][lessonType] = append(config[moduleCode][lessonType], lesson.LessonIndex)
+				config[moduleCode][lessonType] = append(config[moduleCode][lessonType], serializeModuleSlot(lesson))
 			}
 			break
 		}
@@ -98,18 +137,18 @@ func createConfig(
 }
 
 // Constructs the URL
-func serializeConfig(config map[string]map[string][]models.LessonIndex) string {
+func serializeConfig(config map[string]map[string][]models.SerializedDetails) string {
 	var moduleParams []string
 
 	for moduleCode, lessons := range config {
 		var lessonParams []string
-		for lessonType, lessonIndex := range lessons {
+		for lessonType, serializedDetails := range lessons {
 			// Get abbreviation for lesson type
 			abbrev := constants.LessonTypeAbbrev[strings.ToUpper(lessonType)]
 
 			lessonParams = append(
 				lessonParams,
-				fmt.Sprintf("%s:%s", abbrev, "("+serializeLessonIndices(lessonIndex)+")"),
+				fmt.Sprintf("%s:%s", abbrev, "("+strings.Join(serializedDetails, ",")+")"),
 			)
 		}
 		if len(lessonParams) > 0 {
@@ -121,15 +160,4 @@ func serializeConfig(config map[string]map[string][]models.LessonIndex) string {
 	}
 
 	return strings.Join(moduleParams, "&")
-}
-
-// Serializes an array of lesson indices into the format used in timetable share links
-//
-// Returns "1,2,3" with input [1, 2, 3]
-func serializeLessonIndices(lessonIndex []models.LessonIndex) string {
-	parts := make([]string, len(lessonIndex))
-	for i, idx := range lessonIndex {
-		parts[i] = strconv.Itoa(idx)
-	}
-	return strings.Join(parts, ",")
 }

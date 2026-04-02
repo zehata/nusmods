@@ -53,7 +53,11 @@ const (
 	ConsecutiveHoursPenaltyRate = 100
 )
 
+var DayOfWeekAbbrev = [7]string{"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"}
+
 // This is used by [nusmods_link.SerializeLessonIndices] to serialize the result of optimiser into a timetable share link to return to the client
+const WeeksSeparator = "_"
+const LessonDetailSeparator = "|"
 const ModuleCodeSeparator = ";"
 
 // Beam search parameters

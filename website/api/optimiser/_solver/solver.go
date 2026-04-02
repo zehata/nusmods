@@ -190,21 +190,18 @@ func hasConflict(state models.TimetableState, newSlots []models.ModuleSlot) bool
 			if newSlot.StartMin < oldSlot.EndMin && oldSlot.StartMin < newSlot.EndMin {
 
 				// if weeks is not a []int, then skip checking for week conflict
-				newWeeks, ok := newSlot.Weeks.([]any)
-				if !ok {
+				var newWeeks models.WeeksArray
+				if err := json.Unmarshal(newSlot.Weeks, &newWeeks); err != nil {
 					return true
 				}
-				if _, ok := oldSlot.Weeks.([]any); !ok {
+				var oldWeeks models.WeeksArray
+				if err := json.Unmarshal(oldSlot.Weeks, &oldWeeks); err != nil {
 					return true
 				}
 
 				// check if the weeks overlap
 				for _, week := range newWeeks {
-					weekFloat, ok := week.(float64)
-					if !ok {
-						continue
-					}
-					if _, exists := oldSlot.WeeksSet[int(weekFloat)]; exists {
+					if _, exists := oldSlot.WeeksSet[week]; exists {
 						return true
 					}
 				}
