@@ -28,7 +28,7 @@ import TimetableTimings from './TimetableTimings';
 import TimetableDay from './TimetableDay';
 
 type Props = TimerData & {
-  lessons: TimetableArrangement<ColoredLesson | InteractableLesson>;
+  lessons: TimetableArrangement<ColoredLesson>;
   // These should be non-optional, but because HOCs currently strip defaultProps
   // for the sake of our sanity we type these as optional to reduce errors at call sites
   isVerticalOrientation?: boolean;

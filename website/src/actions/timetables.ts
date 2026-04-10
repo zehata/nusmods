@@ -1,8 +1,9 @@
-import { each, flatMap, get } from 'lodash-es';
+import { each, flatMap, get, isEmpty } from 'lodash-es';
 
 import type {
   ColorIndex,
   Lesson,
+  LessonsChangedNotification,
   ModuleLessonConfig,
   SemTimetableConfig,
   TimetableConfig,
@@ -214,6 +215,30 @@ export function setTimetable(
   };
 }
 
+export const CREATE_LESSONS_CHANGED_NOTIFICATION = 'CREATE_LESSON_CHANGED_NOTIFICATION' as const;
+export function createLessonsChangedNotification(
+  semester: Semester,
+  notification: LessonsChangedNotification,
+) {
+  return {
+    type: CREATE_LESSONS_CHANGED_NOTIFICATION,
+    payload: {
+      semester,
+      notification,
+    },
+  };
+}
+
+export const CLEAR_LESSONS_CHANGED_NOTIFICATIONS = 'CLEAR_LESSONS_CHANGED_NOTIFICATIONS' as const;
+export function clearLessonsChangedNotifications(semester: Semester) {
+  return {
+    type: CLEAR_LESSONS_CHANGED_NOTIFICATIONS,
+    payload: {
+      semester,
+    },
+  };
+}
+
 /**
  * Valid non-TA modules must have one and only one classNo for each lesson type\
  * Valid TA modules configs must have lesson indices that belong to the correct lesson type
@@ -257,14 +282,22 @@ export function validateTimetable(semester: Semester) {
 
       const isTa = ta?.includes(moduleCode);
 
-      const { validatedLessonConfig, valid } = validateModuleLessons(
+      const { validatedLessonConfig, modifications } = validateModuleLessons(
         semester,
         lessonConfig,
         module,
         isTa,
       );
 
-      if (!valid) dispatch(setLessonConfig(semester, moduleCode, validatedLessonConfig));
+      if (isEmpty(modifications)) return;
+
+      // dispatch(setLessonConfig(semester, moduleCode, validatedLessonConfig));
+      dispatch(
+        createLessonsChangedNotification(semester, {
+          moduleCode,
+          modifications,
+        }),
+      );
     });
   };
 }

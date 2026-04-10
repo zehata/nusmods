@@ -8,6 +8,7 @@ import {
   TimetableConfig,
   Lesson,
   TimetableConfigV1,
+  LessonsChangedNotification,
 } from './timetables';
 import {
   Faculty,
@@ -121,6 +122,9 @@ export type SemesterColorMap = { [semester: Semester]: ColorMapping };
 export type HiddenModulesMap = { [semester: Semester]: ModuleCode[] };
 export type TaModulesMap = { [semester: Semester]: ModuleCode[] };
 export type TaModulesMapV1 = { [semester: Semester]: TaModulesConfigV1 };
+export type SemesterLessonsChangedNotification = {
+  [semester: Semester]: LessonsChangedNotification[];
+};
 
 export type TimetablesState = {
   readonly lessons: TimetableConfig;
@@ -128,6 +132,7 @@ export type TimetablesState = {
   readonly hidden: HiddenModulesMap;
   readonly ta: TaModulesMap;
   readonly academicYear: string;
+  readonly lessonsChangedNotifications: SemesterLessonsChangedNotification;
   // Mapping of academic year to old timetable config
   readonly archive: { [key: string]: TimetableConfig | TimetableConfigV1 };
 };

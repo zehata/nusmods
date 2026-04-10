@@ -10,7 +10,8 @@
         "endTime": "1200",
         "venue": "LT26",
         "moduleCode": "CS1010S",
-        "title": "Programming Methodology"
+        "title": "Programming Methodology",
+        "valid": true
       }
     },
     "Recitation": {
@@ -23,7 +24,8 @@
         "endTime": "1100",
         "venue": "VCRm",
         "moduleCode": "CS1010S",
-        "title": "Programming Methodology"
+        "title": "Programming Methodology",
+        "valid": true
       },
       "1|THU|1200|1300|VCRm|1_2_3_4_5_6_7_8_9_10_11_12_13": {
         "classNo": "1",
@@ -34,7 +36,8 @@
         "endTime": "1300",
         "venue": "VCRm",
         "moduleCode": "CS1010S",
-        "title": "Programming Methodology"
+        "title": "Programming Methodology",
+        "valid": true
       }
     },
     "Tutorial": {
@@ -47,7 +50,8 @@
         "endTime": "1000",
         "venue": "COM1-0203",
         "moduleCode": "CS1010S",
-        "title": "Programming Methodology"
+        "title": "Programming Methodology",
+        "valid": true
       },
       "2|TUE|0900|1000|COM1-0216|1_2_3_4_5_6_7_8_9_10_11_12_13": {
         "classNo": "2",
@@ -58,7 +62,8 @@
         "endTime": "1000",
         "venue": "COM1-0216",
         "moduleCode": "CS1010S",
-        "title": "Programming Methodology"
+        "title": "Programming Methodology",
+        "valid": true
       }
     }
   },
@@ -73,7 +78,8 @@
         "endTime": "2030",
         "venue": "VCRm",
         "moduleCode": "CS3216",
-        "title": "Application Development on Evolving Platforms"
+        "title": "Application Development on Evolving Platforms",
+        "valid": true
       }
     }
   }

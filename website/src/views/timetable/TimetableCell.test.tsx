@@ -20,6 +20,7 @@ const LESSON: Omit<InteractableLesson, 'isTaInTimetable'> = {
   canBeSelectedAsActiveLesson: false,
   canBeAddedToLessonConfig: false,
   isActive: false,
+  valid: true,
 };
 
 type Props = {

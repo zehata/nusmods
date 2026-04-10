@@ -36,6 +36,7 @@ const CS3216_LESSONS = {
       startTime: '1830',
       endTime: '2030',
       venue: 'VCRm',
+      valid: true,
     },
   },
 };
@@ -52,6 +53,7 @@ const CS1010S_LESSONS = {
       startTime: '1100',
       endTime: '1200',
       venue: 'i3-0344',
+      valid: true,
     },
   },
 };
@@ -68,6 +70,7 @@ const PC1222_LESSONS = {
       startTime: '1400',
       endTime: '1700',
       venue: 'S12-0402',
+      valid: true,
     },
   },
   Tutorial: {
@@ -81,6 +84,7 @@ const PC1222_LESSONS = {
       startTime: '0900',
       endTime: '1000',
       venue: 'CQT/SR0315',
+      valid: true,
     },
   },
   Lecture: {
@@ -94,6 +98,7 @@ const PC1222_LESSONS = {
       startTime: '1200',
       endTime: '1400',
       venue: 'LT25',
+      valid: true,
     },
     'SL1|FRI|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13': {
       moduleCode: 'PC1222',
@@ -105,6 +110,7 @@ const PC1222_LESSONS = {
       startTime: '1200',
       endTime: '1400',
       venue: 'LT25',
+      valid: true,
     },
   },
 };

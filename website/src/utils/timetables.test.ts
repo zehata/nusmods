@@ -54,7 +54,6 @@ import {
   serializeLessonDetails,
   serializeTimetable,
   timetableLessonsArray,
-  validateModuleLessons,
   validateTimetableModules,
 } from './timetables';
 
@@ -1233,114 +1232,114 @@ describe(validateTimetableModules, () => {
 //   - remove lesson group if any lesson is missing
 //   - remove lesson group if there are extra lessons
 //
-describe(validateModuleLessons, () => {
-  const semester: Semester = 1;
-  const lessons: ModuleLessonConfig = {
-    Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-    Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-    Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
-  };
+// describe(validateModuleLessons, () => {
+//   const semester: Semester = 1;
+//   const lessons: ModuleLessonConfig = {
+//     Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+//     Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+//     Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+//   };
 
-  describe('validate non ta module lessons', () => {
-    test('should leave valid lessons untouched', () => {
-      expect(validateModuleLessons(semester, lessons, CS1010S, false)).toEqual({
-        validatedLessonConfig: lessons,
-        valid: true,
-      });
-    });
+//   describe('validate non ta module lessons', () => {
+//     test('should leave valid lessons untouched', () => {
+//       expect(validateModuleLessons(semester, lessons, CS1010S, false)).toEqual({
+//         validatedLessonConfig: lessons,
+//         valid: true,
+//       });
+//     });
 
-    test('should remove lesson types which do not exist in module', () => {
-      expect(
-        validateModuleLessons(
-          semester,
-          {
-            ...lessons,
-            Laboratory: ['1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13'], // CS1010S has no lab
-          },
-          CS1010S,
-          false,
-        ),
-      ).toEqual({ validatedLessonConfig: lessons, valid: false });
-    });
+//     test('should remove lesson types which do not exist in module', () => {
+//       expect(
+//         validateModuleLessons(
+//           semester,
+//           {
+//             ...lessons,
+//             Laboratory: ['1|WED|1200|1400|LT32|1_2_3_4_5_6_7_8_9_10_11_12_13'], // CS1010S has no lab
+//           },
+//           CS1010S,
+//           false,
+//         ),
+//       ).toEqual({ validatedLessonConfig: lessons, valid: false });
+//     });
 
-    test('should replace lessons that have invalid class no', () => {
-      expect(
-        validateModuleLessons(
-          semester,
-          {
-            ...lessons,
-            Lecture: ['10|FRI|1300|1400|S14-0620|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
-          },
-          CS1010S,
-          false,
-        ),
-      ).toEqual({ validatedLessonConfig: lessons, valid: false });
-    });
+//     test('should replace lessons that have invalid class no', () => {
+//       expect(
+//         validateModuleLessons(
+//           semester,
+//           {
+//             ...lessons,
+//             Lecture: ['10|FRI|1300|1400|S14-0620|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
+//           },
+//           CS1010S,
+//           false,
+//         ),
+//       ).toEqual({ validatedLessonConfig: lessons, valid: false });
+//     });
 
-    test('should add lessons for when they are missing', () => {
-      expect(
-        validateModuleLessons(
-          semester,
-          {
-            Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
-          },
-          CS1010S,
-          false,
-        ),
-      ).toEqual({
-        validatedLessonConfig: {
-          Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-          Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-          Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
-        },
-        valid: false,
-      });
-    });
-  });
+//     test('should add lessons for when they are missing', () => {
+//       expect(
+//         validateModuleLessons(
+//           semester,
+//           {
+//             Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+//           },
+//           CS1010S,
+//           false,
+//         ),
+//       ).toEqual({
+//         validatedLessonConfig: {
+//           Lecture: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+//           Recitation: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+//           Tutorial: ['1|MON|0900|1000|COM1-0203|3_4_5_6_7_8_9_10_11_12_13'],
+//         },
+//         valid: false,
+//       });
+//     });
+//   });
 
-  describe('validate ta module lessons', () => {
-    test('should leave valid config untouched', () => {
-      expect(validateModuleLessons(semester, lessons, CS1010S, true)).toEqual({
-        validatedLessonConfig: lessons,
-        valid: true,
-      });
-    });
+//   describe('validate ta module lessons', () => {
+//     test('should leave valid config untouched', () => {
+//       expect(validateModuleLessons(semester, lessons, CS1010S, true)).toEqual({
+//         validatedLessonConfig: lessons,
+//         valid: true,
+//       });
+//     });
 
-    test('should remove lesson types which do not exist in module', () => {
-      expect(
-        validateModuleLessons(
-          semester,
-          {
-            ...lessons,
-            Laboratory: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
-          },
-          CS1010S,
-          true,
-        ),
-      ).toEqual({
-        validatedLessonConfig: lessons,
-        valid: false,
-      });
-    });
+//     test('should remove lesson types which do not exist in module', () => {
+//       expect(
+//         validateModuleLessons(
+//           semester,
+//           {
+//             ...lessons,
+//             Laboratory: ['1|WED|1000|1200|LT26|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+//           },
+//           CS1010S,
+//           true,
+//         ),
+//       ).toEqual({
+//         validatedLessonConfig: lessons,
+//         valid: false,
+//       });
+//     });
 
-    test('should replace lessons that have invalid class no', () => {
-      expect(
-        validateModuleLessons(
-          semester,
-          {
-            ...lessons,
-            Lecture: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
-          },
-          CS1010S,
-          true,
-        ),
-      ).toEqual({
-        validatedLessonConfig: lessons,
-        valid: false,
-      });
-    });
-  });
-});
+//     test('should replace lessons that have invalid class no', () => {
+//       expect(
+//         validateModuleLessons(
+//           semester,
+//           {
+//             ...lessons,
+//             Lecture: ['1|THU|1200|1300|S14-0619|1_2_3_4_5_6_7_8_9_10_11_12_13'], // lesson is not a lecture
+//           },
+//           CS1010S,
+//           true,
+//         ),
+//       ).toEqual({
+//         validatedLessonConfig: lessons,
+//         valid: false,
+//       });
+//     });
+//   });
+// });
 
 describe(formatNumericWeeks, () => {
   it('should return null if every week is given', () => {

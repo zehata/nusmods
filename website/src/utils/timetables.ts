@@ -27,6 +27,7 @@ import {
   some,
   toPairs,
   values,
+  zipWith,
 } from 'lodash-es';
 import { addDays, min as minDate, parseISO, startOfDay } from 'date-fns';
 import qs from 'query-string';
@@ -62,6 +63,8 @@ import {
   TimetableDayArrangement,
   TimetableDayFormat,
   TimetableArrangement,
+  ValidationResult,
+  LessonModification,
 } from 'types/timetables';
 
 import { ColorMapping, ModuleCodeMap, ModulesMap } from 'types/reducers';
@@ -154,7 +157,7 @@ export function hydrateSemTimetableWithLessons(
   semTimetableConfig: SemTimetableConfig,
   modules: ModulesMap,
   semester: Semester,
-): SemTimetableConfigWithLessons<Lesson> {
+): SemTimetableConfigWithLessons<Lesson & ValidationResult> {
   return mapValues(
     semTimetableConfig,
     (moduleLessonConfig: ModuleLessonConfig, moduleCode: ModuleCode) => {
@@ -171,16 +174,56 @@ function hydrateModuleConfigWithLessons(
   moduleLessonConfig: ModuleLessonConfig,
   module: Module,
   semester: Semester,
-): ModuleLessonConfigWithLessons<Lesson> {
+): ModuleLessonConfigWithLessons<Lesson & ValidationResult> {
   const lessonMap = getModuleLessonMap(module, semester);
   return mapValues(moduleLessonConfig, (lessonKeys: LessonKey[], lessonType: LessonType) => {
     const lessonsWithLessonType: Record<LessonKey, RawLesson> = get(lessonMap, lessonType, {});
-    const lessons: Record<LessonKey, RawLesson> = pick(lessonsWithLessonType, lessonKeys);
-    return mapValues(lessons, (lesson: RawLesson) => ({
+    const validLessonKeys = keys(lessonsWithLessonType);
+
+    const [validConfigLessonKeys, invalidConfigLessonKeys] = partition(
+      lessonKeys,
+      (configLessonKey) => validLessonKeys.includes(configLessonKey),
+    );
+
+    const validConfigRawLessons: Record<LessonKey, RawLesson> = pick(
+      lessonsWithLessonType,
+      validConfigLessonKeys,
+    );
+    const validConfigLessons = mapValues(validConfigRawLessons, (lesson: RawLesson) => ({
       ...lesson,
       moduleCode: module.moduleCode,
       title: module.title,
+      valid: true,
     }));
+
+    if (invalidConfigLessonKeys.length < 1) {
+      return validConfigLessons;
+    }
+
+    const invalidConfigRawLessons: Record<LessonKey, RawLesson> = reduce(
+      invalidConfigLessonKeys,
+      (accumulated, invalidConfigLessonKey) => {
+        return {
+          ...accumulated,
+          invalidConfigLessonKey: {
+            ...deserializeLessonDetails(invalidConfigLessonKey),
+            lessonType,
+          },
+        };
+      },
+      {},
+    );
+    const invalidConfigLessons = mapValues(invalidConfigRawLessons, (lesson: RawLesson) => ({
+      ...lesson,
+      moduleCode: module.moduleCode,
+      title: module.title,
+      valid: false,
+    }));
+
+    return {
+      ...validConfigLessons,
+      ...invalidConfigLessons,
+    };
   });
 }
 
@@ -462,7 +505,7 @@ export function validateTimetableModules(
  */
 export function validateTaModuleLessons(
   lessonConfig: ModuleLessonConfig,
-  lessonMap: Readonly<LessonMap>,
+  lessonMap: Readonly<LessonMap<RawLesson>>,
 ): {
   validatedLessonConfig: ModuleLessonConfig;
   valid: boolean;
@@ -484,9 +527,7 @@ export function validateTaModuleLessons(
       return {
         config: {
           ...accumulatedValidationResult.config,
-          [lessonType]: hasInvalidLesson
-            ? getRecoveryLessonKeys(get(lessonMap, lessonType, {}))
-            : configLessonTypeLessonKeys,
+          [lessonType]: configLessonTypeLessonKeys,
         },
         valid: accumulatedValidationResult.valid && !hasInvalidLesson,
       };
@@ -502,19 +543,38 @@ export function validateTaModuleLessons(
 
 /**
  * Used to recover from the config of a lesson type that contains invalid lesson indices
- * @param lessonsWithLessonType lessons with the same lesson type to generate a valid lesson config from
+ * @param validLessons lessons with the same lesson type to generate a valid lesson config from
  * @returns lesson indices of the generated valid lesson config
  *
  * Note: the current implementation generates a config containing lessons belonging to the first classNo in the provided lessons
  */
-export function getRecoveryLessonKeys(
-  lessonsWithLessonType: Record<LessonKey, RawLesson>,
-): LessonKey[] {
-  const firstClass = first(map(lessonsWithLessonType));
+export function getRecoveryLessons(
+  validLessons: Record<LessonKey, RawLesson>,
+): Record<LessonKey, RawLesson> {
+  const firstClass = first(map(validLessons));
   if (!firstClass) {
-    return [];
+    return {};
   }
-  return keys(pickBy(lessonsWithLessonType, (lesson) => lesson.classNo === firstClass.classNo));
+  return pickBy(validLessons, (lesson) => lesson.classNo === firstClass.classNo);
+}
+
+function deserializeLessonTypeLessons(
+  lessonType: LessonType,
+  lessonKeys: LessonKey[],
+): Record<LessonKey, RawLesson> {
+  return reduce(
+    lessonKeys,
+    (accumulatedLessons, lessonKey) => {
+      return {
+        ...accumulatedLessons,
+        [lessonKey]: {
+          ...deserializeLessonDetails(lessonKey),
+          lessonType,
+        },
+      };
+    },
+    {},
+  );
 }
 
 /**
@@ -527,66 +587,101 @@ export function getRecoveryLessonKeys(
  */
 export function validateNonTaModuleLesson(
   lessonConfig: ModuleLessonConfig,
-  lessonMap: Readonly<LessonMap>,
+  lessonMap: Readonly<LessonMap<RawLesson>>,
 ): {
   validatedLessonConfig: ModuleLessonConfig;
-  valid: boolean;
+  modifications: Record<LessonType, LessonModification[]>;
 } {
   const lessonTypesInLessonConfig = keys(lessonConfig);
-  const { config: validatedLessonConfig, valid: configValid } = reduce(
+  const { config: validatedLessonConfig, modifications } = reduce(
     lessonMap,
-    (accumulatedValidationResult, lessonTypeValidLessons, lessonType) => {
+    ({ config, modifications }, lessonTypeValidLessons, lessonType) => {
       const lessonTypeInLessonConfig = lessonTypesInLessonConfig.includes(lessonType);
       const configLessonKeys: LessonKey[] = lessonConfig[lessonType];
       const firstLessonKey = first(configLessonKeys);
       const lessonTypeValidLessonKeys = keys(lessonTypeValidLessons);
 
-      if (
-        !lessonTypeInLessonConfig ||
-        !firstLessonKey ||
-        !lessonTypeValidLessonKeys.includes(firstLessonKey)
-      ) {
-        const validSerializedLessonDetails = getRecoveryLessonKeys(lessonTypeValidLessons);
+      if (!lessonTypeInLessonConfig || !firstLessonKey) {
+        const configLessons: Record<LessonKey, RawLesson> = deserializeLessonTypeLessons(
+          lessonType,
+          configLessonKeys,
+        );
+        const recoveryLessons: Record<LessonKey, RawLesson> =
+          getRecoveryLessons(lessonTypeValidLessons);
+
         return {
           config: {
-            ...accumulatedValidationResult.config,
-            [lessonType]: validSerializedLessonDetails,
+            ...config,
+            [lessonType]: keys(recoveryLessons),
           },
-          valid: false,
+          modifications: {
+            ...modifications,
+          },
         };
       }
 
-      const { classNo } = deserializeLessonDetails(firstLessonKey);
-      const classNoValidLessonKeys: LessonKey[] = keys(
-        pickBy(lessonTypeValidLessons, (lesson) => lesson.classNo === classNo),
+      const [validConfigLessonKeys, invalidConfigLessonKeys] = partition(
+        configLessonKeys,
+        (lessonKey) => lessonTypeValidLessonKeys.includes(lessonKey),
       );
-      const configSerializedLessonDetailsValid = isEqual(
-        new Set(configLessonKeys),
-        new Set(classNoValidLessonKeys),
+
+      if (invalidConfigLessonKeys.length < 1) {
+        return {
+          config: {
+            ...config,
+            [lessonType]: validConfigLessonKeys,
+          },
+          modifications,
+        };
+      }
+
+      const configLessons: Record<LessonKey, RawLesson> = deserializeLessonTypeLessons(
+        lessonType,
+        configLessonKeys,
       );
-      const validSerializedLessonDetails = configSerializedLessonDetailsValid
-        ? classNoValidLessonKeys
-        : getRecoveryLessonKeys(lessonTypeValidLessons);
+      const recoveryLessons: Record<LessonKey, RawLesson> = getClosestLessonTypeLessons(
+        lessonTypeValidLessons,
+        configLessonKeys,
+      );
 
       return {
         config: {
-          ...accumulatedValidationResult.config,
-          [lessonType]: validSerializedLessonDetails,
+          ...config,
+          [lessonType]: keys(recoveryLessons),
         },
-        valid: accumulatedValidationResult.valid && configSerializedLessonDetailsValid,
+        modifications: {
+          ...modifications,
+        },
       };
     },
-    { config: {}, valid: true } as { config: ModuleLessonConfig; valid: boolean },
+    { config: {}, modifications: {} } as {
+      config: ModuleLessonConfig;
+      modifications: Record<LessonType, LessonModification[]>;
+    },
   );
 
-  const configLessonTypesValid = isEqual(
-    new Set(keys(validatedLessonConfig)),
-    new Set(lessonTypesInLessonConfig),
+  const validLessonTypes = keys(validatedLessonConfig);
+  const invalidLessonTypes = filter(
+    lessonTypesInLessonConfig,
+    (lessonType) => !validLessonTypes.includes(lessonType),
+  );
+  const removedLessonTypesConfigs = reduce(
+    invalidLessonTypes,
+    (accumulated, invalidLessonType) => {
+      return {
+        ...accumulated,
+        [invalidLessonType]: [] as LessonModification[],
+      };
+    },
+    {} as Record<LessonType, LessonModification[]>,
   );
 
   return {
     validatedLessonConfig,
-    valid: configValid && configLessonTypesValid,
+    modifications: {
+      ...modifications,
+      ...removedLessonTypesConfigs,
+    },
   };
 }
 
@@ -603,12 +698,17 @@ export function validateModuleLessons(
   lessonConfig: ModuleLessonConfig,
   module: Module,
   isTa: boolean,
-): { validatedLessonConfig: ModuleLessonConfig; valid: boolean } {
+): {
+  validatedLessonConfig: ModuleLessonConfig;
+  modifications: Record<LessonType, LessonModification[]>;
+} {
   const lessonMap = getModuleLessonMap(module, semester);
 
-  if (isTa) {
-    return validateTaModuleLessons(lessonConfig, lessonMap);
-  }
+  if (isTa)
+    return {
+      validatedLessonConfig: lessonConfig,
+      modifications: {},
+    };
 
   return validateNonTaModuleLesson(lessonConfig, lessonMap);
 }
@@ -618,7 +718,7 @@ export function validateModuleLessons(
  * @param lessons lessons to group
  * @returns lesson keys, not lessons
  */
-export const makeLessonMap = (lessons: readonly RawLesson[]): LessonMap => {
+export const makeLessonMap = <T extends RawLesson>(lessons: readonly T[]): LessonMap<T> => {
   const lessonsByLessonType = groupBy(lessons, 'lessonType');
   return mapValues(lessonsByLessonType, (lessonsWithLessonType) =>
     fromPairs(map(lessonsWithLessonType, (lesson) => [serializeLessonDetails(lesson), lesson])),
@@ -832,7 +932,7 @@ export function deserializeTaModulesConfigV1(
 export function deserializeModuleLessonConfig(
   moduleLessonConfig: ModuleLessonConfig,
   serializedModuleLessonConfig: string,
-  lessonMap: Readonly<LessonMap>,
+  lessonMap: Readonly<LessonMap<RawLesson>>,
   timetable: readonly RawLesson[],
 ): ModuleLessonConfig {
   // LEC:(0,1);TUT:(3)
@@ -888,7 +988,7 @@ export function deserializeModuleLessonConfig(
 export function deserializeModuleLessonConfigV1(
   moduleLessonConfig: ModuleLessonConfig,
   serializedModuleLessonConfig: string,
-  lessonMap: Readonly<LessonMap>,
+  lessonMap: Readonly<LessonMap<RawLesson>>,
 ): ModuleLessonConfig {
   // LEC:1,TUT:1,REC:1
   return reduce(
@@ -1144,7 +1244,7 @@ export function migrateModuleLessonConfig(
   taModulesConfig: ModuleCode[] | TaModulesConfigV1,
   moduleCode: ModuleCode,
   timetable: readonly RawLesson[],
-  lessonMap: Readonly<LessonMap>,
+  lessonMap: Readonly<LessonMap<RawLesson>>,
 ): {
   migratedModuleLessonConfig: ModuleLessonConfig;
   alreadyMigrated: boolean;
@@ -1262,6 +1362,27 @@ export function migrateSemTimetableConfig(
   );
 }
 
+function getClosestLessonTypeLessons(
+  validLessons: Record<LessonKey, RawLesson>,
+  configLessonKeys: LessonKey[],
+): Record<LessonKey, RawLesson> {
+  const configLessonsByClassNo = groupBy(
+    map(configLessonKeys, deserializeLessonDetails),
+    'classNo',
+  );
+  const closestLessons = maxBy(
+    toPairs(configLessonsByClassNo),
+    ([, lessonsWithClassNo]) => lessonsWithClassNo.length,
+  );
+
+  if (!closestLessons) return getRecoveryLessons(validLessons);
+
+  const [closestClassNo] = closestLessons;
+  const lessonKeys = pickBy(validLessons, (lesson) => lesson.classNo === closestClassNo);
+
+  return lessonKeys;
+}
+
 /**
  * Based on what lessons are currently in the lesson config, find the classNo that most of the lessons belong to
  * @param serializedLessonDetailsMap {@link SerializedLessonDetailsMap|Lesson indices mapping} of the module
@@ -1269,37 +1390,21 @@ export function migrateSemTimetableConfig(
  * @returns a lesson config consisting of lesson indices that best matches the TA lesson config
  */
 export function getClosestLessonConfig(
-  lessonMap: LessonMap,
+  lessonMap: LessonMap<RawLesson>,
   timetableLessonKeys: ModuleLessonConfig,
 ): ModuleLessonConfig {
   return reduce(
     lessonMap,
     (accumulatedModuleLessonConfig, moduleLessonsWithLessonType, lessonType) => {
       const timetableLessonsWithLessonType: LessonKey[] = timetableLessonKeys[lessonType];
-
-      const configLessonsByClassNo = groupBy(
-        pick(moduleLessonsWithLessonType, timetableLessonsWithLessonType),
-        'classNo',
-      );
-      const closestLessons = maxBy(
-        toPairs(configLessonsByClassNo),
-        ([, lessonsWithClassNo]) => lessonsWithClassNo.length,
-      );
-
-      if (!closestLessons) return accumulatedModuleLessonConfig;
-
-      const [closestClassNo] = closestLessons;
-      const lessonKeys = map(
-        filter(
-          toPairs(moduleLessonsWithLessonType),
-          ([, lesson]) => lesson.classNo === closestClassNo,
-        ),
-        ([lessonKey]) => lessonKey,
+      const { lessonKeys } = getClosestLessonTypeLessons(
+        moduleLessonsWithLessonType,
+        timetableLessonsWithLessonType,
       );
 
       return {
         ...accumulatedModuleLessonConfig,
-        [lessonType]: lessonKeys,
+        [lessonType]: keys(lessonKeys),
       };
     },
     {} as ModuleLessonConfig,
@@ -1375,7 +1480,7 @@ export function deserializeLessonDetails(
  * See type defintion of `InteractableLesson` for properties added
  */
 export function getInteractableLessons(
-  timetableLessons: SemTimetableConfigWithLessons<Lesson>,
+  timetableLessons: SemTimetableConfigWithLessons<Lesson & ValidationResult>,
   taModules: ModuleCode[],
   modules: ModulesMap,
   semester: Semester,
@@ -1386,52 +1491,59 @@ export function getInteractableLessons(
   const moduleTimetables = mapValues(modules, (module) => getModuleTimetable(module, semester));
   const activeLessonKey = activeLesson ? serializeLessonDetails(activeLesson) : null;
 
-  return mapValues(timetableLessons, (lessonMap: LessonMap, moduleCode: ModuleCode) => {
-    const isTaInTimetable = taModules.includes(moduleCode);
+  return mapValues(
+    timetableLessons,
+    (lessonMap: LessonMap<Lesson & ValidationResult>, moduleCode: ModuleCode) => {
+      const isTaInTimetable = taModules.includes(moduleCode);
 
-    return mapValues(
-      lessonMap,
-      (
-        lessonsWithLessonType,
-        lessonType: LessonType,
-      ): { [lessonKey: LessonKey]: InteractableLesson } => {
-        const isSameModuleAndLessonType =
-          moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
+      return mapValues(
+        lessonMap,
+        (
+          lessonsWithLessonType,
+          lessonType: LessonType,
+        ): { [lessonKey: LessonKey]: InteractableLesson } => {
+          const isSameModuleAndLessonType =
+            moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
 
-        const configLessonKeys: LessonKey[] = keys(lessonsWithLessonType);
-        const lessons =
-          activeLesson && isSameModuleAndLessonType
-            ? getModuleLessonMap(modules[moduleCode], semester)[lessonType]
-            : lessonsWithLessonType;
+          const configLessonKeys: LessonKey[] = keys(lessonsWithLessonType);
+          const lessons =
+            activeLesson && isSameModuleAndLessonType
+              ? mapValues(
+                  getModuleLessonMap(modules[moduleCode], semester)[lessonType],
+                  (lesson) => ({ ...lesson, valid: true }),
+                )
+              : lessonsWithLessonType;
 
-        return mapValues(lessons, (lesson, lessonKey: LessonKey): InteractableLesson => {
-          const isActive = isSameModuleAndLessonType && lessonKey === activeLessonKey;
-          const canBeSelectedAsActiveLesson =
-            !readOnly &&
-            (isTaInTimetable || areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType));
+          return mapValues(lessons, (lesson, lessonKey: LessonKey): InteractableLesson => {
+            const isActive = isSameModuleAndLessonType && lessonKey === activeLessonKey;
+            const canBeSelectedAsActiveLesson =
+              !readOnly &&
+              (isTaInTimetable ||
+                areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType));
 
-          const alreadyAddedToLessonConfig = configLessonKeys.includes(lessonKey);
-          const isSameLessonGroupAsActiveLesson = isTaInTimetable
-            ? isActive
-            : lesson.classNo === activeLesson?.classNo;
-          const canBeAddedToLessonConfig =
-            isSameModuleAndLessonType &&
-            !alreadyAddedToLessonConfig &&
-            !isSameLessonGroupAsActiveLesson;
+            const alreadyAddedToLessonConfig = configLessonKeys.includes(lessonKey);
+            const isSameLessonGroupAsActiveLesson = isTaInTimetable
+              ? isActive
+              : lesson.classNo === activeLesson?.classNo;
+            const canBeAddedToLessonConfig =
+              isSameModuleAndLessonType &&
+              !alreadyAddedToLessonConfig &&
+              !isSameLessonGroupAsActiveLesson;
 
-          return {
-            ...lesson,
-            moduleCode,
-            title: modules[moduleCode].title,
-            isActive,
-            isTaInTimetable,
-            canBeAddedToLessonConfig,
-            canBeSelectedAsActiveLesson,
-            colorIndex: colors[moduleCode],
-            lessonKey,
-          };
-        });
-      },
-    );
-  });
+            return {
+              ...lesson,
+              moduleCode,
+              title: modules[moduleCode].title,
+              isActive,
+              isTaInTimetable,
+              canBeAddedToLessonConfig,
+              canBeSelectedAsActiveLesson,
+              colorIndex: colors[moduleCode],
+              lessonKey,
+            };
+          });
+        },
+      );
+    },
+  );
 }

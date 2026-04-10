@@ -10,7 +10,8 @@
     "moduleCode": "CS1010S",
     "title": "Programming Methodology",
     "colorIndex": 0,
-    "lessonIndex": 0
+    "lessonIndex": 0,
+    "valid": true
   },
   {
     "classNo": "1",
@@ -23,7 +24,8 @@
     "moduleCode": "CS1010S",
     "title": "Programming Methodology",
     "colorIndex": 0,
-    "lessonIndex": 1
+    "lessonIndex": 1,
+    "valid": true
   },
   {
     "classNo": "1",
@@ -36,7 +38,8 @@
     "moduleCode": "CS1010S",
     "title": "Programming Methodology",
     "colorIndex": 0,
-    "lessonIndex": 2
+    "lessonIndex": 2,
+    "valid": true
   },
   {
     "classNo": "2",
@@ -49,7 +52,8 @@
     "moduleCode": "CS1010S",
     "title": "Programming Methodology",
     "colorIndex": 0,
-    "lessonIndex": 3
+    "lessonIndex": 3,
+    "valid": true
   },
   {
     "classNo": "2",
@@ -62,7 +66,8 @@
     "moduleCode": "CS1010S",
     "title": "Programming Methodology",
     "colorIndex": 0,
-    "lessonIndex": 4
+    "lessonIndex": 4,
+    "valid": true
   },
   {
     "classNo": "1",
@@ -75,6 +80,7 @@
     "moduleCode": "CS3216",
     "title": "Application Development on Evolving Platforms",
     "colorIndex": 1,
-    "lessonIndex": 5
+    "lessonIndex": 5,
+    "valid": true
   }
 ]

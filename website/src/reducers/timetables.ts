@@ -4,7 +4,11 @@ import { createMigrate } from 'redux-persist';
 
 import { PersistConfig } from 'storage/persistReducer';
 import { LessonKey, ModuleCode } from 'types/modules';
-import { ModuleLessonConfig, SemTimetableConfig } from 'types/timetables';
+import {
+  LessonsChangedNotification,
+  ModuleLessonConfig,
+  SemTimetableConfig,
+} from 'types/timetables';
 import { ColorMapping, TimetablesState } from 'types/reducers';
 
 import config from 'config';
@@ -24,6 +28,8 @@ import {
   SET_TIMETABLE,
   SHOW_LESSON_IN_TIMETABLE,
   REMOVE_TA_MODULE,
+  CREATE_LESSONS_CHANGED_NOTIFICATION,
+  CLEAR_LESSONS_CHANGED_NOTIFICATIONS,
 } from 'actions/timetables';
 import { getNewColor } from 'utils/colors';
 import { SET_EXPORTED_DATA } from 'actions/constants';
@@ -237,6 +243,7 @@ export const defaultTimetableState: TimetablesState = {
   ta: {},
   academicYear: config.academicYear,
   archive: {},
+  lessonsChangedNotifications: {},
 };
 
 function timetables(
@@ -316,6 +323,29 @@ function timetables(
       return produce(state, (draft) => {
         draft.ta[semester] = taModules;
       });
+    }
+
+    case CREATE_LESSONS_CHANGED_NOTIFICATION: {
+      const { semester, notification } = action.payload;
+      const current: LessonsChangedNotification[] = get(
+        state.lessonsChangedNotifications[semester],
+        [],
+      );
+
+      return {
+        ...state,
+        lessonsChangedNotifications: {
+          ...state.lessonsChangedNotifications,
+          [action.payload.semester]: [...current, notification],
+        },
+      };
+    }
+
+    case CLEAR_LESSONS_CHANGED_NOTIFICATIONS: {
+      return {
+        ...state,
+        lessonsChangedNotifications: [],
+      };
     }
 
     default:

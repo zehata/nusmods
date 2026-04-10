@@ -35,7 +35,10 @@ export function getModuleTimetable(module: Module, semester: Semester): readonly
 }
 
 // Returns a map of lessons to lessonType of a module for the corresponding semester.
-export function getModuleLessonMap(module: Module, semester: Semester): Readonly<LessonMap> {
+export function getModuleLessonMap(
+  module: Module,
+  semester: Semester,
+): Readonly<LessonMap<RawLesson>> {
   return get(getModuleSemesterData(module, semester), 'lessonMap', {});
 }
 

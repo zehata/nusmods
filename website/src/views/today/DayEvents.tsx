@@ -4,15 +4,17 @@ import { isSameDay } from 'date-fns';
 import classnames from 'classnames';
 
 import { MapPin } from 'react-feather';
-import { Lesson, ColoredLesson } from 'types/timetables';
+import { Lesson, ColoredLesson, ValidationResult } from 'types/timetables';
 import { SelectedLesson } from 'types/views';
 import { formatTime } from 'utils/timify';
 import { isLessonAvailable, isSameLesson } from 'utils/timetables';
 import EventMapInline from './EventMapInline';
 import styles from './DayEvents.scss';
+import Tooltip from 'views/components/Tooltip';
+import LessonRemovedWarning from 'views/components/InvalidLessons/LessonRemovedWarning';
 
 type Props = {
-  readonly lessons: ColoredLesson[];
+  readonly lessons: (ColoredLesson & ValidationResult)[];
   readonly date: Date;
   readonly dayInfo: AcadWeekInfo;
   readonly openLesson: SelectedLesson | null;
@@ -22,7 +24,7 @@ type Props = {
 };
 
 const DayEvents = React.memo<Props>((props) => {
-  const renderLesson = (lesson: ColoredLesson, i: number) => {
+  const renderLesson = (lesson: ColoredLesson & ValidationResult, i: number) => {
     const { openLesson, onOpenLesson, marker, date } = props;
 
     const isOpen =
@@ -39,7 +41,11 @@ const DayEvents = React.memo<Props>((props) => {
           <p>{formatTime(lesson.endTime)}</p>
         </div>
 
-        <div className={classnames(styles.card, `color-${lesson.colorIndex}`)}>
+        <div
+          className={classnames(styles.card, `color-${lesson.colorIndex}`, {
+            lessonInvalid: !lesson.valid,
+          })}
+        >
           <h4>
             {lesson.moduleCode} {lesson.title}
           </h4>
@@ -48,6 +54,7 @@ const DayEvents = React.memo<Props>((props) => {
           </p>
           <MapPin className={styles.venueIcon} />{' '}
           {lesson.venue.startsWith('E-Learn') ? 'E-Learning' : lesson.venue}
+          {!lesson.valid && <LessonRemovedWarning className={styles.warning} />}
           <div>
             <EventMapInline
               className={styles.map}

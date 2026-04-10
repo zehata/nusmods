@@ -34,6 +34,7 @@ import type { Actions } from 'types/actions';
 import LoadingSpinner from './components/LoadingSpinner';
 import FeedbackModal from './components/FeedbackModal';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
+import LessonsModifiedModal from './components/InvalidLessons/LessonsModifiedModal';
 
 import styles from './AppShell.scss';
 import useColorScheme from './hooks/useColorScheme';
@@ -163,6 +164,10 @@ const AppShell: FC<PropsWithChildren> = ({ children }) => {
           )}
         </main>
       </div>
+
+      <ErrorBoundary>
+        <LessonsModifiedModal />
+      </ErrorBoundary>
 
       <ErrorBoundary>
         <FeedbackModal />

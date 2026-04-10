@@ -63,6 +63,8 @@ export type Lesson = RawLesson & {
 
 export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
 
+export type ValidationResult = { valid: boolean };
+
 /**
  * Interactable lessons are lessons that appear on the Timetable page
  *
@@ -71,13 +73,14 @@ export type ColoredLesson = Lesson & { colorIndex: ColorIndex };
  * - is able to replace the currently selected lesson
  * - is currently in the lesson config
  */
-export type InteractableLesson = ColoredLesson & {
-  isTaInTimetable: boolean;
-  canBeSelectedAsActiveLesson: boolean;
-  canBeAddedToLessonConfig: boolean;
-  isActive: boolean;
-  lessonKey: LessonKey;
-};
+export type InteractableLesson = ColoredLesson &
+  ValidationResult & {
+    isTaInTimetable: boolean;
+    canBeSelectedAsActiveLesson: boolean;
+    canBeAddedToLessonConfig: boolean;
+    isActive: boolean;
+    lessonKey: LessonKey;
+  };
 
 //  The array of Lessons must belong to that lessonType.
 export type ModuleLessonConfigWithLessons<T extends Lesson> = {
@@ -126,3 +129,14 @@ export type HoverLesson = {
 };
 
 export type ColorIndex = number;
+
+export type LessonModification = {
+  before: Lesson;
+  after: Lesson;
+  changedFields: (keyof Lesson)[];
+};
+
+export type LessonsChangedNotification = {
+  moduleCode: ModuleCode;
+  modifications: Record<LessonType, LessonModification[]>;
+};

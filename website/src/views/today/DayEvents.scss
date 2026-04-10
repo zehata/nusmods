@@ -24,12 +24,14 @@
   $v-padding: 0.6rem;
   $h-padding: 1rem;
 
+  position: relative;
   overflow: hidden;
   flex: 1 0;
   padding: $v-padding $h-padding;
   border-bottom: 0.3rem solid;
   border-radius: 0.8rem;
   font-size: 0.9rem;
+  z-index: 0;
 
   h4 {
     margin-bottom: 0.2rem;
@@ -45,6 +47,11 @@
   .venueIcon {
     width: 1rem;
     vertical-align: bottom;
+  }
+
+  .warning {
+    margin-top: 0.4rem;
+    padding: 0.6rem;
   }
 
   .map {

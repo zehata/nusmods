@@ -15,7 +15,12 @@ import {
 import { produce } from 'immer';
 
 import { DaysOfWeek } from 'types/modules';
-import { Lesson, ColoredLesson, SemTimetableConfigWithLessons } from 'types/timetables';
+import {
+  Lesson,
+  ColoredLesson,
+  SemTimetableConfigWithLessons,
+  ValidationResult,
+} from 'types/timetables';
 import { ColorMapping } from 'types/reducers';
 import { EmptyGroupType, SelectedLesson } from 'types/views';
 
@@ -51,7 +56,7 @@ import BeforeLessonCard from '../BeforeLessonCard';
 import EventMap from '../EventMap';
 import styles from './TodayContainer.scss';
 
-const EMPTY_LESSONS: ColoredLesson[] = [];
+const EMPTY_LESSONS: (ColoredLesson & ValidationResult)[] = [];
 
 // Map the semester property from AcadWeekInfo to semester number
 const semesterNameMap: Record<string, number> = {
@@ -65,7 +70,7 @@ export type OwnProps = TimerData;
 
 export type Props = OwnProps &
   Readonly<{
-    timetableWithLessons: SemTimetableConfigWithLessons<Lesson>;
+    timetableWithLessons: SemTimetableConfigWithLessons<Lesson & ValidationResult>;
     colors: ColorMapping;
     matchBreakpoint: boolean;
   }>;
@@ -180,11 +185,12 @@ export class TodayContainerComponent extends React.PureComponent<Props, State> {
   groupLessons() {
     const { colors, currentTime, timetableWithLessons } = this.props;
 
-    const timetableLessons: Lesson[] = timetableLessonsArray(timetableWithLessons);
+    const timetableLessons: (Lesson & ValidationResult)[] =
+      timetableLessonsArray(timetableWithLessons);
 
     // Inject color into module
     const coloredTimetableLessons = timetableLessons.map(
-      (lesson: Lesson): ColoredLesson => ({
+      (lesson: Lesson & ValidationResult): ColoredLesson & ValidationResult => ({
         ...lesson,
         colorIndex: colors[lesson.moduleCode],
       }),
@@ -258,7 +264,7 @@ export class TodayContainerComponent extends React.PureComponent<Props, State> {
     return days;
   }
 
-  renderDay(date: Date, lessons: ColoredLesson[], isToday: boolean) {
+  renderDay(date: Date, lessons: (ColoredLesson & ValidationResult)[], isToday: boolean) {
     const dayInfo = NUSModerator.academicCalendar.getAcadWeekInfo(date);
 
     // In lg and above, we use the sidebar to show the map instead

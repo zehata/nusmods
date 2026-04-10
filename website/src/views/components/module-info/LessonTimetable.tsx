@@ -2,7 +2,7 @@ import { FC, memo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import type { SemesterData } from 'types/modules';
-import type { ColoredLesson, InteractableLesson, TimetableArrangement } from 'types/timetables';
+import type { ColoredLesson, TimetableArrangement } from 'types/timetables';
 
 import Timetable from 'views/timetable/Timetable';
 import SemesterPicker from 'views/components/module-info/SemesterPicker';
@@ -32,7 +32,7 @@ const SemesterLessonTimetable: FC<{ semesterData?: SemesterData }> = ({ semester
   return (
     <Timetable
       lessons={arrangedLessons}
-      onModifyCell={(lesson: InteractableLesson) => history.push(venuePage(lesson.venue))}
+      onModifyCell={(lesson: ColoredLesson) => history.push(venuePage(lesson.venue))}
     />
   );
 };

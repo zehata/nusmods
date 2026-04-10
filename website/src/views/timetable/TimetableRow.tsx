@@ -13,7 +13,7 @@ type Props = {
   showTitle: boolean;
   startingIndex: number;
   endingIndex: number;
-  lessons: ColoredLesson[] | InteractableLesson[];
+  lessons: ColoredLesson[];
   hoverLesson?: HoverLesson | null;
   onCellHover: OnHoverCell;
   onModifyCell?: OnModifyCell;

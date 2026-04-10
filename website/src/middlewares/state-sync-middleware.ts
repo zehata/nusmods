@@ -11,6 +11,7 @@ const reduxStateSyncConfig = {
     // Reference: https://github.com/aohua/redux-state-sync/issues/53
     const blacklist = [PERSIST, PURGE, REHYDRATE];
 
+    return false;
     // redux-state-sync relies on BroadcastChannel, which only supports
     // objects that are clonable by `structuredClone`
     if (typeof action === 'function') {

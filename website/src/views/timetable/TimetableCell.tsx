@@ -17,8 +17,9 @@ import {
 import { TRANSPARENT_COLOR_INDEX } from 'utils/colors';
 import elements from 'views/elements';
 import Tooltip from 'views/components/Tooltip/Tooltip';
-import { Minus, Plus } from 'react-feather';
+import { AlertTriangle, Minus, Plus } from 'react-feather';
 import styles from './TimetableCell.scss';
+import LessonRemovedWarning from 'views/components/InvalidLessons/LessonRemovedWarning';
 
 type Props = {
   showTitle: boolean;
@@ -42,10 +43,7 @@ function formatWeekInfo(weekInfo: AcadWeekInfo) {
  * @param lesson This cell's lesson
  * @param hoverLesson The lesson being hovered over
  */
-function checkHover(
-  lesson: InteractableLesson | ColoredLesson,
-  hoverLesson: HoverLesson | null | undefined,
-): boolean {
+function checkHover(lesson: ColoredLesson, hoverLesson: HoverLesson | null | undefined): boolean {
   if (!hoverLesson) return false;
 
   if (!isInteractable(lesson)) return false;
@@ -128,6 +126,8 @@ const TimetableCell: React.FC<Props> = (props) => {
 
   const weekText = consumeWeeks<React.ReactNode>(lesson.weeks, formatNumericWeeks, formatWeekRange);
 
+  const lessonInvalid = 'valid' in lesson && !lesson.valid;
+
   const className = classnames(
     styles.baseCell,
     getLessonIdentifier(lesson),
@@ -137,6 +137,7 @@ const TimetableCell: React.FC<Props> = (props) => {
       : [styles.coloredCell, `color-${lesson.colorIndex}`],
     {
       hoverable: !!onClick,
+      lessonInvalid,
       [styles.clickable]: !!onClick,
       [styles.available]: isInteractable(lesson) && lesson.canBeAddedToLessonConfig,
       [styles.active]: isInteractable(lesson) && lesson.isActive,
@@ -184,6 +185,7 @@ const TimetableCell: React.FC<Props> = (props) => {
         </div>
         <div>{lesson.venue.startsWith('E-Learn') ? 'E-Learning' : lesson.venue}</div>
         {weekText && <div>{weekText}</div>}
+        {lessonInvalid && <LessonRemovedWarning className={styles.warning} />}
       </div>
     </Cell>
   );

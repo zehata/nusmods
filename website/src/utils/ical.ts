@@ -14,7 +14,7 @@ import {
   StartTime,
   WeekRange,
 } from 'types/modules';
-import { Lesson, SemTimetableConfigWithLessons } from 'types/timetables';
+import { Lesson, SemTimetableConfigWithLessons, ValidationResult } from 'types/timetables';
 
 import config from 'config';
 import academicCalendar from 'data/academic-calendar';
@@ -174,7 +174,7 @@ export function iCalEventForLesson(
 
 export default function iCalForTimetable(
   semester: Semester,
-  timetable: SemTimetableConfigWithLessons<Lesson>,
+  timetable: SemTimetableConfigWithLessons<Lesson & ValidationResult>,
   moduleData: { [moduleCode: string]: Module },
   hiddenModules: ModuleCode[],
   taModules: ModuleCode[],
@@ -192,6 +192,8 @@ export default function iCalForTimetable(
 
     each(lessonConfig, (lessons) => {
       map(lessons).forEach((lesson) => {
+        if (!lesson.valid) return;
+
         events.push(
           iCalEventForLesson(lesson, moduleData[moduleCode], semester, firstDayOfSchool, isTa),
         );

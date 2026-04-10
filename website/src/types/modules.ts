@@ -140,9 +140,9 @@ export type RawLesson = Readonly<{
   weeks: Weeks;
 }>;
 
-export type LessonMap = {
+export type LessonMap<T extends RawLesson> = {
   [lessonType: LessonType]: {
-    [lessonKey: LessonKey]: RawLesson;
+    [lessonKey: LessonKey]: T;
   };
 };
 
@@ -150,7 +150,7 @@ export type LessonMap = {
 export type SemesterData = {
   semester: Semester;
   timetable: readonly RawLesson[];
-  readonly lessonMap: LessonMap;
+  readonly lessonMap: LessonMap<RawLesson>;
 
   // Exam
   examDate?: string;

@@ -6,6 +6,7 @@ $cell-opacity: 0.5;
 .baseCell {
   // Flex to ensure cell content sticks to top, because browsers tend to
   // vertical align middle button content
+  position: relative;
   z-index: $timetable-cell-z-index;
   display: flex;
   flex-direction: column;
@@ -123,4 +124,8 @@ $cell-opacity: 0.5;
 .taActionIndicator {
   height: 0.8rem;
   margin-right: -0.3rem;
+}
+
+.warning {
+  margin-top: 0.4rem;
 }

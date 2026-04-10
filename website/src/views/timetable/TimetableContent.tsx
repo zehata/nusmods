@@ -23,6 +23,8 @@ import {
   InteractableLesson,
   TaModulesConfigV1,
   Lesson,
+  ColoredLesson,
+  ValidationResult,
 } from 'types/timetables';
 
 import {
@@ -43,6 +45,7 @@ import {
   getLessonIdentifier,
   getSemesterModules,
   hydrateSemTimetableWithLessons,
+  isInteractable,
   serializeLessonDetails,
   timetableLessonsArray,
 } from 'utils/timetables';
@@ -79,7 +82,7 @@ type OwnProps = {
 
 type Props = OwnProps & {
   // From Redux
-  timetableWithLessons: SemTimetableConfigWithLessons<Lesson>;
+  timetableWithLessons: SemTimetableConfigWithLessons<Lesson & ValidationResult>;
   modules: ModulesMap;
   activeLesson: Lesson | null;
   timetableOrientation: TimetableOrientation;
@@ -289,13 +292,15 @@ export const TimetableContent: React.FC<Props> = ({
   );
 
   const modifyCell = React.useCallback(
-    (lesson: InteractableLesson, position: ClientRect): void => {
+    (lesson: ColoredLesson, position: ClientRect): void => {
       const lessonMap = interactableLessonsMap[lesson.moduleCode];
 
       // If activeLesson exists, then the user is choosing a cell to modify
       const isChoosing = !!activeLesson;
       if (isChoosing) {
         const sameLessonTypeLessons = lessonMap[activeLesson.lessonType];
+
+        if (!isInteractable(lesson)) return;
 
         if (isTaInTimetable(lesson.moduleCode)) {
           modifyTaCell(sameLessonTypeLessons, lesson);
@@ -523,7 +528,7 @@ function mapStateToProps(state: StoreState, ownProps: OwnProps) {
   const taInTimetable = ownProps.taImportedModules ?? state.timetables.ta[semester] ?? [];
   const taModuleCodes: ModuleCode[] = isArray(taInTimetable) ? taInTimetable : keys(taInTimetable);
 
-  const timetableWithLessons: SemTimetableConfigWithLessons<Lesson> =
+  const timetableWithLessons: SemTimetableConfigWithLessons<Lesson & ValidationResult> =
     hydrateSemTimetableWithLessons(timetable, modules, semester);
 
   return {
