@@ -51,7 +51,6 @@ import {
 } from 'utils/timetables';
 import { resetScrollPosition } from 'utils/react';
 import ModulesSelectContainer from 'views/timetable/ModulesSelectContainer';
-import Announcements from 'views/components/notfications/Announcements';
 import Title from 'views/components/Title';
 import ErrorBoundary from 'views/errors/ErrorBoundary';
 import ModRegNotification from 'views/components/notfications/ModRegNotification';
@@ -63,6 +62,8 @@ import TimetableModulesTable from './TimetableModulesTable';
 import ExamCalendar from './ExamCalendar';
 import ModulesTableFooter from './ModulesTableFooter';
 import styles from './TimetableContent.scss';
+import AppAnnouncements from 'views/components/notfications/AppAnnouncements';
+import LessonModifiedAnnouncement from 'views/components/InvalidLessons/LessonModifiedAnnouncement';
 
 type ModifiedCell = {
   className: string;
@@ -388,7 +389,9 @@ export const TimetableContent: React.FC<Props> = ({
     >
       <Title>Timetable</Title>
 
-      <Announcements />
+      <AppAnnouncements />
+
+      <LessonModifiedAnnouncement />
 
       <ErrorBoundary>
         <ModRegNotification />

@@ -40,7 +40,7 @@ import {
   getClosestLessonConfig,
   getEndTimeAsDate,
   getInteractableLessons,
-  getRecoveryLessonKeys,
+  getRecoveryLessons,
   getStartTimeAsDate,
   groupLessonsByDay,
   hydrateSemTimetableWithLessons,
@@ -1486,8 +1486,8 @@ describe(getClosestLessonConfig, () => {
   });
 });
 
-describe(getRecoveryLessonKeys, () => {
+describe(getRecoveryLessons, () => {
   test('guard against empty lessons input', () => {
-    expect(getRecoveryLessonKeys({})).toEqual([]);
+    expect(getRecoveryLessons({})).toEqual([]);
   });
 });

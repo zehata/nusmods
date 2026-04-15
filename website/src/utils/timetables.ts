@@ -16,24 +16,27 @@ import {
   keys,
   last,
   map,
+  mapKeys,
   mapValues,
   maxBy,
+  omit,
+  omitBy,
   partition,
   pick,
   pickBy,
   range,
   reduce,
+  reject,
   sample,
+  size,
   some,
   toPairs,
   values,
-  zipWith,
 } from 'lodash-es';
 import { addDays, min as minDate, parseISO, startOfDay } from 'date-fns';
 import qs from 'query-string';
 
 import {
-  consumeWeeks,
   LessonType,
   Module,
   ModuleCode,
@@ -74,7 +77,7 @@ import { getTimeAsDate } from './timify';
 import { getModuleTimetable, getExamDate, getExamDuration, getModuleLessonMap } from './modules';
 import { deltas } from './array';
 
-type lessonTypeAbbrev = { [lessonType: string]: string };
+export type lessonTypeAbbrev = { [lessonType: string]: string };
 export const LESSON_TYPE_ABBREV: lessonTypeAbbrev = {
   'Design Lecture': 'DLEC',
   Laboratory: 'LAB',
@@ -445,18 +448,18 @@ export function isLessonAvailable(
   date: Date,
   weekInfo: Readonly<AcadWeekInfo>,
 ): boolean {
-  return consumeWeeks(
-    lesson.weeks,
-    (weeks) => weeks.includes(weekInfo.num as number),
-    (weekRange) => {
-      const end = minDate([parseISO(weekRange.end), date]);
-      for (let current = parseISO(weekRange.start); current <= end; current = addDays(current, 7)) {
-        if (isEqual(current, startOfDay(date))) return true;
-      }
+  const weeks = lesson.weeks;
 
-      return false;
-    },
-  );
+  if (isWeekRange(weeks)) {
+    const end = minDate([parseISO(weeks.end), date]);
+    for (let current = parseISO(weeks.start); current <= end; current = addDays(current, 7)) {
+      if (isEqual(current, startOfDay(date))) return true;
+    }
+
+    return false;
+  }
+
+  return weeks.includes(weekInfo.num as number);
 }
 
 export function isLessonOngoing(lesson: Lesson, currentTime: number): boolean {
@@ -577,6 +580,115 @@ function deserializeLessonTypeLessons(
   );
 }
 
+type PartialLessonMappings = {
+  mappedLessons: [RawLesson, RawLesson][];
+  remainingLessonsBefore: Record<LessonKey, RawLesson>;
+  remainingLessonsAfter: Record<LessonKey, RawLesson>;
+};
+
+function sameTimeMappings({
+  mappedLessons,
+  remainingLessonsBefore,
+  remainingLessonsAfter,
+}: PartialLessonMappings) {
+  return reduce(
+    remainingLessonsAfter,
+    (accumulated, lessonAfter, lessonAfterKey) => {
+      const sameTimeAndDayLessons = omitBy(remainingLessonsBefore, (lessonBefore) =>
+        some([
+          lessonBefore.day !== lessonAfter.day,
+          lessonBefore.startTime !== lessonAfter.startTime,
+          lessonBefore.endTime !== lessonAfter.endTime,
+        ]),
+      );
+
+      if (size(sameTimeAndDayLessons) === 1) {
+        const { mappedLessons, remainingLessonsBefore, remainingLessonsAfter } = accumulated;
+        const [lessonBeforeKey, lessonBefore] = toPairs(sameTimeAndDayLessons)[0];
+
+        return {
+          mappedLessons: [...mappedLessons, [lessonAfter, lessonBefore] as [RawLesson, RawLesson]],
+          remainingLessonsBefore: omit(remainingLessonsBefore, lessonBeforeKey),
+          remainingLessonsAfter: omit(remainingLessonsAfter, lessonAfterKey),
+        };
+      }
+
+      return accumulated;
+    },
+    {
+      mappedLessons,
+      remainingLessonsBefore,
+      remainingLessonsAfter,
+    } as PartialLessonMappings,
+  );
+}
+
+function mapOriginalLessonsToModified(
+  original: Record<LessonKey, RawLesson>,
+  modified: Record<LessonKey, RawLesson>,
+): LessonModification[] {
+  const lessonsBefore = pickBy(
+    original,
+    (_lesson, lessonKey) => !modified.hasOwnProperty(lessonKey),
+  );
+  const lessonsAfter = pickBy(
+    modified,
+    (_lesson, lessonKey) => !original.hasOwnProperty(lessonKey),
+  );
+
+  const mappingWithSameTimeLessonsMapped = sameTimeMappings({
+    mappedLessons: [],
+    remainingLessonsBefore: lessonsBefore,
+    remainingLessonsAfter: lessonsAfter,
+  });
+
+  const { mappedLessons, remainingLessonsBefore, remainingLessonsAfter } =
+    mappingWithSameTimeLessonsMapped;
+  const mappableLessonModifications = reduce(
+    mappedLessons,
+    (accumulated, [lessonAfter, lessonBefore]) => {
+      const changedFields = reduce(
+        lessonAfter,
+        (accumulated, valueAfter, key) => {
+          const valueBefore = lessonBefore[key as keyof RawLesson];
+
+          if (valueBefore === valueAfter) return [...accumulated, key as keyof RawLesson];
+
+          return accumulated;
+        },
+        [] as (keyof RawLesson)[],
+      );
+
+      return [
+        ...accumulated,
+        {
+          before: lessonBefore,
+          after: lessonAfter,
+          changedFields,
+        },
+      ];
+    },
+    [] as LessonModification[],
+  );
+
+  const unmappedLessonsBefore: LessonModification[] = map(
+    remainingLessonsBefore,
+    (lessonBefore) => ({
+      before: lessonBefore,
+      after: null,
+      changedFields: null,
+    }),
+  );
+
+  const unmappedLessonsAfter: LessonModification[] = map(remainingLessonsAfter, (lessonAfter) => ({
+    before: null,
+    after: lessonAfter,
+    changedFields: null,
+  }));
+
+  return [...mappableLessonModifications, ...unmappedLessonsBefore, ...unmappedLessonsAfter];
+}
+
 /**
  * Valid non-TA modules must have one and only one classNo for each lesson type
  * @param lessonConfig lesson configs to validate
@@ -599,7 +711,6 @@ export function validateNonTaModuleLesson(
       const lessonTypeInLessonConfig = lessonTypesInLessonConfig.includes(lessonType);
       const configLessonKeys: LessonKey[] = lessonConfig[lessonType];
       const firstLessonKey = first(configLessonKeys);
-      const lessonTypeValidLessonKeys = keys(lessonTypeValidLessons);
 
       if (!lessonTypeInLessonConfig || !firstLessonKey) {
         const configLessons: Record<LessonKey, RawLesson> = deserializeLessonTypeLessons(
@@ -608,6 +719,7 @@ export function validateNonTaModuleLesson(
         );
         const recoveryLessons: Record<LessonKey, RawLesson> =
           getRecoveryLessons(lessonTypeValidLessons);
+        const lessonModifications = mapOriginalLessonsToModified(configLessons, recoveryLessons);
 
         return {
           config: {
@@ -616,41 +728,36 @@ export function validateNonTaModuleLesson(
           },
           modifications: {
             ...modifications,
+            [lessonType]: lessonModifications,
           },
         };
       }
 
-      const [validConfigLessonKeys, invalidConfigLessonKeys] = partition(
-        configLessonKeys,
-        (lessonKey) => lessonTypeValidLessonKeys.includes(lessonKey),
+      const classNo = deserializeLessonDetails(firstLessonKey).classNo;
+      const validLessons: Record<LessonKey, RawLesson> = pickBy(
+        lessonTypeValidLessons,
+        (lesson) => lesson.classNo === classNo,
       );
 
-      if (invalidConfigLessonKeys.length < 1) {
+      if (new Set(keys(validLessons)) === new Set(configLessonKeys))
         return {
-          config: {
-            ...config,
-            [lessonType]: validConfigLessonKeys,
-          },
+          config,
           modifications,
         };
-      }
 
-      const configLessons: Record<LessonKey, RawLesson> = deserializeLessonTypeLessons(
-        lessonType,
-        configLessonKeys,
-      );
-      const recoveryLessons: Record<LessonKey, RawLesson> = getClosestLessonTypeLessons(
-        lessonTypeValidLessons,
-        configLessonKeys,
+      const lessonModifications = mapOriginalLessonsToModified(
+        deserializeLessonTypeLessons(lessonType, configLessonKeys),
+        validLessons,
       );
 
       return {
         config: {
           ...config,
-          [lessonType]: keys(recoveryLessons),
+          [lessonType]: keys(validLessons),
         },
         modifications: {
           ...modifications,
+          [lessonType]: lessonModifications,
         },
       };
     },
@@ -661,9 +768,8 @@ export function validateNonTaModuleLesson(
   );
 
   const validLessonTypes = keys(validatedLessonConfig);
-  const invalidLessonTypes = filter(
-    lessonTypesInLessonConfig,
-    (lessonType) => !validLessonTypes.includes(lessonType),
+  const invalidLessonTypes = reject(lessonTypesInLessonConfig, (lessonType) =>
+    validLessonTypes.includes(lessonType),
   );
   const removedLessonTypesConfigs = reduce(
     invalidLessonTypes,

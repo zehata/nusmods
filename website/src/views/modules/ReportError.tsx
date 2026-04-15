@@ -20,7 +20,7 @@ import type { Module } from 'types/modules';
 import Modal from 'views/components/Modal';
 import CloseButton from 'views/components/CloseButton';
 import ExternalLink from 'views/components/ExternalLink';
-import { isNewCourseDataAnnoucement } from 'views/components/notfications/Announcements';
+import { isNewCourseDataAnnoucement } from 'views/components/notfications/AppAnnouncements';
 import facultyEmails from 'data/facultyEmail';
 import appConfig from 'config';
 import useGlobalDebugValue from '../hooks/useGlobalDebugValue';

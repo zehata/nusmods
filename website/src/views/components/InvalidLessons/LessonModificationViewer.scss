@@ -1,0 +1,36 @@
+@import '~styles/utils/modules-entry';
+
+.strikethrough {
+    text-decoration: line-through 2px;
+}
+
+.before {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+
+    border-radius: 0.2rem;
+
+    background: theme-color(danger);
+    color: white;
+}
+
+.after {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+
+    border-radius: 0.2rem;
+
+    background: theme-color(success);
+    color: white;
+}
+
+.lessonFieldComparison {
+    display: inline-flex;
+    gap: 0.2rem;
+}

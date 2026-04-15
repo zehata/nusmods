@@ -55,6 +55,8 @@ import EmptyLessonGroup from '../EmptyLessonGroup';
 import BeforeLessonCard from '../BeforeLessonCard';
 import EventMap from '../EventMap';
 import styles from './TodayContainer.scss';
+import AppAnnouncements from 'views/components/notfications/AppAnnouncements';
+import LessonModifiedAnnouncement from 'views/components/InvalidLessons/LessonModifiedAnnouncement';
 
 const EMPTY_LESSONS: (ColoredLesson & ValidationResult)[] = [];
 
@@ -329,6 +331,8 @@ export class TodayContainerComponent extends React.PureComponent<Props, State> {
         <Title>Today</Title>
 
         <div className={styles.schedule}>
+          <LessonModifiedAnnouncement />
+
           {this.groupLessons()}
           <p className={styles.attribution}>
             Icon made by <ExternalLink href="https://www.freepik.com/">Freepik</ExternalLink> from{' '}

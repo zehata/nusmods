@@ -1,0 +1,16 @@
+.moduleModifications {
+    display: flex;
+    gap: 1rem;
+
+    & .lessonType {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.lessonTypeModifications {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    width: 12rem;
+}

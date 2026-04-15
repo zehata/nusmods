@@ -130,11 +130,19 @@ export type HoverLesson = {
 
 export type ColorIndex = number;
 
-export type LessonModification = {
-  before: Lesson;
-  after: Lesson;
-  changedFields: (keyof Lesson)[];
-};
+export type LessonModification =
+  | {
+      before: null;
+      after: RawLesson;
+    }
+  | {
+      before: RawLesson;
+      after: null;
+    }
+  | {
+      before: RawLesson;
+      after: RawLesson;
+    };
 
 export type LessonsChangedNotification = {
   moduleCode: ModuleCode;

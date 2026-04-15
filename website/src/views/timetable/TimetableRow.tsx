@@ -6,7 +6,7 @@ import { OnHoverCell, OnModifyCell } from 'types/views';
 import { convertTimeToIndex } from 'utils/timify';
 import { isInteractable } from 'utils/timetables';
 import styles from './TimetableRow.scss';
-import TimetableCell from './TimetableCell';
+import TimetableLessonCell from './TimetableLessonCell';
 
 type Props = {
   verticalMode: boolean;
@@ -63,7 +63,7 @@ const TimetableRow: React.FC<Props> = (props) => {
             : {};
 
         return (
-          <TimetableCell
+          <TimetableLessonCell
             key={lesson.startTime}
             style={style}
             lesson={lesson}

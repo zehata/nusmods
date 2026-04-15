@@ -3,8 +3,8 @@ import type { EventOption } from 'ical-generator';
 import { addDays, addMinutes, addWeeks, isValid } from 'date-fns';
 
 import {
-  consumeWeeks,
   EndTime,
+  isWeekRange,
   LessonTime,
   Module,
   ModuleCode,
@@ -158,11 +158,10 @@ export function iCalEventForLesson(
   firstDayOfSchool: Date,
   isTa: boolean,
 ): EventOption {
-  const event = consumeWeeks(
-    lesson.weeks,
-    (weeks) => calculateNumericWeek(lesson, semester, weeks, firstDayOfSchool),
-    (weeks) => calculateWeekRange(lesson, semester, weeks),
-  );
+  const weeks = lesson.weeks;
+  const event = isWeekRange(weeks)
+    ? calculateWeekRange(lesson, semester, weeks)
+    : calculateNumericWeek(lesson, semester, weeks, firstDayOfSchool);
 
   return {
     ...event,

@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 
 import { HoverLesson, InteractableLesson } from 'types/timetables';
 import { EVERY_WEEK } from 'test-utils/timetable';
-import TimetableCell from './TimetableCell';
+import TimetableLessonCell from './TimetableLessonCell';
 
 const jest = vi;
 const LESSON: Omit<InteractableLesson, 'isTaInTimetable'> = {
@@ -46,11 +46,11 @@ const makeFactory =
     return {
       onClick,
       onHover: props.onHover,
-      wrapper: shallow(<TimetableCell onClick={onClick} lesson={lesson} {...props} />),
+      wrapper: shallow(<TimetableLessonCell onClick={onClick} lesson={lesson} {...props} />),
     };
   };
 
-describe(TimetableCell, () => {
+describe(TimetableLessonCell, () => {
   const NON_TA_LESSON: InteractableLesson = {
     ...LESSON,
     isTaInTimetable: false,
@@ -133,7 +133,7 @@ describe(TimetableCell, () => {
   });
 });
 
-describe(TimetableCell, () => {
+describe(TimetableLessonCell, () => {
   const TA_LESSON: InteractableLesson = {
     ...LESSON,
     isTaInTimetable: true,

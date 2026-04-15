@@ -74,15 +74,6 @@ export const WORKLOAD_COMPONENTS: WorkloadComponent[] = [
  */
 export const isWeekRange = (week: Weeks): week is WeekRange => !Array.isArray(week);
 
-export const consumeWeeks = <T = void>(
-  weeks: Weeks,
-  consumeNumericWeeks: (numericWeeks: NumericWeeks) => T,
-  consumeWeekRange: (weekRange: WeekRange) => T,
-): T => {
-  if (Array.isArray(weeks)) return consumeNumericWeeks(weeks);
-  return consumeWeekRange(weeks as WeekRange);
-};
-
 export type SearchableModule = {
   moduleCode: ModuleCode;
   title: ModuleTitle;

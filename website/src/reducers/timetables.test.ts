@@ -326,6 +326,7 @@ describe('stateReconciler', () => {
     ta: {},
     academicYear: config.academicYear,
     archive: oldArchive,
+    lessonsChangedNotifications: [],
   };
 
   const { stateReconciler } = persistConfig;

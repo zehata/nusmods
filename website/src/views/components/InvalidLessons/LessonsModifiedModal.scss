@@ -1,26 +1,9 @@
-.semesterModifications {
-
-}
-
 .moduleModifications {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
+    display: grid;
+    gap: 1rem;
 }
 
 .lessonTypeModifications {
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    align-items: center;
-
-    & > div {
-        flex-grow: 1;
-    }
-}
-
-.lessonTiming {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    gap: 0.5rem;
 }

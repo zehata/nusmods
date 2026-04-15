@@ -32,6 +32,7 @@ import ErrorBoundary from 'views/errors/ErrorBoundary';
 import styles from './ModulePageContent.scss';
 import ReportError from './ReportError';
 import ModuleTree from './ModuleTree';
+import AppAnnouncements from 'views/components/notfications/AppAnnouncements';
 
 export type Props = {
   module: Module;
@@ -78,7 +79,7 @@ const ModulePageContent: React.FC<Props> = ({ module, archiveYear }) => {
     <div className={classnames('page-container', styles.moduleInfoPage)}>
       <Title description={module.description}>{pageTitle}</Title>
 
-      <Announcements />
+      <AppAnnouncements />
 
       {isArchive && (
         <div className={classnames(styles.archiveWarning, 'alert alert-warning')}>

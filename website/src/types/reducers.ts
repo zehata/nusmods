@@ -122,7 +122,7 @@ export type SemesterColorMap = { [semester: Semester]: ColorMapping };
 export type HiddenModulesMap = { [semester: Semester]: ModuleCode[] };
 export type TaModulesMap = { [semester: Semester]: ModuleCode[] };
 export type TaModulesMapV1 = { [semester: Semester]: TaModulesConfigV1 };
-export type SemesterLessonsChangedNotification = {
+export type SemesterLessonsChangedNotificationsMap = {
   [semester: Semester]: LessonsChangedNotification[];
 };
 
@@ -132,7 +132,7 @@ export type TimetablesState = {
   readonly hidden: HiddenModulesMap;
   readonly ta: TaModulesMap;
   readonly academicYear: string;
-  readonly lessonsChangedNotifications: SemesterLessonsChangedNotification;
+  readonly lessonsChangedNotifications: SemesterLessonsChangedNotificationsMap;
   // Mapping of academic year to old timetable config
   readonly archive: { [key: string]: TimetableConfig | TimetableConfigV1 };
 };

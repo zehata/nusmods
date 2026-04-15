@@ -229,12 +229,16 @@ export function createLessonsChangedNotification(
   };
 }
 
-export const CLEAR_LESSONS_CHANGED_NOTIFICATIONS = 'CLEAR_LESSONS_CHANGED_NOTIFICATIONS' as const;
-export function clearLessonsChangedNotifications(semester: Semester) {
+export const DISMISS_LESSONS_CHANGED_NOTIFICATION = 'DISMISS_LESSONS_CHANGED_NOTIFICATION' as const;
+export function dismissLessonsChangedNotification(
+  semester: Semester,
+  notification: LessonsChangedNotification,
+) {
   return {
-    type: CLEAR_LESSONS_CHANGED_NOTIFICATIONS,
+    type: DISMISS_LESSONS_CHANGED_NOTIFICATION,
     payload: {
       semester,
+      notification,
     },
   };
 }
@@ -291,7 +295,7 @@ export function validateTimetable(semester: Semester) {
 
       if (isEmpty(modifications)) return;
 
-      // dispatch(setLessonConfig(semester, moduleCode, validatedLessonConfig));
+      dispatch(setLessonConfig(semester, moduleCode, validatedLessonConfig));
       dispatch(
         createLessonsChangedNotification(semester, {
           moduleCode,

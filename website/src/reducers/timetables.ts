@@ -1,4 +1,4 @@
-import { get, omit, uniq, values } from 'lodash-es';
+import { get, omit, reject, uniq, values } from 'lodash-es';
 import { produce } from 'immer';
 import { createMigrate } from 'redux-persist';
 
@@ -29,7 +29,7 @@ import {
   SHOW_LESSON_IN_TIMETABLE,
   REMOVE_TA_MODULE,
   CREATE_LESSONS_CHANGED_NOTIFICATION,
-  CLEAR_LESSONS_CHANGED_NOTIFICATIONS,
+  DISMISS_LESSONS_CHANGED_NOTIFICATION,
 } from 'actions/timetables';
 import { getNewColor } from 'utils/colors';
 import { SET_EXPORTED_DATA } from 'actions/constants';
@@ -120,11 +120,9 @@ function moduleLessonConfig(
       if (!(lessonKeysToExclude && lessonType)) return state;
       return {
         ...state,
-        [lessonType]: [
-          ...state[lessonType].filter(
-            (lessonKey: LessonKey) => !lessonKeysToExclude.includes(lessonKey),
-          ),
-        ],
+        [lessonType]: reject(state[lessonType], (lessonKey: LessonKey) =>
+          lessonKeysToExclude.includes(lessonKey),
+        ),
       };
     }
     case REMOVE_TA_MODULE:
@@ -229,7 +227,7 @@ function semTaModules(state = DEFAULT_TA_STATE, action: Actions): ModuleCode[] {
     case REMOVE_MODULE: {
       const { moduleCode: modulesToExclude } = action.payload;
       if (!modulesToExclude) return state;
-      return state.filter((moduleCode: ModuleCode) => !modulesToExclude.includes(moduleCode));
+      return reject(state, (moduleCode: ModuleCode) => modulesToExclude.includes(moduleCode));
     }
     default:
       return state;
@@ -328,7 +326,8 @@ function timetables(
     case CREATE_LESSONS_CHANGED_NOTIFICATION: {
       const { semester, notification } = action.payload;
       const current: LessonsChangedNotification[] = get(
-        state.lessonsChangedNotifications[semester],
+        state.lessonsChangedNotifications,
+        semester,
         [],
       );
 
@@ -341,10 +340,20 @@ function timetables(
       };
     }
 
-    case CLEAR_LESSONS_CHANGED_NOTIFICATIONS: {
+    case DISMISS_LESSONS_CHANGED_NOTIFICATION: {
+      const { semester, notification } = action.payload;
+      const current: LessonsChangedNotification[] = get(
+        state.lessonsChangedNotifications,
+        semester,
+        [],
+      );
+
       return {
         ...state,
-        lessonsChangedNotifications: [],
+        lessonsChangedNotifications: {
+          ...state.lessonsChangedNotifications,
+          [action.payload.semester]: reject(current, notification),
+        },
       };
     }
 
