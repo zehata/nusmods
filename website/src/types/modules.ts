@@ -26,6 +26,7 @@ export type WeekRange = {
   weeks?: number[];
 };
 export type LessonIndex = number;
+export type LessonId = string;
 
 // Recursive tree of module codes and boolean operators for the prereq tree
 export type PrereqTree =
@@ -139,18 +140,17 @@ export type RawLesson = Readonly<{
   weeks: Weeks;
 }>;
 
-export type RawLessonWithIndex = RawLesson & { readonly lessonIndex: LessonIndex };
-
-export type LessonIndicesMap = {
+export type ModuleLessonMap<T extends RawLesson> = {
   [lessonType: LessonType]: {
-    [classNo: ClassNo]: LessonIndex[];
+    [lessonId: LessonId]: T;
   };
 };
 
 // Semester-specific information of a module.
 export type SemesterData = {
   semester: Semester;
-  timetable: readonly RawLessonWithIndex[];
+  timetable: readonly RawLesson[];
+  readonly lessonMap: ModuleLessonMap<RawLesson>;
 
   // Exam
   examDate?: string;

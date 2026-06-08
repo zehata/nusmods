@@ -21,8 +21,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1600",
-          "venue": "AS6-0421",
-          "lessonIndex": 0
+          "venue": "AS6-0421"
         },
         {
           "classNo": "2",
@@ -31,8 +30,7 @@
           "day": "Tuesday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS6-0421",
-          "lessonIndex": 1
+          "venue": "AS6-0421"
         },
         {
           "classNo": "3",
@@ -41,8 +39,7 @@
           "day": "Tuesday",
           "startTime": "1830",
           "endTime": "2030",
-          "venue": "AS6-0421",
-          "lessonIndex": 2
+          "venue": "AS6-0421"
         },
         {
           "classNo": "4",
@@ -51,8 +48,7 @@
           "day": "Thursday",
           "startTime": "1600",
           "endTime": "1800",
-          "venue": "AS6-0421",
-          "lessonIndex": 3
+          "venue": "AS6-0421"
         },
         {
           "classNo": "5",
@@ -61,8 +57,7 @@
           "day": "Friday",
           "startTime": "1000",
           "endTime": "1200",
-          "venue": "AS6-0421",
-          "lessonIndex": 4
+          "venue": "AS6-0421"
         },
         {
           "classNo": "1",
@@ -71,8 +66,7 @@
           "day": "Monday",
           "startTime": "1830",
           "endTime": "2030",
-          "venue": "LT15",
-          "lessonIndex": 5
+          "venue": "LT15"
         }
       ]
     }

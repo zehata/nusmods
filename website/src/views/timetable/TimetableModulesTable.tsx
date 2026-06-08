@@ -14,11 +14,11 @@ import { ModuleTableOrder } from 'types/reducers';
 
 import ColorPicker from 'views/components/ColorPicker';
 import {
-  selectModuleColor,
-  hideLessonInTimetable,
-  showLessonInTimetable,
-  addTaModule,
   disableTaModule,
+  enableTaModule,
+  hideLessonInTimetable,
+  selectModuleColor,
+  showLessonInTimetable,
 } from 'actions/timetables';
 import {
   getExamDate,
@@ -206,7 +206,7 @@ export default connect(
     selectModuleColor,
     hideLessonInTimetable,
     showLessonInTimetable,
-    enableTaModule: addTaModule,
+    enableTaModule,
     disableTaModule,
   },
 )(React.memo(TimetableModulesTableComponent));

@@ -31,8 +31,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 0
+          "covidZone": "B"
         },
         {
           "classNo": "27",
@@ -43,8 +42,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 1
+          "covidZone": "B"
         },
         {
           "classNo": "29",
@@ -55,8 +53,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 2
+          "covidZone": "B"
         },
         {
           "classNo": "30",
@@ -67,8 +64,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 3
+          "covidZone": "B"
         },
         {
           "classNo": "2",
@@ -79,8 +75,7 @@
           "day": "Thursday",
           "lessonType": "Lecture",
           "size": 450,
-          "covidZone": "B",
-          "lessonIndex": 4
+          "covidZone": "B"
         },
         {
           "classNo": "1",
@@ -91,8 +86,7 @@
           "day": "Friday",
           "lessonType": "Lecture",
           "size": 450,
-          "covidZone": "B",
-          "lessonIndex": 5
+          "covidZone": "B"
         },
         {
           "classNo": "14",
@@ -103,8 +97,7 @@
           "day": "Wednesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 6
+          "covidZone": "B"
         },
         {
           "classNo": "18",
@@ -115,8 +108,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 7
+          "covidZone": "B"
         },
         {
           "classNo": "11",
@@ -127,8 +119,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 8
+          "covidZone": "B"
         },
         {
           "classNo": "19",
@@ -139,8 +130,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 9
+          "covidZone": "B"
         },
         {
           "classNo": "9",
@@ -151,8 +141,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 10
+          "covidZone": "B"
         },
         {
           "classNo": "2",
@@ -163,8 +152,7 @@
           "day": "Monday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 11
+          "covidZone": "B"
         },
         {
           "classNo": "22",
@@ -175,8 +163,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 12
+          "covidZone": "B"
         },
         {
           "classNo": "21",
@@ -187,8 +174,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 13
+          "covidZone": "B"
         },
         {
           "classNo": "24",
@@ -199,8 +185,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 14
+          "covidZone": "B"
         },
         {
           "classNo": "10",
@@ -211,8 +196,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 15
+          "covidZone": "B"
         },
         {
           "classNo": "13",
@@ -223,8 +207,7 @@
           "day": "Wednesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 16
+          "covidZone": "B"
         },
         {
           "classNo": "8",
@@ -235,8 +218,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 17
+          "covidZone": "B"
         },
         {
           "classNo": "20",
@@ -247,8 +229,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 18
+          "covidZone": "B"
         },
         {
           "classNo": "5",
@@ -259,8 +240,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 19
+          "covidZone": "B"
         },
         {
           "classNo": "4",
@@ -271,8 +251,7 @@
           "day": "Monday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 20
+          "covidZone": "B"
         },
         {
           "classNo": "7",
@@ -283,8 +262,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 21
+          "covidZone": "B"
         },
         {
           "classNo": "12",
@@ -295,8 +273,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 22
+          "covidZone": "B"
         },
         {
           "classNo": "17",
@@ -307,8 +284,7 @@
           "day": "Wednesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 23
+          "covidZone": "B"
         },
         {
           "classNo": "16",
@@ -319,8 +295,7 @@
           "day": "Wednesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 24
+          "covidZone": "B"
         },
         {
           "classNo": "1",
@@ -331,8 +306,7 @@
           "day": "Tuesday",
           "lessonType": "Lecture",
           "size": 450,
-          "covidZone": "B",
-          "lessonIndex": 25
+          "covidZone": "B"
         },
         {
           "classNo": "2",
@@ -343,8 +317,7 @@
           "day": "Monday",
           "lessonType": "Lecture",
           "size": 450,
-          "covidZone": "B",
-          "lessonIndex": 26
+          "covidZone": "B"
         },
         {
           "classNo": "1",
@@ -355,8 +328,7 @@
           "day": "Monday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 27
+          "covidZone": "B"
         },
         {
           "classNo": "15",
@@ -367,8 +339,7 @@
           "day": "Wednesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 28
+          "covidZone": "B"
         },
         {
           "classNo": "23",
@@ -379,8 +350,7 @@
           "day": "Thursday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 29
+          "covidZone": "B"
         },
         {
           "classNo": "26",
@@ -391,8 +361,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 30
+          "covidZone": "B"
         },
         {
           "classNo": "3",
@@ -403,8 +372,7 @@
           "day": "Monday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 31
+          "covidZone": "B"
         },
         {
           "classNo": "25",
@@ -415,8 +383,7 @@
           "day": "Friday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 32
+          "covidZone": "B"
         },
         {
           "classNo": "6",
@@ -427,8 +394,7 @@
           "day": "Tuesday",
           "lessonType": "Tutorial",
           "size": 30,
-          "covidZone": "B",
-          "lessonIndex": 33
+          "covidZone": "B"
         }
       ],
       "covidZones": ["B"],
@@ -447,8 +413,7 @@
           "day": "Monday",
           "lessonType": "Lecture",
           "size": 375,
-          "covidZone": "B",
-          "lessonIndex": 34
+          "covidZone": "B"
         },
         {
           "classNo": "2",
@@ -459,8 +424,7 @@
           "day": "Thursday",
           "lessonType": "Lecture",
           "size": 375,
-          "covidZone": "B",
-          "lessonIndex": 35
+          "covidZone": "B"
         },
         {
           "classNo": "1",
@@ -471,8 +435,7 @@
           "day": "Thursday",
           "lessonType": "Lecture",
           "size": 375,
-          "covidZone": "B",
-          "lessonIndex": 36
+          "covidZone": "B"
         },
         {
           "classNo": "1",
@@ -483,8 +446,7 @@
           "day": "Monday",
           "lessonType": "Lecture",
           "size": 375,
-          "covidZone": "B",
-          "lessonIndex": 37
+          "covidZone": "B"
         }
       ],
       "covidZones": ["B"],

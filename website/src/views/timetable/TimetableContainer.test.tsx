@@ -24,6 +24,7 @@ import { BFS1001, CS1010S, CS3216 } from '__mocks__/modules';
 import modulesList from '__mocks__/moduleList.json';
 
 import { TimetableContainerComponent } from './TimetableContainer';
+import userEvent from '@testing-library/user-event';
 
 const jest = vi;
 /**
@@ -144,7 +145,9 @@ describe(TimetableContainerComponent, () => {
   test('should eventually display imported timetable if there is one', async () => {
     const semester = 1;
     const importedTimetable = {
-      [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': [0] }, // BFS1001 doesn't have Lecture, only SectionalTeaching
+      [moduleCodeThatCanBeLoaded]: {
+        'Sectional Teaching': ['A1'],
+      }, // BFS1001 doesn't have Lecture, only SectionalTeaching
     };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
@@ -167,7 +170,11 @@ describe(TimetableContainerComponent, () => {
 
   test('should eventually display imported timetable without any modules loaded', async () => {
     const semester = 1;
-    const importedTimetable = { [moduleCodeThatCanBeLoaded]: { 'Sectional Teaching': [0] } };
+    const importedTimetable = {
+      [moduleCodeThatCanBeLoaded]: {
+        'Sectional Teaching': ['A1'],
+      },
+    };
     const location = timetableShare(semester, importedTimetable, [moduleCodeThatCanBeLoaded], []);
     make(location);
 
@@ -187,9 +194,11 @@ describe(TimetableContainerComponent, () => {
     expect(screen.queryByText(/SEC/)).not.toBeInTheDocument();
   });
 
-  test('should ignore invalid modules in imported timetable', () => {
+  test('should ignore invalid modules in imported timetable', async () => {
     const semester = 1;
-    const importedTimetable = { TRUMP2020: { Lecture: [1] } };
+    const importedTimetable = {
+      TRUMP2020: { Lecture: ['A1'] },
+    };
     const location = timetableShare(semester, importedTimetable, [], []);
     make(location);
 
@@ -215,7 +224,10 @@ describe(TimetableContainerComponent, () => {
 
     // Populate mock timetable
     await act(async () => {
-      const timetable = { CS1010S: { Lecture: [0] }, CS3216: { Lecture: [0] } };
+      const timetable = {
+        CS1010S: { Lecture: ['1'] },
+        CS3216: { Lecture: ['1'] },
+      };
       (store.dispatch as Dispatch)(setTimetable(semester, timetable));
     });
 
@@ -228,5 +240,33 @@ describe(TimetableContainerComponent, () => {
 
     // Expect import header not to be present
     expect(screen.queryByRole('button', { name: 'Import' })).not.toBeInTheDocument();
+  });
+
+  test('switch semester', async () => {
+    const semester = 1;
+    const location = timetablePage(semester);
+    const { store } = make(location);
+    const user = userEvent.setup();
+
+    // Populate moduleBank using "succeeded" requests-middleware requests
+    await act(async () => {
+      store.dispatch({ type: SUCCESS_KEY(FETCH_MODULE), payload: CS1010S });
+    });
+
+    // Populate mock timetable
+    await act(async () => {
+      const timetable = {
+        CS1010S: { Lecture: ['1'] },
+      };
+      (store.dispatch as Dispatch)(setTimetable(semester, timetable));
+    });
+
+    expect(screen.queryByText(/CS1010S Programming Methodology/)).toBeInTheDocument();
+
+    const previousSemesterButton = screen.getByTestId(/next-semester/);
+    await user.click(previousSemesterButton);
+    expect(screen.getByText(/Semester 2/)).toBeInTheDocument();
+
+    expect(screen.queryByText(/CS1010S Programming Methodology/)).not.toBeInTheDocument();
   });
 });

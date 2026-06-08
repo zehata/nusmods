@@ -11,16 +11,17 @@ import {
   filter,
   isArray,
   keys,
+  omit,
 } from 'lodash-es';
 
 import { ColorMapping, HORIZONTAL, ModulesMap, TimetableOrientation } from 'types/reducers';
-import { LessonIndex, LessonType, Module, ModuleCode, Semester } from 'types/modules';
+import { LessonId, LessonType, Module, ModuleCode, Semester } from 'types/modules';
 import {
   SemTimetableConfig,
   SemTimetableConfigWithLessons,
   InteractableLesson,
-  LessonWithIndex,
   TaModulesConfigV1,
+  Lesson,
 } from 'types/timetables';
 
 import {
@@ -57,6 +58,7 @@ import TimetableModulesTable from './TimetableModulesTable';
 import ExamCalendar from './ExamCalendar';
 import ModulesTableFooter from './ModulesTableFooter';
 import styles from './TimetableContent.scss';
+import { serializeLessonDetails } from 'utils/timetables/lessonId';
 
 type ModifiedCell = {
   className: string;
@@ -76,9 +78,9 @@ type OwnProps = {
 
 type Props = OwnProps & {
   // From Redux
-  timetableWithLessons: SemTimetableConfigWithLessons;
+  timetableWithLessons: SemTimetableConfigWithLessons<Lesson>;
   modules: ModulesMap;
-  activeLesson: LessonWithIndex | null;
+  activeLesson: Lesson | null;
   timetableOrientation: TimetableOrientation;
   showTitle: boolean;
   hiddenInTimetable: ModuleCode[];
@@ -88,32 +90,26 @@ type Props = OwnProps & {
   addModule: (semester: Semester, moduleCode: ModuleCode) => void;
   removeModule: (semester: Semester, moduleCode: ModuleCode) => void;
   resetTimetable: (semester: Semester) => void;
-  modifyLesson: (lesson: LessonWithIndex) => void;
+  modifyLesson: (lesson: Lesson) => void;
   addLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    lessonIndices: LessonId[],
   ) => void;
   removeLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    lessonIndices: LessonId[],
   ) => void;
   changeLesson: (
     semester: Semester,
     moduleCode: ModuleCode,
     lessonType: LessonType,
-    lessonIndices: LessonIndex[],
+    lessonIndices: LessonId[],
   ) => void;
   cancelModifyLesson: () => void;
-};
-
-type State = {
-  isScrolledHorizontally: boolean;
-  showExamCalendar: boolean;
-  tombstone: TombstoneModule | null;
 };
 
 /**
@@ -140,358 +136,377 @@ function maintainScrollPosition(container: HTMLElement, modifiedCell: ModifiedCe
   container.scrollLeft = x; // eslint-disable-line no-param-reassign
 }
 
-class TimetableContent extends React.Component<Props, State> {
-  override state: State = {
-    isScrolledHorizontally: false,
-    showExamCalendar: false,
-    tombstone: null,
-  };
+export const TimetableContent: React.FC<Props> = ({
+  // Own props
+  readOnly,
+  header,
+  semester,
+  timetable,
+  colors,
 
-  timetableRef = React.createRef<HTMLDivElement>();
+  // From Redux
+  timetableWithLessons,
+  modules,
+  activeLesson,
+  timetableOrientation,
+  showTitle,
+  hiddenInTimetable,
+  taInTimetable,
 
-  modifiedCell: ModifiedCell | null = null;
+  // Actions
+  addModule,
+  removeModule,
+  resetTimetable,
+  modifyLesson,
+  addLesson,
+  removeLesson,
+  changeLesson,
+  cancelModifyLesson,
+}) => {
+  const [isScrolledHorizontally, setScrolledHorizontally] = React.useState<boolean>(false);
+  const [showExamCalendar, setShowExamCalendar] = React.useState<boolean>(false);
+  const [tombstone, setTombstone] = React.useState<TombstoneModule | null>(null);
 
-  override componentDidUpdate() {
-    if (this.modifiedCell && this.timetableRef.current) {
-      maintainScrollPosition(this.timetableRef.current, this.modifiedCell);
+  const timetableRef = React.createRef<HTMLDivElement>();
+  const [modifiedCell, setModifiedCell] = React.useState<ModifiedCell | null>(null);
 
-      this.modifiedCell = null;
+  React.useEffect(() => {
+    if (modifiedCell && timetableRef.current) {
+      maintainScrollPosition(timetableRef.current, modifiedCell);
+      setModifiedCell(null);
     }
-  }
+  }, [modifiedCell, timetableRef]);
 
-  override componentWillUnmount() {
-    this.cancelModifyLesson();
-  }
+  const onScroll = React.useCallback(
+    (e: React.UIEvent) => {
+      // Only trigger when there is an active lesson
+      setScrolledHorizontally(!!activeLesson && e.currentTarget && e.currentTarget.scrollLeft > 0);
+    },
+    [activeLesson],
+  );
 
-  onScroll: React.UIEventHandler = (e) => {
-    // Only trigger when there is an active lesson
-    const isScrolledHorizontally =
-      !!this.props.activeLesson && e.currentTarget && e.currentTarget.scrollLeft > 0;
-    if (this.state.isScrolledHorizontally !== isScrolledHorizontally) {
-      this.setState({ isScrolledHorizontally });
+  const cancelModifyAndResetScroll = React.useCallback((): void => {
+    if (!activeLesson) {
+      return;
     }
-  };
-
-  modifyTaCell = (
-    sameModuleLessons: InteractableLesson[],
-    interactedLesson: InteractableLesson,
-  ): void => {
-    const { moduleCode, lessonType, lessonIndex } = interactedLesson;
-
-    const currentlySelected = filter(
-      sameModuleLessons,
-      (lesson) => !lesson.canBeAddedToLessonConfig,
-    );
-    if (interactedLesson.canBeAddedToLessonConfig) {
-      // Allow multiple lessons of the same type to be added for TA lessons
-      this.props.addLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
-    } else if (currentlySelected.length > 1) {
-      // If a TA lesson is the last of its module, disallow removing it
-      // because the user will not be able to re-add the lessons.
-      this.props.removeLesson(this.props.semester, moduleCode, lessonType, [lessonIndex]);
-    } else {
-      this.props.cancelModifyLesson();
-    }
+    cancelModifyLesson();
     resetScrollPosition();
-  };
+  }, [cancelModifyLesson, activeLesson]);
 
-  modifyCell =
-    (moduleTimetable: InteractableLesson[], activeLesson: LessonWithIndex | null) =>
+  // Returns modules currently in the timetable
+  const addedModules = React.useMemo((): Module[] => {
+    const semesterModules = getSemesterModules(timetableWithLessons, modules);
+    return sortBy(semesterModules, (module: Module) => getExamDate(module, semester));
+  }, [modules, semester, timetableWithLessons]);
+
+  const isTaInTimetable = React.useCallback(
+    (moduleCode: ModuleCode) => taInTimetable.includes(moduleCode),
+    [taInTimetable],
+  );
+
+  const isHiddenInTimetable = React.useCallback(
+    (moduleCode: ModuleCode) => hiddenInTimetable.includes(moduleCode),
+    [hiddenInTimetable],
+  );
+
+  // Separate added modules into sections of clashing modules.
+  // Note: exclude hidden courses and TA-ed courses from exam clash detection.
+  const examinableModules = React.useMemo(
+    () =>
+      filter(
+        addedModules,
+        (module) => !isHiddenInTimetable(module.moduleCode) && !isTaInTimetable(module.moduleCode),
+      ),
+    [addedModules, isHiddenInTimetable, isTaInTimetable],
+  );
+
+  const clashes = React.useMemo(
+    () => findExamClashes(examinableModules, semester),
+    [examinableModules, semester],
+  );
+
+  const nonClashingMods: Module[] = React.useMemo(
+    () => difference(addedModules, flatten(values(clashes))),
+    [addedModules, clashes],
+  );
+
+  const isVerticalOrientation = React.useMemo(
+    () => timetableOrientation !== HORIZONTAL,
+    [timetableOrientation],
+  );
+
+  const isShowingTitle = React.useMemo(
+    () => !isVerticalOrientation && showTitle,
+    [isVerticalOrientation, showTitle],
+  );
+
+  const timetableLessons = omit(timetableWithLessons, hiddenInTimetable);
+
+  const interactableLessonsMap = React.useMemo(
+    () =>
+      getInteractableLessons(
+        timetableLessons,
+        taInTimetable,
+        modules,
+        semester,
+        colors,
+        readOnly,
+        activeLesson,
+      ),
+    [timetableLessons, taInTimetable, modules, semester, colors, readOnly, activeLesson],
+  );
+
+  const interactableLessons: InteractableLesson[] = timetableLessonsArray(interactableLessonsMap);
+  const arrangedLessons = arrangeLessonsForWeek(interactableLessons);
+
+  const modifyTaCell = React.useCallback(
+    (
+      sameLessonTypeLessons: Record<LessonId, InteractableLesson>,
+      interactableLesson: InteractableLesson,
+    ) => {
+      const { moduleCode, lessonType } = interactableLesson;
+      const lessonId = serializeLessonDetails(interactableLesson);
+
+      const currentlySelected = filter(
+        sameLessonTypeLessons,
+        (lesson) => !lesson.canBeAddedToLessonConfig,
+      );
+      if (interactableLesson.canBeAddedToLessonConfig) {
+        // Allow multiple lessons of the same type to be added for TA lessons
+        addLesson(semester, moduleCode, lessonType, [lessonId]);
+      } else if (currentlySelected.length > 1) {
+        // If a TA lesson is the last of its type, disallow removing it
+        removeLesson(semester, moduleCode, lessonType, [lessonId]);
+      } else {
+        cancelModifyLesson();
+      }
+      resetScrollPosition();
+
+      return () => cancelModifyAndResetScroll();
+    },
+    [addLesson, removeLesson, cancelModifyLesson, cancelModifyAndResetScroll, semester],
+  );
+
+  const modifyCell = React.useCallback(
     (lesson: InteractableLesson, position: ClientRect): void => {
+      const lessonMap = interactableLessonsMap[lesson.moduleCode];
+
       // If activeLesson exists, then the user is choosing a cell to modify
       const isChoosing = !!activeLesson;
       if (isChoosing) {
-        const sameModuleLessons = moduleTimetable.filter(
-          (timetableLesson) => timetableLesson.moduleCode === lesson.moduleCode,
-        );
+        const sameLessonTypeLessons = lessonMap[activeLesson.lessonType];
 
-        if (this.isTaInTimetable(lesson.moduleCode)) {
-          this.modifyTaCell(sameModuleLessons, lesson);
+        if (isTaInTimetable(lesson.moduleCode)) {
+          modifyTaCell(sameLessonTypeLessons, lesson);
           return;
         }
 
-        const sameLessonTypeLessons = sameModuleLessons.filter(
-          (timetableLesson) => timetableLesson.lessonType === lesson.lessonType,
-        );
-
         if (lesson.canBeAddedToLessonConfig) {
-          const lessonIndices = map(
-            filter(
-              sameLessonTypeLessons,
-              (timetableLessons) => timetableLessons.classNo === lesson.classNo,
-            ),
-            (sameLessonTypeLesson) => sameLessonTypeLesson.lessonIndex,
-          );
-          this.props.changeLesson(
-            this.props.semester,
-            lesson.moduleCode,
-            lesson.lessonType,
-            lessonIndices,
-          );
+          const lessonIds = [lesson.classNo];
+          changeLesson(semester, lesson.moduleCode, lesson.lessonType, lessonIds);
         } else {
-          this.props.cancelModifyLesson();
+          cancelModifyLesson();
         }
         resetScrollPosition();
-      } else {
-        this.props.modifyLesson(lesson);
-
-        this.modifiedCell = {
-          position,
-          className: getLessonIdentifier(lesson),
-        };
+        return;
       }
-    };
 
-  cancelModifyLesson = (): void => {
-    if (this.props.activeLesson) {
-      this.props.cancelModifyLesson();
-
-      resetScrollPosition();
-    }
-  };
-
-  isHiddenInTimetable = (moduleCode: ModuleCode): boolean =>
-    this.props.hiddenInTimetable.includes(moduleCode);
-
-  isTaInTimetable = (moduleCode: ModuleCode): boolean =>
-    this.props.taInTimetable.includes(moduleCode);
-
-  addModule = (semester: Semester, moduleCode: ModuleCode) => {
-    this.props.addModule(semester, moduleCode);
-    this.resetTombstone();
-  };
-
-  removeModule = (moduleCodeToRemove: ModuleCode) => {
-    // Save the index of the module before removal so the tombstone can be inserted into
-    // the correct position
-    const index = this.addedModules().findIndex(
-      ({ moduleCode }) => moduleCode === moduleCodeToRemove,
-    );
-    this.props.removeModule(this.props.semester, moduleCodeToRemove);
-    const moduleWithColor = this.toModuleWithColor(this.addedModules()[index]);
-
-    // A tombstone is displayed in place of a deleted module
-    this.setState({ tombstone: { ...moduleWithColor, index } });
-  };
-
-  resetTimetable = () => {
-    this.props.resetTimetable(this.props.semester);
-  };
-
-  resetTombstone = () => this.setState({ tombstone: null });
-
-  // Returns modules currently in the timetable
-  addedModules(): Module[] {
-    const modules = getSemesterModules(this.props.timetableWithLessons, this.props.modules);
-    return sortBy(modules, (module: Module) => getExamDate(module, this.props.semester));
-  }
-
-  toModuleWithColor = (module: Module): ModuleWithColor => ({
-    ...module,
-    colorIndex: this.props.colors[module.moduleCode],
-    isHiddenInTimetable: this.isHiddenInTimetable(module.moduleCode),
-    isTaInTimetable: this.isTaInTimetable(module.moduleCode),
-  });
-
-  renderModuleTable = (
-    modules: Module[],
-    horizontalOrientation: boolean,
-    tombstone: TombstoneModule | null = null,
-  ) => (
-    <TimetableModulesTable
-      modules={modules.map(this.toModuleWithColor)}
-      horizontalOrientation={horizontalOrientation}
-      semester={this.props.semester}
-      onRemoveModule={this.removeModule}
-      readOnly={this.props.readOnly}
-      tombstone={tombstone}
-      resetTombstone={this.resetTombstone}
-    />
+      modifyLesson(lesson);
+      setModifiedCell({
+        position,
+        className: getLessonIdentifier(lesson),
+      });
+    },
+    [
+      changeLesson,
+      modifyLesson,
+      cancelModifyLesson,
+      interactableLessonsMap,
+      activeLesson,
+      isTaInTimetable,
+      modifyTaCell,
+      semester,
+    ],
   );
 
-  // Returns component with table(s) of modules
-  renderModuleSections(modules: Module[], horizontalOrientation: boolean) {
-    const { tombstone } = this.state;
+  const toModuleWithColor = React.useCallback(
+    (module: Module): ModuleWithColor => ({
+      ...module,
+      colorIndex: colors[module.moduleCode],
+      isHiddenInTimetable: isHiddenInTimetable(module.moduleCode),
+      isTaInTimetable: isTaInTimetable(module.moduleCode),
+    }),
+    [colors, isHiddenInTimetable, isTaInTimetable],
+  );
 
-    // Separate added modules into sections of clashing modules.
-    // Note: exclude hidden courses and TA-ed courses from exam clash detection.
-    const examinableModules = modules.filter(
-      (module) =>
-        !this.isHiddenInTimetable(module.moduleCode) && !this.isTaInTimetable(module.moduleCode),
-    );
-    const clashes = findExamClashes(examinableModules, this.props.semester);
-    const nonClashingMods: Module[] = difference(modules, flatten(values(clashes)));
+  const addSemesterModule = React.useCallback(
+    (moduleCode: ModuleCode) => {
+      addModule(semester, moduleCode);
+      setTombstone(null);
+    },
+    [addModule, semester],
+  );
 
-    if (isEmpty(clashes) && isEmpty(nonClashingMods) && !tombstone) {
-      return (
-        <div className="row">
-          <div className="col-sm-12">
-            <p className="text-sm-center">No courses added.</p>
-          </div>
-        </div>
-      );
-    }
+  const removeModuleAndSetTombstone = React.useCallback(
+    (moduleCodeToRemove: ModuleCode) => {
+      // Save the index of the module before removal so the tombstone can be inserted into
+      // the correct position
+      const index = addedModules.findIndex(({ moduleCode }) => moduleCode === moduleCodeToRemove);
+      removeModule(semester, moduleCodeToRemove);
+      const moduleWithColor = toModuleWithColor(addedModules[index]);
 
-    return (
-      <>
-        {!isEmpty(clashes) && (
-          <>
-            <div className="alert alert-danger">
-              Warning! There are clashes in your exam timetable.
-            </div>
-            {Object.keys(clashes)
-              .sort()
-              .map((clashDate) => (
-                <div key={clashDate}>
-                  <p>
-                    Clash on <strong>{formatExamDate(clashDate)}</strong>
-                  </p>
-                  {this.renderModuleTable(clashes[clashDate], horizontalOrientation)}
-                </div>
-              ))}
-            <hr />
-          </>
-        )}
-        {this.renderModuleTable(nonClashingMods, horizontalOrientation, tombstone)}
-      </>
-    );
-  }
+      // A tombstone is displayed in place of a deleted module
+      setTombstone({ ...moduleWithColor, index });
+    },
+    [removeModule, addedModules, semester, toModuleWithColor],
+  );
 
-  override render() {
-    const {
-      semester,
-      modules,
-      colors,
-      activeLesson,
-      timetableOrientation,
-      showTitle,
-      readOnly,
-      hiddenInTimetable,
-      taInTimetable,
-    } = this.props;
+  const resetSemesterTimetable = React.useCallback(
+    () => resetTimetable(semester),
+    [resetTimetable, semester],
+  );
 
-    const { showExamCalendar } = this.state;
+  return (
+    <div
+      className={classnames('page-container', styles.container, {
+        verticalMode: isVerticalOrientation,
+      })}
+      onClick={cancelModifyAndResetScroll}
+      onKeyUp={(e) => e.key === 'Escape' && cancelModifyAndResetScroll()} // Quit modifying when Esc is pressed
+      data-testid="timetable"
+    >
+      <Title>Timetable</Title>
 
-    const timetableLessons: LessonWithIndex[] = timetableLessonsArray(
-      this.props.timetableWithLessons,
-    ).filter((lesson) => !this.isHiddenInTimetable(lesson.moduleCode));
+      <Announcements />
 
-    const interactableLesson: InteractableLesson[] = getInteractableLessons(
-      timetableLessons,
-      modules,
-      semester,
-      colors,
-      readOnly,
-      this.isTaInTimetable,
-      activeLesson,
-    );
-    const arrangedLessons = arrangeLessonsForWeek(interactableLesson);
+      <ErrorBoundary>
+        <ModRegNotification />
+      </ErrorBoundary>
 
-    const isVerticalOrientation = timetableOrientation !== HORIZONTAL;
-    const isShowingTitle = !isVerticalOrientation && showTitle;
-    const addedModules = this.addedModules();
+      <div>{header}</div>
 
-    return (
-      <div
-        className={classnames('page-container', styles.container, {
-          verticalMode: isVerticalOrientation,
-        })}
-        onClick={this.cancelModifyLesson}
-        onKeyUp={(e) => e.key === 'Escape' && this.cancelModifyLesson()} // Quit modifying when Esc is pressed
-      >
-        <Title>Timetable</Title>
-
-        <Announcements />
-
-        <ErrorBoundary>
-          <ModRegNotification />
-        </ErrorBoundary>
-
-        <div>{this.props.header}</div>
-
-        <div className="row">
-          <div
-            className={classnames({
-              'col-md-12': !isVerticalOrientation,
-              'col-md-8': isVerticalOrientation,
-            })}
-          >
-            {showExamCalendar ? (
-              <ExamCalendar
-                semester={semester}
-                modules={addedModules.map((module) => ({
-                  ...module,
-                  colorIndex: this.props.colors[module.moduleCode],
-                  isHiddenInTimetable: this.isHiddenInTimetable(module.moduleCode),
-                  isTaInTimetable: this.isTaInTimetable(module.moduleCode),
-                }))}
+      <div className="row">
+        <div
+          className={classnames({
+            'col-md-12': !isVerticalOrientation,
+            'col-md-8': isVerticalOrientation,
+          })}
+        >
+          {showExamCalendar ? (
+            <ExamCalendar
+              semester={semester}
+              modules={addedModules.map((module) => ({
+                ...module,
+                colorIndex: colors[module.moduleCode],
+                isHiddenInTimetable: isHiddenInTimetable(module.moduleCode),
+                isTaInTimetable: isTaInTimetable(module.moduleCode),
+              }))}
+            />
+          ) : (
+            <div className={styles.timetableWrapper} onScroll={onScroll} ref={timetableRef}>
+              <Timetable
+                lessons={arrangedLessons}
+                isVerticalOrientation={isVerticalOrientation}
+                isScrolledHorizontally={isScrolledHorizontally}
+                showTitle={isShowingTitle}
+                onModifyCell={modifyCell}
               />
-            ) : (
-              <div
-                className={styles.timetableWrapper}
-                onScroll={this.onScroll}
-                ref={this.timetableRef}
-              >
-                <Timetable
-                  lessons={arrangedLessons}
-                  isVerticalOrientation={isVerticalOrientation}
-                  isScrolledHorizontally={this.state.isScrolledHorizontally}
-                  showTitle={isShowingTitle}
-                  onModifyCell={this.modifyCell(interactableLesson, activeLesson)}
-                />
-              </div>
-            )}
-          </div>
-          <div
-            className={classnames({
-              'col-md-12': !isVerticalOrientation,
-              'col-md-4': isVerticalOrientation,
-            })}
-          >
-            <div className="row">
-              <div className="col-12 no-export">
-                <TimetableActions
-                  isVerticalOrientation={isVerticalOrientation}
-                  showTitle={isShowingTitle}
-                  semester={semester}
-                  timetable={this.props.timetable}
-                  showExamCalendar={showExamCalendar}
-                  resetTimetable={this.resetTimetable}
-                  toggleExamCalendar={() => this.setState({ showExamCalendar: !showExamCalendar })}
-                  hiddenModules={hiddenInTimetable}
-                  taModules={taInTimetable}
-                />
-              </div>
+            </div>
+          )}
+        </div>
+        <div
+          className={classnames({
+            'col-md-12': !isVerticalOrientation,
+            'col-md-4': isVerticalOrientation,
+          })}
+        >
+          <div className="row">
+            <div className="col-12 no-export">
+              <TimetableActions
+                isVerticalOrientation={isVerticalOrientation}
+                showTitle={isShowingTitle}
+                semester={semester}
+                timetable={timetable}
+                showExamCalendar={showExamCalendar}
+                resetTimetable={resetSemesterTimetable}
+                toggleExamCalendar={() => setShowExamCalendar(!showExamCalendar)}
+                hiddenModules={hiddenInTimetable}
+                taModules={taInTimetable}
+              />
+            </div>
 
-              <div className={styles.modulesSelect}>
-                {!readOnly && (
-                  <ModulesSelectContainer
+            <div className={styles.modulesSelect}>
+              {!readOnly && (
+                <ModulesSelectContainer
+                  semester={semester}
+                  timetable={timetable}
+                  addModule={addSemesterModule}
+                  removeModule={removeModuleAndSetTombstone}
+                />
+              )}
+            </div>
+
+            <div className="col-12">
+              {isEmpty(clashes) && isEmpty(nonClashingMods) && !tombstone ? (
+                <div className="row">
+                  <div className="col-sm-12">
+                    <p className="text-sm-center">No courses added.</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {!isEmpty(clashes) && (
+                    <>
+                      <div className="alert alert-danger">
+                        Warning! There are clashes in your exam timetable.
+                      </div>
+                      {Object.keys(clashes)
+                        .sort()
+                        .map((clashDate) => (
+                          <div key={clashDate}>
+                            <p>
+                              Clash on <strong>{formatExamDate(clashDate)}</strong>
+                            </p>
+                            <TimetableModulesTable
+                              modules={map(clashes[clashDate], toModuleWithColor)}
+                              horizontalOrientation={!isVerticalOrientation}
+                              semester={semester}
+                              onRemoveModule={removeModuleAndSetTombstone}
+                              readOnly={readOnly}
+                              tombstone={null}
+                              resetTombstone={() => setTombstone(null)}
+                            />
+                          </div>
+                        ))}
+                      <hr />
+                    </>
+                  )}
+                  <TimetableModulesTable
+                    modules={map(nonClashingMods, toModuleWithColor)}
+                    horizontalOrientation={!isVerticalOrientation}
                     semester={semester}
-                    timetable={this.props.timetable}
-                    addModule={this.addModule}
-                    removeModule={this.removeModule}
+                    onRemoveModule={removeModuleAndSetTombstone}
+                    readOnly={readOnly}
+                    tombstone={tombstone}
+                    resetTombstone={() => setTombstone(null)}
                   />
-                )}
-              </div>
-
-              <div className="col-12">
-                {this.renderModuleSections(addedModules, !isVerticalOrientation)}
-              </div>
-              <div className="col-12">
-                <ModulesTableFooter
-                  modules={addedModules}
-                  semester={semester}
-                  hiddenInTimetable={hiddenInTimetable}
-                  taInTimetable={taInTimetable}
-                />
-              </div>
+                </>
+              )}
+            </div>
+            <div className="col-12">
+              <ModulesTableFooter
+                modules={addedModules}
+                semester={semester}
+                hiddenInTimetable={hiddenInTimetable}
+                taInTimetable={taInTimetable}
+              />
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 function mapStateToProps(state: StoreState, ownProps: OwnProps) {
   const { semester, timetable } = ownProps;
@@ -502,7 +517,8 @@ function mapStateToProps(state: StoreState, ownProps: OwnProps) {
   const taInTimetable = ownProps.taImportedModules ?? state.timetables.ta[semester] ?? [];
   const taModuleCodes: ModuleCode[] = isArray(taInTimetable) ? taInTimetable : keys(taInTimetable);
 
-  const timetableWithLessons = hydrateSemTimetableWithLessons(timetable, modules, semester);
+  const timetableWithLessons: SemTimetableConfigWithLessons<Lesson> =
+    hydrateSemTimetableWithLessons(timetable, modules, semester);
 
   return {
     semester,

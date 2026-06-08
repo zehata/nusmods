@@ -19,7 +19,7 @@ type OwnProps = {
 
 type Props = OwnProps & {
   moduleList: ModuleSelectList;
-  addModule: (semester: Semester, moduleCode: ModuleCode) => void;
+  addModule: (moduleCode: ModuleCode) => void;
   removeModule: (moduleCode: ModuleCode) => void;
   popNotification: () => void;
 };
@@ -33,7 +33,7 @@ const RESULTS_LIMIT = 500;
 class ModulesSelectContainer extends Component<Props> {
   onChange = (moduleCode: ModuleCode) => {
     this.props.popNotification();
-    this.props.addModule(this.props.semester, moduleCode);
+    this.props.addModule(moduleCode);
   };
 
   getFilteredModules = (inputValue: string | null) => {

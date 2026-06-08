@@ -1,13 +1,16 @@
-import { filter, find, map, mapValues, shuffle, some } from 'lodash-es';
-import { LessonWithIndex, InteractableLesson } from 'types/timetables';
-import { LessonIndex, ModuleCode, RawLesson } from 'types/modules';
+import { filter, flatMap, get, map, mapValues, shuffle, some, values } from 'lodash-es';
+import { Lesson, SemTimetableConfig } from 'types/timetables';
+import { LessonId, LessonType, ModuleCode, RawLesson } from 'types/modules';
 
-import { getModuleTimetable } from 'utils/modules';
+import { getModuleLessonMap } from 'utils/modules';
 
 import { CS4243, PC1222, GES1021 } from '__mocks__/modules';
 import { createGenericLesson } from 'test-utils/timetable';
 
 import { areOtherClassesAvailable, getInteractableLessons } from './interactabilityHydration';
+import { hydrateSemTimetableWithLessons } from './lessonHydration';
+import { serializeLessonDetails } from './lessonId';
+import { timetableLessonsArray } from 'utils/timetables';
 
 test('areOtherClassesAvailable', () => {
   // Lessons belong to different ClassNo.
@@ -40,9 +43,9 @@ test('areOtherClassesAvailable', () => {
 
 describe('getInteractableLessons', () => {
   const modules = {
-    PC1222,
-    CS4243,
-    GES1021,
+    [PC1222.moduleCode]: PC1222,
+    [CS4243.moduleCode]: CS4243,
+    [GES1021.moduleCode]: GES1021,
   };
   const semester = 1;
   const colors = {
@@ -50,125 +53,138 @@ describe('getInteractableLessons', () => {
     CS4243: 1,
     GES1021: 2,
   };
-  const getIsTaInTimetable = (taModulesConfig: ModuleCode[]) => (moduleCode: ModuleCode) =>
-    taModulesConfig.includes(moduleCode);
 
-  const lessonsMap: Record<ModuleCode, LessonWithIndex[]> = mapValues(modules, (module) =>
-    map(getModuleTimetable(module, semester), (lesson) => ({
-      ...lesson,
-      moduleCode: module.moduleCode,
-      title: module.title,
-    })),
+  const lessonsMap: Record<ModuleCode, Record<LessonType, Record<LessonId, Lesson>>> = mapValues(
+    modules,
+    (module) => ({
+      ...mapValues(getModuleLessonMap(module, semester), (lessonsWithLessonType) => ({
+        ...mapValues(lessonsWithLessonType, (lesson) => ({
+          ...lesson,
+          moduleCode: module.moduleCode,
+          title: module.title,
+        })),
+      })),
+    }),
   );
 
-  const getLesson = (moduleCode: ModuleCode, lessonIndex: LessonIndex): LessonWithIndex => {
-    const lessonWithIndex = find(
-      lessonsMap[moduleCode],
-      (lesson) => lesson.lessonIndex === lessonIndex,
-    );
-    if (!lessonWithIndex) throw new Error('No lesson found with this lesson index');
-    return lessonWithIndex;
-  };
-
-  const getLessons = (moduleCode: ModuleCode, lessonIndices: LessonIndex[]): LessonWithIndex[] =>
-    filter(lessonsMap[moduleCode], (lesson) => lessonIndices.includes(lesson.lessonIndex));
-
-  const getHydratedLesson = (hydratedLessons: InteractableLesson[], lesson: LessonWithIndex) =>
-    find(
-      hydratedLessons,
-      (hydratedLesson) =>
-        hydratedLesson.moduleCode === lesson.moduleCode &&
-        hydratedLesson.lessonIndex === lesson.lessonIndex,
-    );
-
   describe('hydrating modules when there is no active lesson', () => {
-    const taModuleLessons = getLessons(PC1222.moduleCode, [0, 1, 10, 11, 12, 13]);
+    const lessonWithAlternative = '1|TUE|1400|1600|AS6-0421|3_4_5_6_7_8_9_10_11_12_13';
+    const lessonWithNoAlternative = '1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13';
 
-    const lessonWithAlternative = getLesson(CS4243.moduleCode, 0);
-    const lessonWithNoAlternative = getLesson(CS4243.moduleCode, 5);
+    const semTimetableConfig: SemTimetableConfig = {
+      [PC1222.moduleCode]: {
+        Laboratory: [
+          'F01|FRI|1400|1700|S12-0402|3_5_7_9_11',
+          'F02|FRI|1400|1700|S12-0402|4_6_8_10_12',
+        ],
+        Lecture: ['SL1|TUE|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: [
+          'SL1|FRI|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13',
+          'T1|MON|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13',
+          'T10|FRI|1700|1800|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13',
+        ],
+      },
+      [CS4243.moduleCode]: {
+        Laboratory: [lessonWithAlternative],
+        Lecture: [lessonWithNoAlternative],
+      },
+    };
 
-    const timetableLessons: LessonWithIndex[] = [
-      ...taModuleLessons,
-      lessonWithAlternative,
-      lessonWithNoAlternative,
-    ];
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
 
-    const isTaInTimetable = getIsTaInTimetable([PC1222.moduleCode]);
     const readOnly = false;
     const activeLesson = null;
 
     const hydratedLessons = getInteractableLessons(
       timetableLessons,
+      [PC1222.moduleCode],
       modules,
       semester,
       colors,
       readOnly,
-      isTaInTimetable,
       activeLesson,
     );
 
+    const allLessons = flatMap(hydratedLessons, (modulesLessons) =>
+      flatMap(modulesLessons, (lessonTypeLessons) => values(lessonTypeLessons)),
+    );
+
     test('all lessons are marked as non active because there is no active lesson', () => {
-      expect(some(hydratedLessons, (lesson) => lesson.isActive)).toBe(false);
+      expect(some(allLessons, (lesson) => lesson.isActive)).toBe(false);
     });
 
     test('when there are no active lessons, only lessons that are in timetable are present, they cannot be added to lesson config', () => {
-      expect(some(hydratedLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(false);
+      expect(some(allLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(false);
     });
 
     test('lessons from ta module are marked as ta in timetable', () => {
-      const lessonsFromTaModule = filter(
-        hydratedLessons,
-        (lesson) => lesson.moduleCode === PC1222.moduleCode,
+      const lessonsFromTaModule = flatMap(hydratedLessons[PC1222.moduleCode], (lessons) =>
+        values(lessons),
       );
       expect(some(lessonsFromTaModule, (lesson) => !lesson.isTaInTimetable)).toBe(false);
     });
 
     test('lessons from non-ta module are marked as not ta in timetable', () => {
-      const lessonsFromNonTaModule = filter(
-        hydratedLessons,
-        (lesson) => lesson.moduleCode === CS4243.moduleCode,
+      const lessonsFromNonTaModule = flatMap(hydratedLessons[CS4243.moduleCode], (lessons) =>
+        values(lessons),
       );
       expect(some(lessonsFromNonTaModule, (lesson) => lesson.isTaInTimetable)).toBe(false);
     });
 
     test('hydration of lessons with alternative lessons', () => {
       expect(
-        getHydratedLesson(hydratedLessons, lessonWithAlternative)?.canBeSelectedAsActiveLesson,
+        get(hydratedLessons, [CS4243.moduleCode, 'Laboratory', lessonWithAlternative])
+          ?.canBeSelectedAsActiveLesson,
       ).toBe(true);
     });
 
     test('hydration of lessons with no alternative lessons', () => {
       expect(
-        getHydratedLesson(hydratedLessons, lessonWithNoAlternative)?.canBeSelectedAsActiveLesson,
+        get(hydratedLessons, [CS4243.moduleCode, 'Lecture', lessonWithNoAlternative])
+          ?.canBeSelectedAsActiveLesson,
       ).toBe(false);
     });
 
     test('should only show lessons in timetable when no lesson is active', () => {
-      expect(hydratedLessons).toHaveLength(timetableLessons.length);
+      expect(allLessons).toHaveLength(
+        flatMap(timetableLessons, (moduleLessons) =>
+          flatMap(moduleLessons, (lessons) => values(lessons)),
+        ).length,
+      );
     });
   });
 
   describe('hydrating modules when there is an active lesson from a non-ta module', () => {
-    const activeLesson = getLesson(PC1222.moduleCode, 0);
+    const activeLessonId = 'F01|FRI|1400|1700|S12-0402|3_5_7_9_11';
 
-    const otherLessons = getLessons(PC1222.moduleCode, [10, 12]);
+    const semTimetableConfig: SemTimetableConfig = {
+      [PC1222.moduleCode]: {
+        Laboratory: [activeLessonId],
+        Lecture: ['SL1|TUE|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['T1|MON|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+    };
 
-    const timetableLessons = [activeLesson, ...otherLessons];
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
 
-    const isTaInTimetable = getIsTaInTimetable([CS4243.moduleCode]);
     const readOnly = false;
+    const activeLesson = get(timetableLessons, [PC1222.moduleCode, 'Laboratory', activeLessonId]);
 
     const hydratedLessons = getInteractableLessons(
       timetableLessons,
+      [],
       modules,
       semester,
       colors,
       readOnly,
-      isTaInTimetable,
       activeLesson,
     );
 
-    const hydratedActiveLesson = getHydratedLesson(hydratedLessons, activeLesson);
+    const hydratedActiveLesson = get(hydratedLessons, [
+      PC1222.moduleCode,
+      'Laboratory',
+      activeLessonId,
+    ]);
 
     test('active lesson should be marked as active', () => {
       expect(hydratedActiveLesson?.isActive).toBe(true);
@@ -179,7 +195,7 @@ describe('getInteractableLessons', () => {
     });
 
     const hydratedAlternativeLessons = filter(
-      hydratedLessons,
+      flatMap(get(hydratedLessons, PC1222.moduleCode), (lessons) => values(lessons)),
       (lesson) =>
         lesson.lessonType === activeLesson.lessonType && lesson.classNo !== activeLesson.classNo,
     );
@@ -192,13 +208,14 @@ describe('getInteractableLessons', () => {
 
     test('all alternative lessons are displayed', () => {
       const alternativeLessons = filter(
-        lessonsMap[PC1222.moduleCode],
+        flatMap(get(lessonsMap, PC1222.moduleCode), (lessons) => values(lessons)),
         (lesson) =>
           lesson.lessonType === activeLesson.lessonType && lesson.classNo !== activeLesson.classNo,
       );
-      const indicesOfAlternativeLessons = new Set(map(alternativeLessons, 'lessonIndex'));
+
+      const indicesOfAlternativeLessons = new Set(map(alternativeLessons, serializeLessonDetails));
       const indicesOfHydratedAlternativeLessons = new Set(
-        map(hydratedAlternativeLessons, 'lessonIndex'),
+        map(hydratedAlternativeLessons, serializeLessonDetails),
       );
 
       expect(indicesOfAlternativeLessons).toEqual(indicesOfHydratedAlternativeLessons);
@@ -206,33 +223,45 @@ describe('getInteractableLessons', () => {
   });
 
   describe('hydrating modules when there is an active lesson from a ta module', () => {
-    const lessonsFromOtherModule = getLessons(PC1222.moduleCode, [0, 10, 12]);
+    const activeLessonId = '1|TUE|1400|1600|AS6-0421|3_4_5_6_7_8_9_10_11_12_13';
 
-    const activeLesson = getLesson(CS4243.moduleCode, 0);
-    const lessonsFromActiveModule = getLessons(CS4243.moduleCode, [1, 2, 5]);
-
-    const timetableLessons: LessonWithIndex[] = [
-      activeLesson,
-      ...lessonsFromOtherModule,
-      ...lessonsFromActiveModule,
+    const timetableLessonsKeys = [
+      activeLessonId,
+      '2|TUE|1600|1800|AS6-0421|3_4_5_6_7_8_9_10_11_12_13',
+      '3|TUE|1830|2030|AS6-0421|3_4_5_6_7_8_9_10_11_12_13',
     ];
 
-    const isTaInTimetable = getIsTaInTimetable([CS4243.moduleCode]);
+    const semTimetableConfig: SemTimetableConfig = {
+      [PC1222.moduleCode]: {
+        Laboratory: ['F01|FRI|1400|1700|S12-0402|3_5_7_9_11'],
+        Lecture: ['SL1|TUE|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['T1|MON|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+      [CS4243.moduleCode]: {
+        Laboratory: timetableLessonsKeys,
+        Lecture: ['1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+    };
+
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
+
     const readOnly = false;
+    const activeLesson = get(timetableLessons, [CS4243.moduleCode, 'Laboratory', activeLessonId]);
 
     const hydratedLessons = getInteractableLessons(
       timetableLessons,
+      [CS4243.moduleCode],
       modules,
       semester,
       colors,
       readOnly,
-      isTaInTimetable,
       activeLesson,
     );
 
     const hydratedOtherModuleLessons = filter(
-      hydratedLessons,
-      (lesson) => lesson.moduleCode !== activeLesson.moduleCode,
+      flatMap(get(hydratedLessons, PC1222.moduleCode), (lessons) => values(lessons)),
+      (lesson) =>
+        lesson.lessonType === activeLesson.lessonType && lesson.classNo !== activeLesson.classNo,
     );
 
     test('lessons that are not from the same module as the active lesson cannot be added', () => {
@@ -243,8 +272,9 @@ describe('getInteractableLessons', () => {
 
     test('timetable lessons from other modules are visible', () => {
       const otherModuleLessons = filter(
-        timetableLessons,
-        (lesson) => lesson.moduleCode !== activeLesson.moduleCode,
+        flatMap(get(lessonsMap, PC1222.moduleCode), (lessons) => values(lessons)),
+        (lesson) =>
+          lesson.lessonType === activeLesson.lessonType && lesson.classNo !== activeLesson.classNo,
       );
       const indicesOfOtherModuleLessons = new Set(map(otherModuleLessons, 'lessonIndex'));
       const indicesOfHydratedOtherModuleLessons = new Set(
@@ -254,7 +284,11 @@ describe('getInteractableLessons', () => {
       expect(indicesOfHydratedOtherModuleLessons).toEqual(indicesOfOtherModuleLessons);
     });
 
-    const hydratedActiveLesson = getHydratedLesson(hydratedLessons, activeLesson);
+    const hydratedActiveLesson = get(hydratedLessons, [
+      CS4243.moduleCode,
+      'Laboratory',
+      activeLessonId,
+    ]);
 
     test('active lesson should be marked as active', () => {
       expect(hydratedActiveLesson?.isActive).toBe(true);
@@ -264,9 +298,9 @@ describe('getInteractableLessons', () => {
       expect(hydratedActiveLesson?.canBeAddedToLessonConfig).toBe(false);
     });
 
-    const hydratedActiveModuleLessons = filter(
-      hydratedLessons,
-      (lesson) => lesson.moduleCode === activeLesson.moduleCode,
+    const hydratedActiveModuleLessons = flatMap(
+      get(hydratedLessons, CS4243.moduleCode),
+      (lessons) => values(lessons),
     );
 
     test('all lessons of a ta module are interactable', () => {
@@ -286,35 +320,35 @@ describe('getInteractableLessons', () => {
     );
 
     test('alternative lessons in timetable are already added to the lesson config', () => {
-      const alternativeLessonsInTimetable = filter(hydratedAlternativeLessons, (lesson) =>
-        [0, 1, 2].includes(lesson.lessonIndex),
-      );
-
-      expect(some(alternativeLessonsInTimetable, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(
-        false,
-      );
-    });
-
-    test('alternative lessons not in timetable can be added to the lesson config', () => {
-      const alternativeLessonsNotInTimetable = filter(
-        hydratedAlternativeLessons,
-        (lesson) => ![0, 1, 2].includes(lesson.lessonIndex),
+      const alternativeTimetableLessonsArray = filter(hydratedAlternativeLessons, (lesson) =>
+        timetableLessonsKeys.includes(serializeLessonDetails(lesson)),
       );
 
       expect(
-        some(alternativeLessonsNotInTimetable, (lesson) => !lesson.canBeAddedToLessonConfig),
+        some(alternativeTimetableLessonsArray, (lesson) => lesson.canBeAddedToLessonConfig),
+      ).toBe(false);
+    });
+
+    test('alternative lessons not in timetable can be added to the lesson config', () => {
+      const alternativeNonTimetableLessonsArray = filter(
+        hydratedAlternativeLessons,
+        (lesson) => !timetableLessonsKeys.includes(serializeLessonDetails(lesson)),
+      );
+
+      expect(
+        some(alternativeNonTimetableLessonsArray, (lesson) => !lesson.canBeAddedToLessonConfig),
       ).toBe(false);
     });
 
     test('all alternative lessons are displayed', () => {
       const alternativeLessons = filter(
-        lessonsMap[CS4243.moduleCode],
+        flatMap(get(lessonsMap, CS4243.moduleCode), (lessons) => values(lessons)),
         (lesson) =>
           lesson.lessonType === activeLesson.lessonType && lesson.classNo !== activeLesson.classNo,
       );
-      const indicesOfAlternativeLessons = new Set(map(alternativeLessons, 'lessonIndex'));
+      const indicesOfAlternativeLessons = new Set(map(alternativeLessons, serializeLessonDetails));
       const indicesOfHydratedAlternativeLessons = new Set(
-        map(hydratedAlternativeLessons, 'lessonIndex'),
+        map(hydratedAlternativeLessons, serializeLessonDetails),
       );
 
       expect(indicesOfAlternativeLessons).toEqual(indicesOfHydratedAlternativeLessons);
@@ -322,35 +356,56 @@ describe('getInteractableLessons', () => {
   });
 
   describe('hydrating non-ta module containing multiple lessons with the same classNo', () => {
-    const timetableLessons = getLessons(GES1021.moduleCode, [0, 1]);
+    const timetableLessonsKeys = [
+      'SL1|MON|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13',
+      'SL1|WED|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13',
+    ];
 
-    const isTaInTimetable = getIsTaInTimetable([]);
+    const semTimetableConfig: SemTimetableConfig = {
+      [GES1021.moduleCode]: {
+        Lecture: timetableLessonsKeys,
+      },
+    };
+
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
+
     const readOnly = false;
     const activeLesson = null;
 
     const hydratedLessons = getInteractableLessons(
       timetableLessons,
+      [],
       modules,
       semester,
       colors,
       readOnly,
-      isTaInTimetable,
       activeLesson,
     );
 
+    const hydratedTimetableLessons = flatMap(get(hydratedLessons, [GES1021.moduleCode, 'Lecture']));
+
     test('lessons in timetable are already added to lesson config', () => {
-      expect(some(hydratedLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(false);
+      expect(some(hydratedTimetableLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(
+        false,
+      );
     });
 
     test('should only show lessons in timetable when no lesson is active', () => {
-      expect(hydratedLessons).toHaveLength(timetableLessons.length);
+      expect(hydratedTimetableLessons).toHaveLength(timetableLessonsArray(timetableLessons).length);
     });
   });
 
   describe('hydrating ta module containing multiple lessons with the same classNo', () => {
-    const timetableLessons = getLessons(GES1021.moduleCode, [0]);
+    const timetableLessonIds = ['SL1|MON|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13'];
 
-    const isTaInTimetable = getIsTaInTimetable([GES1021.moduleCode]);
+    const semTimetableConfig: SemTimetableConfig = {
+      [GES1021.moduleCode]: {
+        Lecture: timetableLessonIds,
+      },
+    };
+
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
+
     const readOnly = false;
 
     describe('when no lessons are active', () => {
@@ -358,108 +413,127 @@ describe('getInteractableLessons', () => {
 
       const hydratedLessons = getInteractableLessons(
         timetableLessons,
+        [GES1021.moduleCode],
         modules,
         semester,
         colors,
         readOnly,
-        isTaInTimetable,
         activeLesson,
       );
 
+      const hydratedLessonsArray = timetableLessonsArray(hydratedLessons);
+
       test('only the lesson in the timetable are visible', () => {
-        expect(hydratedLessons).toHaveLength(1);
+        expect(hydratedLessonsArray).toHaveLength(timetableLessonsArray(timetableLessons).length);
       });
 
       test('lesson is already in timetable', () => {
-        expect(some(hydratedLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(false);
+        expect(some(hydratedLessonsArray, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(false);
       });
     });
 
     describe('when a lesson is active', () => {
-      const activeLesson = getLesson(GES1021.moduleCode, 0);
+      const activeLesson = get(timetableLessons, [
+        GES1021.moduleCode,
+        'Lecture',
+        'SL1|MON|1600|1800|LT27|1_2_3_4_5_6_7_8_9_10_11_12_13',
+      ]);
 
       const hydratedLessons = getInteractableLessons(
         timetableLessons,
+        [GES1021.moduleCode],
         modules,
         semester,
         colors,
         readOnly,
-        isTaInTimetable,
         activeLesson,
       );
 
+      const hydratedLessonsArray = timetableLessonsArray(hydratedLessons);
+
       test('all lessons from the module are visible', () => {
-        expect(hydratedLessons).toHaveLength(2);
+        expect(hydratedLessonsArray).toHaveLength(2);
       });
 
       test('lesson already in timetable are already in the lesson config', () => {
-        const hydratedLessonInTimetable = filter(hydratedLessons, (lesson) =>
-          [0].includes(lesson.lessonIndex),
+        const hydratedTimetableLessons = filter(hydratedLessonsArray, (lesson) =>
+          timetableLessonIds.includes(serializeLessonDetails(lesson)),
         );
 
-        expect(some(hydratedLessonInTimetable, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(
+        expect(some(hydratedTimetableLessons, (lesson) => lesson.canBeAddedToLessonConfig)).toBe(
           false,
         );
       });
 
       test('lesson not in timetable can be added to the lesson config', () => {
-        const hydratedLessonInTimetable = filter(
-          hydratedLessons,
-          (lesson) => ![0].includes(lesson.lessonIndex),
+        const hydratedNonTimetableLessonsArray = filter(
+          hydratedLessonsArray,
+          (lesson) => !timetableLessonIds.includes(serializeLessonDetails(lesson)),
         );
 
-        expect(some(hydratedLessonInTimetable, (lesson) => !lesson.canBeAddedToLessonConfig)).toBe(
-          false,
-        );
+        expect(
+          some(hydratedNonTimetableLessonsArray, (lesson) => !lesson.canBeAddedToLessonConfig),
+        ).toBe(false);
       });
     });
   });
 
   describe('hydrating modules in a readonly timetable', () => {
-    const taModuleLessons = getLessons(PC1222.moduleCode, [0, 10, 12]);
+    const semTimetableConfig: SemTimetableConfig = {
+      [PC1222.moduleCode]: {
+        Laboratory: ['F01|FRI|1400|1700|S12-0402|3_5_7_9_11'],
+        Lecture: ['SL1|TUE|1200|1400|LT25|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+        Tutorial: ['T1|MON|1600|1700|S11-0204|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+      [CS4243.moduleCode]: {
+        Laboratory: ['1|TUE|1400|1600|AS6-0421|3_4_5_6_7_8_9_10_11_12_13'],
+        Lecture: ['1|MON|1830|2030|LT15|1_2_3_4_5_6_7_8_9_10_11_12_13'],
+      },
+    };
 
-    const nonTaModuleLessons = getLessons(CS4243.moduleCode, [0, 5]);
+    const timetableLessons = hydrateSemTimetableWithLessons(semTimetableConfig, modules, semester);
 
-    const timetableLessons = [...taModuleLessons, ...nonTaModuleLessons];
-
-    const isTaInTimetable = getIsTaInTimetable([PC1222.moduleCode]);
     const readOnly = true;
     const activeLesson = null; // lessons cannot be selected as active in a readonly timetable
 
     const hydratedLessons = getInteractableLessons(
       timetableLessons,
+      [PC1222.moduleCode],
       modules,
       semester,
       colors,
       readOnly,
-      isTaInTimetable,
       activeLesson,
     );
 
+    const hydratedLessonsArray = timetableLessonsArray(hydratedLessons);
+
     test('lessons in readonly timetable cannot be select as active lesson', () => {
-      expect(some(hydratedLessons, (lesson) => lesson.canBeSelectedAsActiveLesson)).toBe(false);
+      expect(some(hydratedLessonsArray, (lesson) => lesson.canBeSelectedAsActiveLesson)).toBe(
+        false,
+      );
     });
 
     test('lessons from ta modules are marked as ta in timetable', () => {
-      const hydratedTaModuleLessons = filter(
-        hydratedLessons,
-        (lesson) => lesson.moduleCode === PC1222.moduleCode,
+      const hydratedTaModuleLessonsArray = flatMap(
+        get(hydratedLessons, PC1222.moduleCode),
+        (lessons) => values(lessons),
       );
 
-      expect(some(hydratedTaModuleLessons, (lesson) => !lesson.isTaInTimetable)).toBe(false);
+      expect(some(hydratedTaModuleLessonsArray, (lesson) => !lesson.isTaInTimetable)).toBe(false);
     });
 
     test('lessons from non-ta modules are marked as not ta in timetable', () => {
-      const hydratedTaModuleLessons = filter(
-        hydratedLessons,
-        (lesson) => lesson.moduleCode === CS4243.moduleCode,
+      const hydratedNonTaModuleLessonsArray = flatMap(
+        get(hydratedLessons, CS4243.moduleCode),
+        (lessons) => values(lessons),
       );
 
-      expect(some(hydratedTaModuleLessons, (lesson) => lesson.isTaInTimetable)).toBe(false);
+      expect(some(hydratedNonTaModuleLessonsArray, (lesson) => lesson.isTaInTimetable)).toBe(false);
     });
 
     test('readonly timetables should only show the lessons in the timetable', () => {
-      expect(hydratedLessons).toHaveLength(timetableLessons.length);
+      expect(hydratedLessonsArray).toHaveLength(5);
     });
   });
 });

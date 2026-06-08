@@ -21,8 +21,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ1-0301",
-          "lessonIndex": 0
+          "venue": "BIZ1-0301"
         },
         {
           "classNo": "K10",
@@ -31,8 +30,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1100",
-          "venue": "BIZ2-0510",
-          "lessonIndex": 1
+          "venue": "BIZ2-0510"
         },
         {
           "classNo": "K11",
@@ -41,8 +39,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1700",
-          "venue": "BIZ2-0510",
-          "lessonIndex": 2
+          "venue": "BIZ2-0510"
         },
         {
           "classNo": "K12",
@@ -51,8 +48,7 @@
           "day": "Thursday",
           "startTime": "0800",
           "endTime": "1100",
-          "venue": "BIZ2-0510",
-          "lessonIndex": 3
+          "venue": "BIZ2-0510"
         },
         {
           "classNo": "K13",
@@ -61,8 +57,7 @@
           "day": "Monday",
           "startTime": "1300",
           "endTime": "1600",
-          "venue": "BIZ2-0202",
-          "lessonIndex": 4
+          "venue": "BIZ2-0202"
         },
         {
           "classNo": "K14",
@@ -71,8 +66,7 @@
           "day": "Tuesday",
           "startTime": "1100",
           "endTime": "1400",
-          "venue": "BIZ2-0509",
-          "lessonIndex": 5
+          "venue": "BIZ2-0509"
         },
         {
           "classNo": "K15",
@@ -81,8 +75,7 @@
           "day": "Thursday",
           "startTime": "1500",
           "endTime": "1800",
-          "venue": "BIZ2-0509",
-          "lessonIndex": 6
+          "venue": "BIZ2-0509"
         },
         {
           "classNo": "K2",
@@ -91,8 +84,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1700",
-          "venue": "BIZ2-0413B",
-          "lessonIndex": 7
+          "venue": "BIZ2-0413B"
         },
         {
           "classNo": "K3",
@@ -101,8 +93,7 @@
           "day": "Wednesday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ1-0205",
-          "lessonIndex": 8
+          "venue": "BIZ1-0205"
         },
         {
           "classNo": "K4",
@@ -111,8 +102,7 @@
           "day": "Wednesday",
           "startTime": "1300",
           "endTime": "1600",
-          "venue": "BIZ1-0304",
-          "lessonIndex": 9
+          "venue": "BIZ1-0304"
         },
         {
           "classNo": "K5",
@@ -121,8 +111,7 @@
           "day": "Monday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ2-0202",
-          "lessonIndex": 10
+          "venue": "BIZ2-0202"
         },
         {
           "classNo": "K8",
@@ -131,8 +120,7 @@
           "day": "Wednesday",
           "startTime": "1200",
           "endTime": "1500",
-          "venue": "BIZ1-0201",
-          "lessonIndex": 11
+          "venue": "BIZ1-0201"
         },
         {
           "classNo": "K9",
@@ -141,8 +129,7 @@
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1400",
-          "venue": "BIZ2-0509",
-          "lessonIndex": 12
+          "venue": "BIZ2-0509"
         }
       ],
       "LecturePeriods": [
@@ -167,8 +154,7 @@
           "day": "Tuesday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ2-0413B",
-          "lessonIndex": 0
+          "venue": "BIZ2-0413B"
         },
         {
           "classNo": "B10",
@@ -177,8 +163,7 @@
           "day": "Wednesday",
           "startTime": "1300",
           "endTime": "1600",
-          "venue": "BIZ1-0203",
-          "lessonIndex": 1
+          "venue": "BIZ1-0203"
         },
         {
           "classNo": "B11",
@@ -187,8 +172,7 @@
           "day": "Friday",
           "startTime": "1400",
           "endTime": "1700",
-          "venue": "BIZ2-0413C",
-          "lessonIndex": 2
+          "venue": "BIZ2-0413C"
         },
         {
           "classNo": "B2",
@@ -197,8 +181,7 @@
           "day": "Tuesday",
           "startTime": "1400",
           "endTime": "1700",
-          "venue": "BIZ2-0413B",
-          "lessonIndex": 3
+          "venue": "BIZ2-0413B"
         },
         {
           "classNo": "B3",
@@ -207,8 +190,7 @@
           "day": "Wednesday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ2-0413B",
-          "lessonIndex": 4
+          "venue": "BIZ2-0413B"
         },
         {
           "classNo": "B4",
@@ -217,8 +199,7 @@
           "day": "Thursday",
           "startTime": "1100",
           "endTime": "1400",
-          "venue": "BIZ2-0413A",
-          "lessonIndex": 5
+          "venue": "BIZ2-0413A"
         },
         {
           "classNo": "B5",
@@ -227,8 +208,7 @@
           "day": "Thursday",
           "startTime": "1500",
           "endTime": "1800",
-          "venue": "BIZ2-0413A",
-          "lessonIndex": 6
+          "venue": "BIZ2-0413A"
         },
         {
           "classNo": "B6",
@@ -237,8 +217,7 @@
           "day": "Wednesday",
           "startTime": "0800",
           "endTime": "1100",
-          "venue": "BIZ1-0303",
-          "lessonIndex": 7
+          "venue": "BIZ1-0303"
         },
         {
           "classNo": "B7",
@@ -247,8 +226,7 @@
           "day": "Wednesday",
           "startTime": "1400",
           "endTime": "1700",
-          "venue": "BIZ1-0303",
-          "lessonIndex": 8
+          "venue": "BIZ1-0303"
         },
         {
           "classNo": "B8",
@@ -257,8 +235,7 @@
           "day": "Friday",
           "startTime": "1500",
           "endTime": "1800",
-          "venue": "BIZ1-0204",
-          "lessonIndex": 9
+          "venue": "BIZ1-0204"
         },
         {
           "classNo": "B9",
@@ -267,8 +244,7 @@
           "day": "Wednesday",
           "startTime": "0900",
           "endTime": "1200",
-          "venue": "BIZ1-0203",
-          "lessonIndex": 10
+          "venue": "BIZ1-0203"
         }
       ],
       "LecturePeriods": [

@@ -54,7 +54,7 @@ const (
 )
 
 // This is used by [nusmods_link.SerializeLessonIndices] to serialize the result of optimiser into a timetable share link to return to the client
-const ModuleCodeSeparator = ";"
+const LessonTypesSeparator = ","
 
 // Beam search parameters
 const (

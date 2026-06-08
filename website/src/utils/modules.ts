@@ -3,7 +3,8 @@ import { format } from 'date-fns';
 import type {
   Module,
   ModuleCode,
-  RawLessonWithIndex,
+  ModuleLessonMap,
+  RawLesson,
   Semester,
   SemesterData,
   SemesterDataCondensed,
@@ -29,11 +30,16 @@ export function getModuleSemesterData(
 }
 
 // Returns a flat array of lessons of a module for the corresponding semester.
-export function getModuleTimetable(
+export function getModuleTimetable(module: Module, semester: Semester): readonly RawLesson[] {
+  return get(getModuleSemesterData(module, semester), 'timetable', []);
+}
+
+// Returns a map of lessons to lessonType of a module for the corresponding semester.
+export function getModuleLessonMap(
   module: Module,
   semester: Semester,
-): readonly RawLessonWithIndex[] {
-  return get(getModuleSemesterData(module, semester), 'timetable', []);
+): Readonly<ModuleLessonMap<RawLesson>> {
+  return get(getModuleSemesterData(module, semester), 'lessonMap', {});
 }
 
 /**

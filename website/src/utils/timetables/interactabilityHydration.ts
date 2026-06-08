@@ -1,10 +1,24 @@
-import { filter, groupBy, map, mapValues, partition } from 'lodash-es';
-import { LessonIndex, LessonType, ModuleCode, RawLesson, Semester } from 'types/modules';
+import { groupBy, keys, mapValues } from 'lodash-es';
 
-import { ColoredLesson, InteractableLesson, LessonWithIndex } from 'types/timetables';
+import {
+  LessonId,
+  LessonType,
+  ModuleCode,
+  ModuleLessonMap,
+  RawLesson,
+  Semester,
+} from 'types/modules';
+
+import {
+  ColoredLesson,
+  InteractableLesson,
+  Lesson,
+  SemTimetableConfigWithLessons,
+} from 'types/timetables';
 
 import { ColorMapping, ModulesMap } from 'types/reducers';
-import { getModuleTimetable } from 'utils/modules';
+import { getModuleLessonMap, getModuleTimetable } from 'utils/modules';
+import { serializeLessonDetails } from './lessonId';
 
 // Determines if a Lesson on the timetable can be modifiable / dragged around.
 // Condition: There are multiple ClassNo for all the Array<Lesson> in a lessonType.
@@ -27,122 +41,75 @@ export function areOtherClassesAvailable(
 export function isInteractable(
   lesson: ColoredLesson | InteractableLesson,
 ): lesson is InteractableLesson {
-  return 'lessonIndex' in lesson;
+  return 'canBeSelectedAsActiveLesson' in lesson;
 }
 
 /**
  * Hydrate timetable lessons with interactability info\
- * See type defintion of {@link InteractableLesson} for properties added
+ * See type defintion of `InteractableLesson` for properties added
  */
 export function getInteractableLessons(
-  timetableLessons: LessonWithIndex[],
+  timetableLessons: SemTimetableConfigWithLessons<Lesson>,
+  taModules: ModuleCode[],
   modules: ModulesMap,
   semester: Semester,
   colors: ColorMapping,
   readOnly: boolean,
-  isTaInTimetable: (moduleCode: ModuleCode) => boolean,
-  activeLesson: LessonWithIndex | null,
-): InteractableLesson[] {
-  if (!activeLesson)
-    return hydrateInteractability(
-      timetableLessons,
-      modules,
-      semester,
-      colors,
-      readOnly,
-      isTaInTimetable,
-    );
-
-  const activeModuleCode: ModuleCode = activeLesson.moduleCode;
-  const activeModule = modules[activeModuleCode];
-  const activeModuleLessons = getModuleTimetable(activeModule, semester);
-  const selectableLessons = isTaInTimetable(activeModuleCode)
-    ? activeModuleLessons
-    : filter(activeModuleLessons, (lesson) => lesson.lessonType === activeLesson.lessonType);
-  const selectableLessonsWithModuleCodeAndTitle = map(selectableLessons, (lesson) => ({
-    ...lesson,
-    moduleCode: activeModuleCode,
-    title: activeModule.title,
-  }));
-
-  const [timetableLessonsInSelectableLessons, timetableLessonsNotInSelectableLessons] =
-    isTaInTimetable(activeModuleCode)
-      ? partition(timetableLessons, (lesson) => lesson.moduleCode === activeModuleCode)
-      : partition(
-          timetableLessons,
-          (lesson) =>
-            lesson.moduleCode === activeModuleCode && lesson.lessonType === activeLesson.lessonType,
-        );
-  const selectedLessonIndices = map(timetableLessonsInSelectableLessons, 'lessonIndex');
-
-  return [
-    ...hydrateInteractability(
-      selectableLessonsWithModuleCodeAndTitle,
-      modules,
-      semester,
-      colors,
-      readOnly,
-      isTaInTimetable,
-      activeLesson,
-      selectedLessonIndices,
-    ),
-    ...hydrateInteractability(
-      timetableLessonsNotInSelectableLessons,
-      modules,
-      semester,
-      colors,
-      readOnly,
-      isTaInTimetable,
-    ),
-  ];
-}
-
-/**
- * Hydrates a list of lessons to add interactability info\
- * See type defintion of {@link InteractableLesson} for properties added
- */
-export function hydrateInteractability(
-  timetableLessons: LessonWithIndex[],
-  modules: ModulesMap,
-  semester: Semester,
-  colors: ColorMapping,
-  readOnly: boolean,
-  isTaInTimetable: (moduleCode: ModuleCode) => boolean,
-  activeLesson?: LessonWithIndex,
-  alreadySelectedLessonIndices?: LessonIndex[],
-): InteractableLesson[] {
+  activeLesson: Lesson | null,
+): SemTimetableConfigWithLessons<InteractableLesson> {
   const moduleTimetables = mapValues(modules, (module) => getModuleTimetable(module, semester));
+  const activeLessonId = activeLesson ? serializeLessonDetails(activeLesson) : null;
 
-  return map(timetableLessons, (lesson) => {
-    const { moduleCode, lessonType, classNo, lessonIndex } = lesson;
-    const isSameModule = moduleCode === activeLesson?.moduleCode;
-    const isSameLessonType = lessonType === activeLesson?.lessonType;
+  return mapValues(
+    timetableLessons,
+    (lessonMap: ModuleLessonMap<RawLesson>, moduleCode: ModuleCode) => {
+      const isTaInTimetable = taModules.includes(moduleCode);
 
-    const isActive = isSameModule && isSameLessonType && lessonIndex === activeLesson?.lessonIndex;
-    const moduleIsTaInTimetable = isTaInTimetable(moduleCode);
-    const canBeSelectedAsActiveLesson =
-      !readOnly &&
-      (moduleIsTaInTimetable
-        ? true
-        : areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType));
+      return mapValues(
+        lessonMap,
+        (
+          lessonsWithLessonType,
+          lessonType: LessonType,
+        ): { [lessonId: LessonId]: InteractableLesson } => {
+          const isSameModuleAndLessonType =
+            moduleCode === activeLesson?.moduleCode && lessonType === activeLesson?.lessonType;
 
-    const alreadyAddedToLessonConfig = alreadySelectedLessonIndices?.includes(lesson.lessonIndex);
-    const isSameLessonGroupAsActiveLesson = moduleIsTaInTimetable
-      ? lessonIndex === activeLesson?.lessonIndex
-      : classNo === activeLesson?.classNo;
-    const canBeAddedToLessonConfig =
-      isSameModule &&
-      (moduleIsTaInTimetable ? true : isSameLessonType) &&
-      !alreadyAddedToLessonConfig &&
-      !isSameLessonGroupAsActiveLesson;
+          const configLessonIds: LessonId[] = keys(lessonsWithLessonType);
+          const lessons =
+            activeLesson && isSameModuleAndLessonType
+              ? getModuleLessonMap(modules[moduleCode], semester)[lessonType]
+              : lessonsWithLessonType;
 
-    return {
-      ...lesson,
-      isActive,
-      isTaInTimetable: moduleIsTaInTimetable,
-      canBeAddedToLessonConfig,
-      canBeSelectedAsActiveLesson,
-      colorIndex: colors[moduleCode],
-    };
-  });
+          return mapValues(lessons, (lesson, lessonId: LessonId): InteractableLesson => {
+            const isActive = isSameModuleAndLessonType && lessonId === activeLessonId;
+            const canBeSelectedAsActiveLesson =
+              !readOnly &&
+              (isTaInTimetable ||
+                areOtherClassesAvailable(moduleTimetables[moduleCode], lessonType));
+
+            const alreadyAddedToLessonConfig = configLessonIds.includes(lessonId);
+            const isSameLessonGroupAsActiveLesson = isTaInTimetable
+              ? isActive
+              : lesson.classNo === activeLesson?.classNo;
+            const canBeAddedToLessonConfig =
+              isSameModuleAndLessonType &&
+              !alreadyAddedToLessonConfig &&
+              !isSameLessonGroupAsActiveLesson;
+
+            return {
+              ...lesson,
+              moduleCode,
+              title: modules[moduleCode].title,
+              isActive,
+              isTaInTimetable,
+              canBeAddedToLessonConfig,
+              canBeSelectedAsActiveLesson,
+              colorIndex: colors[moduleCode],
+              lessonId,
+            };
+          });
+        },
+      );
+    },
+  );
 }
