@@ -55,11 +55,6 @@ function moduleBank(state: ModuleBank = defaultModuleBankState, action: Actions)
             timestamp: Date.now(),
             semesterData: map(action.payload.semesterData, (semesterData) => ({
               ...semesterData,
-              timetable: map(semesterData.timetable, (lesson, lessonIndex) => ({
-                ...lesson,
-                lessonIndex,
-              })),
-              // Not in use currently, refer to https://github.com/nusmodifications/nusmods/discussions/4387
               lessonMap: makeModuleLessonMap(semesterData.timetable),
             })),
           },

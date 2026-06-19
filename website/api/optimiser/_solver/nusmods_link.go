@@ -2,7 +2,6 @@ package solver
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	constants "github.com/nusmodifications/nusmods/website/api/optimiser/_constants"
@@ -65,8 +64,8 @@ func FillDefaultsAndGenerateShareableLinks(
 func createConfig(
 	assignments map[string]string,
 	lessonToSlots map[string][][]models.ModuleSlot,
-) map[string]map[string][]models.LessonIndex {
-	config := make(map[string]map[string][]models.LessonIndex)
+) map[string]map[string][]models.ClassNo {
+	config := make(map[string]map[string][]models.ClassNo)
 
 	for lessonKey, classNo := range assignments {
 		// Parse lesson key: "MODULE|LESSONTYPE"
@@ -79,7 +78,7 @@ func createConfig(
 
 		// Initialize module config if not exists
 		if config[moduleCode] == nil {
-			config[moduleCode] = make(map[string][]models.LessonIndex)
+			config[moduleCode] = make(map[string][]models.ClassNo)
 		}
 
 		// Add lesson type and class number to config
@@ -89,7 +88,7 @@ func createConfig(
 			}
 
 			for _, lesson := range lessonsWithClassNo {
-				config[moduleCode][lessonType] = append(config[moduleCode][lessonType], lesson.LessonIndex)
+				config[moduleCode][lessonType] = append(config[moduleCode][lessonType], lesson.ClassNo)
 			}
 			break
 		}
@@ -99,38 +98,27 @@ func createConfig(
 }
 
 // Constructs the URL
-func serializeConfig(config map[string]map[string][]models.LessonIndex) string {
+func serializeConfig(config map[string]map[string][]models.ClassNo) string {
 	var moduleParams []string
 
 	for moduleCode, lessons := range config {
 		var lessonParams []string
-		for lessonType, lessonIndex := range lessons {
+		for lessonType, classNo := range lessons {
 			// Get abbreviation for lesson type
 			abbrev := constants.LessonTypeAbbrev[strings.ToUpper(lessonType)]
 
 			lessonParams = append(
 				lessonParams,
-				fmt.Sprintf("%s:%s", abbrev, "("+serializeLessonIndices(lessonIndex)+")"),
+				fmt.Sprintf("%s:%s", abbrev, strings.Join(classNo, ",")),
 			)
 		}
 		if len(lessonParams) > 0 {
 			moduleParams = append(
 				moduleParams,
-				fmt.Sprintf("%s=%s", moduleCode, strings.Join(lessonParams, constants.ModuleCodeSeparator)),
+				fmt.Sprintf("%s=%s", moduleCode, strings.Join(lessonParams, constants.LessonTypesSeparator)),
 			)
 		}
 	}
 
 	return strings.Join(moduleParams, "&")
-}
-
-// Serializes an array of lesson indices into the format used in timetable share links
-//
-// Returns "1,2,3" with input [1, 2, 3]
-func serializeLessonIndices(lessonIndex []models.LessonIndex) string {
-	parts := make([]string, len(lessonIndex))
-	for i, idx := range lessonIndex {
-		parts[i] = strconv.Itoa(idx)
-	}
-	return strings.Join(parts, ",")
 }
